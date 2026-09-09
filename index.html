@@ -54,7 +54,31 @@
         .level-display{display:flex;align-items:center;gap:10px;background:rgba(0,0,0,0.2);padding:5px 15px;border-radius:50px}
         .level-display .level-bar{width:100px;height:6px;background:#1a2235;border-radius:10px;overflow:hidden}
         .level-display .level-bar .fill{height:100%;background:linear-gradient(90deg,#f1c40f,#e67e22);border-radius:10px;transition:width .5s}
-        @media(max-width:700px){.games-grid{grid-template-columns:1fr}.header{flex-direction:column;text-align:center}.logo{font-size:1.4rem}}
+        .icon-shop{margin-top:25px;background:rgba(255,255,255,0.03);border-radius:20px;padding:20px;border:1px solid rgba(255,255,255,0.05)}
+        .icon-shop h3{margin-bottom:15px;color:#f5e9c4;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+        .icon-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(85px,1fr));gap:10px}
+        .icon-item{display:flex;flex-direction:column;align-items:center;gap:3px;background:rgba(0,0,0,0.3);padding:10px 6px;border-radius:12px;border:2px solid #2d3852;cursor:pointer;transition:all .2s;position:relative}
+        .icon-item:hover{border-color:#f1c40f;transform:scale(1.05)}
+        .icon-item.owned{border-color:#2ecc71}
+        .icon-item.active{border-color:#f1c40f;box-shadow:0 0 25px rgba(241,196,15,0.25)}
+        .icon-item .icon-preview{font-size:2rem}
+        .icon-item .icon-name{font-size:.55rem;color:#a0b5d9;text-align:center}
+        .icon-item .icon-price{font-size:.55rem;color:#f1c40f}
+        .icon-item .icon-tag{position:absolute;top:-6px;right:-6px;font-size:.4rem;background:#e74c3c;color:#fff;padding:1px 6px;border-radius:10px}
+        .icon-item .icon-tag.free{background:#2ecc71}
+        .icon-item .icon-tag.owned-tag{background:#3498db}
+        .icon-item .icon-tag.best{background:linear-gradient(135deg,#f1c40f,#e67e22);color:#1a1f30;font-weight:700;animation:bestPulse 1.5s ease-in-out infinite alternate}
+        .icon-item .icon-tag.ultimate{background:linear-gradient(135deg,#9b59b6,#e74c3c,#f1c40f);color:#fff;font-weight:700;animation:ultimatePulse 1s ease-in-out infinite alternate}
+        @keyframes bestPulse{0%{transform:scale(1)}100%{transform:scale(1.1)}}
+        @keyframes ultimatePulse{0%{transform:scale(1);box-shadow:0 0 10px rgba(155,89,182,0.5)}100%{transform:scale(1.15);box-shadow:0 0 30px rgba(155,89,182,0.8),0 0 60px rgba(231,76,60,0.4)}}
+        .filter-buttons{display:flex;gap:8px;flex-wrap:wrap}
+        .filter-buttons button{padding:4px 14px;border-radius:20px;border:1px solid #4a5575;background:#2d3852;color:#a0b5d9;cursor:pointer;font-size:.75rem;transition:all .2s}
+        .filter-buttons button:hover,.filter-buttons button.active{background:#f1c40f;color:#1a1f30;border-color:#f1c40f}
+        .search-box{display:flex;gap:10px;margin-bottom:15px;flex-wrap:wrap}
+        .search-box input{flex:1;padding:10px 16px;border-radius:10px;border:1px solid #4a5575;background:rgba(0,0,0,0.3);color:#f0f4ff;font-size:.9rem;min-width:150px}
+        .search-box input::placeholder{color:#6a7b9e}
+        .total-icons{color:#7a8bb0;font-size:.8rem}
+        @media(max-width:700px){.games-grid{grid-template-columns:1fr}.header{flex-direction:column;text-align:center}.logo{font-size:1.4rem}.icon-grid{grid-template-columns:repeat(auto-fill,minmax(70px,1fr))}}
     </style>
 </head>
 <body>
@@ -105,33 +129,21 @@
 <div class="dice-shop">
 <h4>🎲 خرید تاس</h4>
 <div class="dice-options">
-<button onclick="buyDice(20,300)">
-<div class="count">🎲 20 تا</div>
-<div class="price">💰 300 سکه</div>
-</button>
-<button onclick="buyDice(43,600)">
-<div class="count">🎲 43 تا</div>
-<div class="price">💰 600 سکه</div>
-</button>
-<button onclick="buyDice(80,1000)">
-<div class="count">🎲 80 تا</div>
-<div class="price">💰 1000 سکه</div>
-</button>
-<button onclick="buyDice(150,1800)">
-<div class="count">🎲 150 تا</div>
-<div class="price">💰 1800 سکه</div>
-</button>
+<button onclick="buyDice(20,300)"><div class="count">🎲 20 تا</div><div class="price">💰 300 سکه</div></button>
+<button onclick="buyDice(43,600)"><div class="count">🎲 43 تا</div><div class="price">💰 600 سکه</div></button>
+<button onclick="buyDice(80,1000)"><div class="count">🎲 80 تا</div><div class="price">💰 1000 سکه</div></button>
+<button onclick="buyDice(150,1800)"><div class="count">🎲 150 تا</div><div class="price">💰 1800 سکه</div></button>
 </div>
 </div>
 
 <div class="games-grid">
 <a href="snake.html" class="game-card">
 <span class="game-icon">🐍</span>
-<div class="game-title">مار و پله آنلاین</div>
-<div class="game-desc">👥 1 تا 6 نفر | 🎲 هر تاس 1 بار مصرف | برنده 800 سکه</div>
+<div class="game-title">مار و پله</div>
+<div class="game-desc">🎯 تک‌نفره با کامپیوتر | 🌐 چندنفره 1-6 نفر | برنده 800 سکه</div>
 <div class="game-stats">
 <span>👥 1-6 نفره</span>
-<span>🌐 آنلاین</span>
+<span>🎮 تک‌نفره</span>
 <span>🏆 800 سکه</span>
 </div>
 <button class="play-btn">▶ بازی کن</button>
@@ -148,6 +160,23 @@
 <button class="play-btn">▶ بازی کن</button>
 </a>
 </div>
+
+<!-- فروشگاه آیکون -->
+<div class="icon-shop">
+<h3>
+<span>🎨 فروشگاه آیکون <span class="total-icons" id="iconCount">33 آیکون</span></span>
+<div class="filter-buttons">
+<button class="active" data-filter="all">همه</button>
+<button data-filter="free">رایگان</button>
+<button data-filter="premium">پریمیوم</button>
+<button data-filter="owned">مالک</button>
+</div>
+</h3>
+<div class="search-box">
+<input type="text" id="iconSearch" placeholder="🔍 جستجوی آیکون...">
+</div>
+<div class="icon-grid" id="iconGrid"></div>
+</div>
 </div>
 
 <div class="footer">
@@ -157,19 +186,51 @@
 
 <script>
 // ============================================================
-//  StarLoom_Game - بدون خطا برای GitHub Pages
+//  StarLoom_Game - با 33 آیکون
 // ============================================================
 
+var ICONS = {
+    'default':{name:'پیش‌فرض',emoji:'😊',price:0},
+    'smile':{name:'خندان',emoji:'😄',price:0},
+    'heart':{name:'قلب',emoji:'❤️',price:0},
+    'star':{name:'ستاره',emoji:'⭐',price:0},
+    'lion':{name:'شیر',emoji:'🦁',price:600},
+    'tiger':{name:'ببر',emoji:'🐯',price:700},
+    'eagle':{name:'عقاب',emoji:'🦅',price:800},
+    'wolf':{name:'گرگ',emoji:'🐺',price:650},
+    'dragon':{name:'اژدها',emoji:'🐉',price:1300},
+    'phoenix':{name:'ققنوس',emoji:'🔥',price:1600},
+    'unicorn':{name:'تک‌شاخ',emoji:'🦄',price:2000},
+    'crown':{name:'تاج',emoji:'👑',price:900},
+    'diamond':{name:'الماس',emoji:'💎',price:1600},
+    'king':{name:'سلطنتی',emoji:'👸',price:2600},
+    'gold':{name:'طلایی',emoji:'🏆',price:1000},
+    'robot':{name:'ربات',emoji:'🤖',price:1100},
+    'gem':{name:'جواهر',emoji:'💠',price:1800},
+    'pizza':{name:'پیتزا',emoji:'🍕',price:500},
+    'burger':{name:'برگر',emoji:'🍔',price:450},
+    'cake':{name:'کیک',emoji:'🎂',price:550},
+    'donut':{name:'دونات',emoji:'🍩',price:400},
+    'ninja':{name:'نینجا',emoji:'🥷',price:1900},
+    'mage':{name:'جادوگر',emoji:'🧙',price:2100},
+    'knight':{name:'شوالیه',emoji:'⚔️',price:1700},
+    'angel':{name:'فرشته',emoji:'👼',price:3100},
+    'demon':{name:'اهریمن',emoji:'👿',price:3600},
+    'skeleton':{name:'اسکلت',emoji:'💀',price:2500},
+    'galaxy':{name:'کهکشان',emoji:'🌌',price:4000},
+    'crystal':{name:'بلورین',emoji:'🔮',price:5000},
+    'cosmic':{name:'کیهانی',emoji:'🚀',price:7000},
+    'legendary':{name:'افسانه‌ای',emoji:'🌟',price:13100},
+    'ultimate':{name:'نهایی',emoji:'⚡',price:16000},
+    'void':{name:'ابدیت',emoji:'🌑',price:20000},
+    'bot':{name:'ربات',emoji:'🤖',price:0}
+};
+
+var currentUser=null,userData=null,currentFilter='all',searchQuery='';
+
 function getUsers(){try{return JSON.parse(localStorage.getItem('starloom_users'))||{}}catch(e){return {}}}
-function saveUsers(u){localStorage.setItem('starloom_users',JSON.stringify(u))}
-
-var currentUser=null;
-var userData=null;
-
-function getIconEmoji(id){
-var icons={'default':'😊','smile':'😄','heart':'❤️','star':'⭐','lion':'🦁','tiger':'🐯','eagle':'🦅','wolf':'🐺','dragon':'🐉','phoenix':'🔥','unicorn':'🦄','crown':'👑','diamond':'💎','king':'👸','gold':'🏆','robot':'🤖','gem':'💠','pizza':'🍕','burger':'🍔','cake':'🎂','donut':'🍩','ninja':'🥷','mage':'🧙','knight':'⚔️','angel':'👼','demon':'👿','skeleton':'💀','galaxy':'🌌','crystal':'🔮','cosmic':'🚀','legendary':'🌟','ultimate':'⚡'};
-return icons[id]||'😊';
-}
+function saveUsers(u){localStorage.setItem('starloom_users',JSON.stringify(u));}
+function getIconEmoji(id){return ICONS[id]?ICONS[id].emoji:'😊';}
 
 function updateUserUI(){
 if(!userData)return;
@@ -184,23 +245,14 @@ document.getElementById('levelFill').style.width=Math.min(progress,100)+'%';
 
 function buyDice(count,price){
 if(!userData){alert('لطفاً وارد شوید');return}
-if((userData.coins||0)<price){
-alert('❌ سکه کافی ندارید! نیاز به '+price.toLocaleString('fa-IR')+' سکه دارید.');
-return;
-}
+if((userData.coins||0)<price){alert('❌ سکه کافی ندارید! نیاز به '+price.toLocaleString('fa-IR')+' سکه دارید.');return}
 if(!confirm('🎲 آیا '+count+' تا تاس به قیمت '+price.toLocaleString('fa-IR')+' سکه می‌خواهید؟'))return;
 userData.coins-=price;
 userData.dice=(userData.dice||0)+count;
 var users=getUsers();
 users[currentUser]=userData;
 saveUsers(users);
-localStorage.setItem('starloom_current_user',JSON.stringify({
-username:currentUser,
-coins:userData.coins,
-level:userData.level,
-icon:userData.icon,
-dice:userData.dice
-}));
+localStorage.setItem('starloom_current_user',JSON.stringify({username:currentUser,coins:userData.coins,level:userData.level,icon:userData.icon,dice:userData.dice}));
 updateUserUI();
 alert('🎉 '+count+' تا تاس خریداری شد!');
 }
@@ -212,19 +264,14 @@ if(!user)return;
 currentUser=username;
 userData=user;
 if(!userData.dice||userData.dice===0){userData.dice=40;users[currentUser].dice=40;saveUsers(users);}
-localStorage.setItem('starloom_current_user',JSON.stringify({
-username:username,
-coins:user.coins,
-level:user.level,
-icon:user.icon,
-dice:userData.dice
-}));
+localStorage.setItem('starloom_current_user',JSON.stringify({username:username,coins:user.coins,level:user.level,icon:user.icon,dice:userData.dice}));
 document.getElementById('authSection').classList.add('hidden');
 document.getElementById('gameSection').classList.remove('hidden');
 document.getElementById('guestInfo').classList.add('hidden');
 document.getElementById('userProfile').classList.remove('hidden');
 updateUserUI();
 updateWelcomeMessage();
+loadIcons();
 }
 
 function updateWelcomeMessage(){
@@ -235,12 +282,7 @@ if(hour<12)g='🌅 صبح بخیر';
 else if(hour<18)g='☀️ ظهر بخیر';
 else g='🌙 شب بخیر';
 var newMsg='';
-if(userData.isNew){
-newMsg=' 🎁 600 سکه + 40 تاس هدیه!';
-userData.isNew=false;
-var users=getUsers();
-if(users[currentUser]){users[currentUser].isNew=false;saveUsers(users);}
-}
+if(userData.isNew){newMsg=' 🎁 600 سکه + 40 تاس هدیه!';userData.isNew=false;var users=getUsers();if(users[currentUser]){users[currentUser].isNew=false;saveUsers(users);}}
 document.getElementById('welcomeMsg').textContent=g+' '+userData.username+'!'+newMsg;
 }
 
@@ -257,7 +299,6 @@ document.getElementById('registerError').textContent='';
 });
 });
 
-// Register
 document.getElementById('registerBtn').addEventListener('click',function(){
 var username=document.getElementById('registerUsername').value.trim();
 var password=document.getElementById('registerPassword').value.trim();
@@ -266,20 +307,7 @@ if(!username||username.length<3){errorEl.textContent='نام کاربری حدا
 if(!password||password.length<4){errorEl.textContent='رمز عبور حداقل 4 کاراکتر';return}
 var users=getUsers();
 if(users[username]){errorEl.textContent='این نام کاربری قبلاً ثبت شده است';return}
-users[username]={
-username:username,
-password:password,
-coins:600,
-level:0,
-icon:'default',
-icons:['default','smile','heart','star'],
-dice:40,
-createdAt:new Date().toISOString(),
-snakeWins:0,
-boomWins:0,
-totalGames:0,
-isNew:true
-};
+users[username]={username:username,password:password,coins:600,level:0,icon:'default',icons:['default','smile','heart','star'],dice:40,createdAt:new Date().toISOString(),snakeWins:0,boomWins:0,totalGames:0,isNew:true};
 saveUsers(users);
 errorEl.textContent='';
 document.getElementById('registerUsername').value='';
@@ -287,7 +315,6 @@ document.getElementById('registerPassword').value='';
 loginUser(username);
 });
 
-// Login
 document.getElementById('loginBtn').addEventListener('click',function(){
 var username=document.getElementById('loginUsername').value.trim();
 var password=document.getElementById('loginPassword').value.trim();
@@ -303,9 +330,89 @@ document.getElementById('loginPassword').value='';
 loginUser(username);
 });
 
-// Enter key support
 document.getElementById('loginPassword').addEventListener('keypress',function(e){if(e.key==='Enter')document.getElementById('loginBtn').click();});
 document.getElementById('registerPassword').addEventListener('keypress',function(e){if(e.key==='Enter')document.getElementById('registerBtn').click();});
+
+// ============================================================
+//  فروشگاه آیکون
+// ============================================================
+function loadIcons(){
+if(!userData)return;
+document.getElementById('iconCount').textContent=Object.keys(ICONS).length+' آیکون';
+renderIcons();
+}
+
+function renderIcons(){
+var owned=userData.icons||['default','smile','heart','star'];
+var search=searchQuery.toLowerCase().trim();
+var filtered=Object.keys(ICONS).map(function(key){return [key,ICONS[key]];});
+if(search){filtered=filtered.filter(function(item){var id=item[0],icon=item[1];return icon.name.indexOf(search)!==-1||id.indexOf(search)!==-1||icon.emoji===search;});}
+if(currentFilter==='free'){filtered=filtered.filter(function(item){return item[1].price===0;});}
+else if(currentFilter==='premium'){filtered=filtered.filter(function(item){return item[1].price>0;});}
+else if(currentFilter==='owned'){filtered=filtered.filter(function(item){return owned.indexOf(item[0])!==-1;});}
+var grid=document.getElementById('iconGrid');
+grid.innerHTML='';
+if(filtered.length===0){grid.innerHTML='<div style="grid-column:1/-1;text-align:center;color:#7a8bb0;padding:20px;">❌ آیکونی پیدا نشد</div>';return;}
+for(var i=0;i<filtered.length;i++){
+var id=filtered[i][0],icon=filtered[i][1];
+var isOwned=owned.indexOf(id)!==-1;
+var isActive=userData.icon===id;
+var isUltimate=id==='ultimate'||id==='void';
+var isLegendary=id==='legendary';
+var div=document.createElement('div');
+div.className='icon-item';
+if(isOwned)div.classList.add('owned');
+if(isActive)div.classList.add('active');
+var tags='';
+if(isUltimate)tags+='<span class="icon-tag ultimate">👑 نهایی</span>';
+else if(isLegendary)tags+='<span class="icon-tag best">⭐ بهترین</span>';
+else if(icon.price===0&&!isOwned)tags+='<span class="icon-tag free">رایگان</span>';
+else if(isOwned&&!isActive)tags+='<span class="icon-tag owned-tag">مالک</span>';
+else if(isActive)tags+='<span class="icon-tag" style="background:#f1c40f;color:#1a1f30;">فعال</span>';
+div.innerHTML=tags+'<span class="icon-preview">'+icon.emoji+'</span><span class="icon-name">'+icon.name+'</span>'+(icon.price>0?'<span class="icon-price">💰 '+icon.price.toLocaleString('fa-IR')+'</span>':'<span class="icon-price">رایگان</span>');
+div.dataset.id=id;
+div.addEventListener('click',function(e){var id=this.dataset.id;handleIconClick(id);});
+grid.appendChild(div);
+}}
+
+function handleIconClick(iconId){
+if(!userData||iconId===userData.icon)return;
+var owned=userData.icons||['default','smile','heart','star'];
+if(owned.indexOf(iconId)!==-1){
+userData.icon=iconId;
+var users=getUsers();
+users[currentUser].icon=iconId;
+saveUsers(users);
+localStorage.setItem('starloom_current_user',JSON.stringify({username:currentUser,coins:userData.coins,level:userData.level,icon:userData.icon,dice:userData.dice}));
+updateUserUI();
+renderIcons();
+return;}
+var price=ICONS[iconId].price;
+if((userData.coins||0)<price){alert('❌ سکه کافی ندارید! نیاز به '+price.toLocaleString('fa-IR')+' سکه دارید.');return;}
+if(!confirm('آیا '+ICONS[iconId].emoji+' '+ICONS[iconId].name+' رو به قیمت '+price.toLocaleString('fa-IR')+' سکه می‌خواهید؟'))return;
+userData.coins-=price;
+if(!userData.icons)userData.icons=['default','smile','heart','star'];
+userData.icons.push(iconId);
+userData.icon=iconId;
+var users=getUsers();
+users[currentUser]=userData;
+saveUsers(users);
+localStorage.setItem('starloom_current_user',JSON.stringify({username:currentUser,coins:userData.coins,level:userData.level,icon:userData.icon,dice:userData.dice}));
+updateUserUI();
+renderIcons();
+alert('🎉 '+ICONS[iconId].emoji+' '+ICONS[iconId].name+' خریداری شد!');
+}
+
+// Filters
+document.querySelectorAll('.filter-buttons button').forEach(function(btn){
+btn.addEventListener('click',function(){
+document.querySelectorAll('.filter-buttons button').forEach(function(b){b.classList.remove('active');});
+this.classList.add('active');
+currentFilter=this.dataset.filter;
+renderIcons();
+});
+});
+document.getElementById('iconSearch').addEventListener('input',function(){searchQuery=this.value;renderIcons();});
 
 // Logout
 document.getElementById('logoutBtn').addEventListener('click',function(){
@@ -334,6 +441,7 @@ document.getElementById('gameSection').classList.remove('hidden');
 document.getElementById('guestInfo').classList.add('hidden');
 document.getElementById('userProfile').classList.remove('hidden');
 updateUserUI();
+loadIcons();
 updateWelcomeMessage();
 }
 }catch(e){localStorage.removeItem('starloom_current_user');}
@@ -341,8 +449,8 @@ updateWelcomeMessage();
 })();
 
 console.log('🌟 StarLoom_Game - آماده!');
-console.log('🎲 40 تاس هدیه به کاربران جدید');
-console.log('👥 مار و پله 1 تا 6 نفر آنلاین');
+console.log('🎨 تعداد آیکون‌ها:', Object.keys(ICONS).length);
+console.log('🎮 مار و پله: تک‌نفره + چندنفره (1-6)');
 </script>
 </body>
 </html>
