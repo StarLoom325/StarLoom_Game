@@ -1,237 +1,679 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>StarLoom_Game - خانه</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-gradient(135deg,#0b0e1a 0%,#1a1f30 100%);min-height:100vh;color:#f0f4ff;padding:15px}
-.main-container{max-width:1200px;margin:0 auto}
-.header{display:flex;justify-content:space-between;align-items:center;padding:15px 25px;background:rgba(255,255,255,0.05);border-radius:25px;backdrop-filter:blur(10px);border:1px solid rgba(255,215,0,0.15);flex-wrap:wrap;gap:10px}
-.logo{font-size:1.8rem;font-weight:800;background:linear-gradient(135deg,#f9d976,#f39c12);-webkit-background-clip:text;background-clip:text;color:transparent}
-.logo span{color:#b9c7e6;background:none;font-weight:300}
-.auth-section{max-width:420px;margin:30px auto;background:rgba(255,255,255,0.05);border-radius:20px;padding:25px;border:1px solid rgba(255,215,0,0.15)}
-.auth-section h2{text-align:center;margin-bottom:20px;color:#f5e9c4}
-.auth-tabs{display:flex;gap:10px;margin-bottom:20px}
-.auth-tabs button{flex:1;padding:10px;border:none;border-radius:10px;background:#2d3852;color:#a0b5d9;font-weight:600;cursor:pointer;transition:all .2s}
-.auth-tabs button.active{background:#f1c40f;color:#1a1f30}
-.auth-form{display:flex;flex-direction:column;gap:12px}
-.auth-form input{padding:12px 16px;border-radius:10px;border:1px solid #4a5575;background:rgba(0,0,0,0.3);color:#f0f4ff;font-size:1rem;direction:ltr}
-.auth-form input::placeholder{color:#6a7b9e;direction:rtl}
-.auth-form button{padding:12px;border:none;border-radius:10px;background:linear-gradient(145deg,#f1c40f,#d4a800);color:#1a1f30;font-weight:700;font-size:1rem;cursor:pointer;transition:all .2s}
-.auth-form button:hover{transform:scale(1.02)}
-.auth-error{color:#e74c3c;text-align:center;font-size:.9rem;min-height:20px}
-.hidden{display:none!important}
-.games-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:25px;margin-top:25px}
-.game-card{background:rgba(255,255,255,0.04);border-radius:25px;padding:25px;backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.08);transition:all .3s ease;text-decoration:none;color:inherit;display:block;cursor:pointer}
-.game-card:hover{transform:translateY(-6px);border-color:rgba(255,215,0,0.3);box-shadow:0 20px 40px rgba(0,0,0,0.5)}
-.game-icon{font-size:3rem;margin-bottom:12px;display:block}
-.game-title{font-size:1.6rem;font-weight:700;margin-bottom:8px;color:#f5e9c4}
-.game-desc{color:#a0b5d9;line-height:1.6;font-size:.9rem;margin-bottom:12px}
-.game-stats{display:flex;gap:15px;font-size:.8rem;color:#7a8bb0;padding-top:12px;border-top:1px solid rgba(255,255,255,0.05);flex-wrap:wrap}
-.game-stats span{display:flex;align-items:center;gap:4px}
-.play-btn{background:linear-gradient(145deg,#f1c40f,#d4a800);border:none;padding:12px 25px;border-radius:50px;font-size:1rem;font-weight:700;color:#1a1f30;cursor:pointer;transition:all .2s ease;margin-top:12px;width:100%;box-shadow:0 4px 0 #8b6d00}
-.play-btn:active{transform:translateY(4px);box-shadow:0 0 0 #8b6d00}
-.user-profile{display:flex;align-items:center;gap:15px;background:rgba(0,0,0,0.3);padding:8px 18px;border-radius:50px;border:1px solid #f1c40f}
-.user-profile .avatar{font-size:2rem}
-.user-profile .info{display:flex;flex-direction:column}
-.user-profile .info .name{font-weight:700;color:#f5e9c4}
-.user-profile .info .stats{font-size:.8rem;color:#a0b5d9}
-.logout-btn{background:#e74c3c;border:none;padding:6px 16px;border-radius:50px;color:#fff;font-weight:600;cursor:pointer;font-size:.85rem}
-.logout-btn:hover{background:#c0392b}
-.footer{text-align:center;margin-top:35px;padding:18px;color:#4a5575;font-size:.8rem;border-top:1px solid rgba(255,255,255,0.05)}
-@media(max-width:700px){.games-grid{grid-template-columns:1fr}.header{flex-direction:column;text-align:center}.logo{font-size:1.4rem}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StarLoom_Game - خانه</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0b0e1a 0%, #1a1f30 100%);
+            min-height: 100vh;
+            color: #f0f4ff;
+            padding: 15px;
+        }
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 25px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 215, 0, 0.15);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #f9d976, #f39c12);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .logo span {
+            color: #b9c7e6;
+            background: none;
+            font-weight: 300;
+        }
+        .auth-section {
+            max-width: 420px;
+            margin: 30px auto;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid rgba(255, 215, 0, 0.15);
+        }
+        .auth-section h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #f5e9c4;
+        }
+        .auth-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .auth-tabs button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            background: #2d3852;
+            color: #a0b5d9;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .auth-tabs button.active {
+            background: #f1c40f;
+            color: #1a1f30;
+        }
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .auth-form input {
+            padding: 12px 16px;
+            border-radius: 10px;
+            border: 1px solid #4a5575;
+            background: rgba(0, 0, 0, 0.3);
+            color: #f0f4ff;
+            font-size: 1rem;
+        }
+        .auth-form input::placeholder {
+            color: #6a7b9e;
+        }
+        .auth-form button {
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(145deg, #f1c40f, #d4a800);
+            color: #1a1f30;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .auth-form button:hover {
+            transform: scale(1.02);
+        }
+        .auth-error {
+            color: #e74c3c;
+            text-align: center;
+            font-size: 0.9rem;
+            min-height: 20px;
+        }
+        .hidden {
+            display: none !important;
+        }
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 25px;
+            margin-top: 25px;
+        }
+        .game-card {
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 25px;
+            padding: 25px;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            cursor: pointer;
+        }
+        .game-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(255, 215, 0, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+        .game-icon {
+            font-size: 3rem;
+            margin-bottom: 12px;
+            display: block;
+        }
+        .game-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #f5e9c4;
+        }
+        .game-desc {
+            color: #a0b5d9;
+            line-height: 1.6;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+        }
+        .game-stats {
+            display: flex;
+            gap: 15px;
+            font-size: 0.8rem;
+            color: #7a8bb0;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            flex-wrap: wrap;
+        }
+        .game-stats span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .play-btn {
+            background: linear-gradient(145deg, #f1c40f, #d4a800);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1a1f30;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 12px;
+            width: 100%;
+            box-shadow: 0 4px 0 #8b6d00;
+        }
+        .play-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 0px 0 #8b6d00;
+        }
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 8px 18px;
+            border-radius: 50px;
+            border: 1px solid #f1c40f;
+        }
+        .user-profile .avatar {
+            font-size: 2rem;
+        }
+        .user-profile .info {
+            display: flex;
+            flex-direction: column;
+        }
+        .user-profile .info .name {
+            font-weight: 700;
+            color: #f5e9c4;
+        }
+        .user-profile .info .stats {
+            font-size: 0.8rem;
+            color: #a0b5d9;
+        }
+        .user-profile .info .dice-count {
+            font-size: 0.7rem;
+            color: #f1c40f;
+        }
+        .logout-btn {
+            background: #e74c3c;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 50px;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 35px;
+            padding: 18px;
+            color: #4a5575;
+            font-size: 0.8rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .welcome-msg {
+            text-align: center;
+            padding: 15px;
+            color: #7a8bb0;
+            font-size: 0.9rem;
+        }
+        .user-info {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px 25px;
+            border-radius: 50px;
+            border: 1px solid #4a5575;
+            font-size: 0.95rem;
+        }
+        .dice-shop {
+            background: rgba(255, 215, 0, 0.05);
+            border: 1px solid rgba(255, 215, 0, 0.15);
+            border-radius: 20px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .dice-shop h4 {
+            color: #f5e9c4;
+            margin-bottom: 10px;
+        }
+        .dice-shop .dice-options {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .dice-shop .dice-options button {
+            background: #2d3852;
+            border: 1px solid #4a5575;
+            padding: 10px 20px;
+            border-radius: 15px;
+            color: #f0f4ff;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        .dice-shop .dice-options button:hover {
+            background: #3f4d70;
+            border-color: #f1c40f;
+        }
+        .dice-shop .dice-options button .price {
+            color: #f1c40f;
+            font-size: 0.8rem;
+        }
+        .dice-shop .dice-options button .count {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        .level-display {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 5px 15px;
+            border-radius: 50px;
+        }
+        .level-display .level-bar {
+            width: 100px;
+            height: 6px;
+            background: #1a2235;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .level-display .level-bar .fill {
+            height: 100%;
+            background: linear-gradient(90deg, #f1c40f, #e67e22);
+            border-radius: 10px;
+            transition: width 0.5s;
+        }
+        @media (max-width: 700px) {
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+            .logo {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
 </head>
 <body>
-<div class="main-container">
-<div class="header">
-<div class="logo">✦ StarLoom_Game <span>| خانه</span></div>
-<div id="userSection">
-<div class="user-info" id="guestInfo">👤 مهمان</div>
-<div class="user-profile hidden" id="userProfile">
-<span class="avatar" id="userAvatar">😊</span>
-<div class="info">
-<span class="name" id="userName">کاربر</span>
-<span class="stats">💰 <span id="userCoins">0</span> | 🏆 لول <span id="userLevel">0</span></span>
-</div>
-<button class="logout-btn" id="logoutBtn">🚪 خروج</button>
-</div>
-</div>
-</div>
+    <div class="main-container">
+        <div class="header">
+            <div class="logo">✦ StarLoom_Game <span>| خانه</span></div>
+            <div id="userSection">
+                <div class="user-info" id="guestInfo">👤 مهمان</div>
+                <div class="user-profile hidden" id="userProfile">
+                    <span class="avatar" id="userAvatar">😊</span>
+                    <div class="info">
+                        <span class="name" id="userName">کاربر</span>
+                        <span class="stats">💰 <span id="userCoins">0</span> | 🏆 لول <span id="userLevel">0</span>/62</span>
+                        <span class="dice-count">🎲 تاس: <span id="userDice">40</span></span>
+                        <div class="level-display">
+                            <span style="font-size:.7rem;">پیشرفت لول</span>
+                            <div class="level-bar"><div class="fill" id="levelFill" style="width:0%"></div></div>
+                        </div>
+                    </div>
+                    <button class="logout-btn" id="logoutBtn">🚪 خروج</button>
+                </div>
+            </div>
+        </div>
 
-<div class="auth-section" id="authSection">
-<h2>🎮 خوش آمدید</h2>
-<div class="auth-tabs">
-<button class="active" data-tab="login">ورود</button>
-<button data-tab="register">ثبت نام</button>
-</div>
-<div class="auth-form" id="loginForm">
-<input type="text" id="loginUsername" placeholder="نام کاربری">
-<input type="password" id="loginPassword" placeholder="رمز عبور">
-<button id="loginBtn">ورود</button>
-<div class="auth-error" id="loginError"></div>
-</div>
-<div class="auth-form hidden" id="registerForm">
-<input type="text" id="registerUsername" placeholder="نام کاربری (حداقل 3 کاراکتر)">
-<input type="password" id="registerPassword" placeholder="رمز عبور (حداقل 4 کاراکتر)">
-<button id="registerBtn">ثبت نام</button>
-<div class="auth-error" id="registerError"></div>
-</div>
-</div>
+        <div class="auth-section" id="authSection">
+            <h2>🎮 خوش آمدید</h2>
+            <div class="auth-tabs">
+                <button class="active" data-tab="login">ورود</button>
+                <button data-tab="register">ثبت نام</button>
+            </div>
+            <div class="auth-form" id="loginForm">
+                <input type="text" id="loginUsername" placeholder="نام کاربری">
+                <input type="password" id="loginPassword" placeholder="رمز عبور">
+                <button id="loginBtn">ورود</button>
+                <div class="auth-error" id="loginError"></div>
+            </div>
+            <div class="auth-form hidden" id="registerForm">
+                <input type="text" id="registerUsername" placeholder="نام کاربری (حداقل 3 کاراکتر)">
+                <input type="password" id="registerPassword" placeholder="رمز عبور (حداقل 4 کاراکتر)">
+                <button id="registerBtn">ثبت نام</button>
+                <div class="auth-error" id="registerError"></div>
+            </div>
+        </div>
 
-<div id="gameSection" class="hidden">
-<div style="text-align:center;padding:15px;color:#7a8bb0;font-size:.9rem;" id="welcomeMsg">👋 خوش برگشتی!</div>
+        <div id="gameSection" class="hidden">
+            <div class="welcome-msg" id="welcomeMsg">👋 خوش برگشتی!</div>
 
-<div class="games-grid">
-<a href="snake.html" class="game-card">
-<span class="game-icon">🐍</span>
-<div class="game-title">مار و پله</div>
-<div class="game-desc">مسیر 190 خانه‌ای! با دوستانت رقابت کن. برنده 600 سکه و لول +1</div>
-<div class="game-stats"><span>👥 2-6 نفره</span><span>📡 وای‌فای/بلوتوث</span><span>🏆 600 سکه</span></div>
-<button class="play-btn">▶ بازی کن</button>
-</a>
-<a href="boom.html" class="game-card">
-<span class="game-icon">💣</span>
-<div class="game-title">بوم بوم</div>
-<div class="game-desc">1000 مکعب! سکه، بمب، مار، چکشت و صندوق پیدا کن. برنده 2000 سکه</div>
-<div class="game-stats"><span>👤 1 نفره</span><span>🎮 آفلاین</span><span>🏆 2000 سکه</span></div>
-<button class="play-btn">▶ بازی کن</button>
-</a>
-</div>
-</div>
+            <!-- فروشگاه تاس -->
+            <div class="dice-shop">
+                <h4>🎲 خرید تاس</h4>
+                <div class="dice-options">
+                    <button onclick="buyDice(20,300)">
+                        <div class="count">🎲 20 تا</div>
+                        <div class="price">💰 300 سکه</div>
+                    </button>
+                    <button onclick="buyDice(43,600)">
+                        <div class="count">🎲 43 تا</div>
+                        <div class="price">💰 600 سکه</div>
+                    </button>
+                    <button onclick="buyDice(80,1000)">
+                        <div class="count">🎲 80 تا</div>
+                        <div class="price">💰 1000 سکه</div>
+                    </button>
+                    <button onclick="buyDice(150,1800)">
+                        <div class="count">🎲 150 تا</div>
+                        <div class="price">💰 1800 سکه</div>
+                    </button>
+                </div>
+            </div>
 
-<div class="footer"><p>⭐ StarLoom_Game - تمامی حقوق محفوظ است</p></div>
-</div>
+            <div class="games-grid">
+                <a href="snake.html" class="game-card">
+                    <span class="game-icon">🐍</span>
+                    <div class="game-title">مار و پله آنلاین</div>
+                    <div class="game-desc">👥 ۱ تا ۶ نفر | 🎲 هر تاس 1 بار مصرف | برنده 800 سکه</div>
+                    <div class="game-stats">
+                        <span>👥 1-6 نفره</span>
+                        <span>🌐 آنلاین</span>
+                        <span>🏆 800 سکه</span>
+                    </div>
+                    <button class="play-btn">▶ بازی کن</button>
+                </a>
+                <a href="boom.html" class="game-card">
+                    <span class="game-icon">💣</span>
+                    <div class="game-title">بوم بوم</div>
+                    <div class="game-desc">1000 مکعب! سکه، بمب، مار، چکشت و صندوق پیدا کن. برنده 2000 سکه</div>
+                    <div class="game-stats">
+                        <span>👤 1 نفره</span>
+                        <span>🎮 آفلاین</span>
+                        <span>🏆 2000 سکه</span>
+                    </div>
+                    <button class="play-btn">▶ بازی کن</button>
+                </a>
+            </div>
+        </div>
 
-<script>
-// ============================================================
-//  صفحه اصلی - ساده و بدون خطا
-// ============================================================
-function getUsers(){try{return JSON.parse(localStorage.getItem('starloom_users'))||{}}catch(e){return {}}}
-function saveUsers(u){localStorage.setItem('starloom_users',JSON.stringify(u))}
+        <div class="footer">
+            <p>⭐ StarLoom_Game - تمامی حقوق محفوظ است</p>
+        </div>
+    </div>
 
-var currentUser=null,userData=null;
+    <script>
+        // ============================================================
+        //  StarLoom_Game - سیستم تاس و کاربران
+        // ============================================================
 
-function updateUserUI(){
-if(!userData)return;
-document.getElementById('userName').textContent=userData.username;
-document.getElementById('userAvatar').textContent=getIconEmoji(userData.icon||'default');
-document.getElementById('userCoins').textContent=userData.coins||0;
-document.getElementById('userLevel').textContent=userData.level||0;
-}
+        var ICONS = {
+            'default': '😊',
+            'smile': '😄',
+            'heart': '❤️',
+            'star': '⭐',
+            'lion': '🦁',
+            'tiger': '🐯',
+            'eagle': '🦅',
+            'wolf': '🐺',
+            'dragon': '🐉',
+            'phoenix': '🔥',
+            'unicorn': '🦄',
+            'crown': '👑',
+            'diamond': '💎',
+            'king': '👸',
+            'gold': '🏆',
+            'robot': '🤖',
+            'gem': '💠',
+            'pizza': '🍕',
+            'burger': '🍔',
+            'cake': '🎂',
+            'donut': '🍩',
+            'ninja': '🥷',
+            'mage': '🧙',
+            'knight': '⚔️',
+            'angel': '👼',
+            'demon': '👿',
+            'skeleton': '💀',
+            'galaxy': '🌌',
+            'crystal': '🔮',
+            'cosmic': '🚀',
+            'legendary': '🌟',
+            'ultimate': '⚡'
+        };
 
-function getIconEmoji(id){
-var icons={'default':'😊','smile':'😄','heart':'❤️','star':'⭐','lion':'🦁','tiger':'🐯','eagle':'🦅','wolf':'🐺','dragon':'🐉','phoenix':'🔥','crown':'👑','diamond':'💎','king':'👸','gold':'🏆','robot':'🤖','pizza':'🍕','burger':'🍔','cake':'🎂','ninja':'🥷','mage':'🧙','knight':'⚔️','angel':'👼','demon':'👿','legendary':'🌟'};
-return icons[id]||'😊';
-}
+        var currentUser = null;
+        var userData = null;
 
-function loginUser(username){
-var users=getUsers();
-var user=users[username];
-if(!user)return;
-currentUser=username;userData=user;
-localStorage.setItem('starloom_current_user',JSON.stringify({username:username,coins:user.coins,level:user.level,icon:user.icon}));
-document.getElementById('authSection').classList.add('hidden');
-document.getElementById('gameSection').classList.remove('hidden');
-document.getElementById('guestInfo').classList.add('hidden');
-document.getElementById('userProfile').classList.remove('hidden');
-updateUserUI();
-var hour=new Date().getHours();
-var g='👋 خوش آمدی';
-if(hour<12)g='🌅 صبح بخیر';
-else if(hour<18)g='☀️ ظهر بخیر';
-else g='🌙 شب بخیر';
-document.getElementById('welcomeMsg').textContent=g+' '+userData.username+'!';
-}
+        function getUsers() {
+            try { return JSON.parse(localStorage.getItem('starloom_users')) || {}; } catch (e) { return {}; }
+        }
 
-// Auth Events
-document.querySelectorAll('.auth-tabs button').forEach(function(btn){
-btn.addEventListener('click',function(){
-document.querySelectorAll('.auth-tabs button').forEach(function(b){b.classList.remove('active');});
-this.classList.add('active');
-var tab=this.dataset.tab;
-document.getElementById('loginForm').classList.toggle('hidden',tab!=='login');
-document.getElementById('registerForm').classList.toggle('hidden',tab!=='register');
-document.getElementById('loginError').textContent='';
-document.getElementById('registerError').textContent='';
-});
-});
+        function saveUsers(u) { localStorage.setItem('starloom_users', JSON.stringify(u)); }
 
-document.getElementById('registerBtn').addEventListener('click',function(){
-var username=document.getElementById('registerUsername').value.trim();
-var password=document.getElementById('registerPassword').value.trim();
-var errorEl=document.getElementById('registerError');
-if(!username||username.length<3){errorEl.textContent='نام کاربری حداقل 3 کاراکتر';return}
-if(!password||password.length<4){errorEl.textContent='رمز عبور حداقل 4 کاراکتر';return}
-var users=getUsers();
-if(users[username]){errorEl.textContent='این نام کاربری قبلاً ثبت شده است';return}
-users[username]={username:username,password:password,coins:600,level:0,icon:'default',icons:['default','smile','heart','star'],createdAt:new Date().toISOString(),snakeWins:0,boomWins:0,totalGames:0,isNew:true};
-saveUsers(users);
-errorEl.textContent='';
-document.getElementById('registerUsername').value='';
-document.getElementById('registerPassword').value='';
-loginUser(username);
-});
+        function getIconEmoji(id) { return ICONS[id] || '😊'; }
 
-document.getElementById('loginBtn').addEventListener('click',function(){
-var username=document.getElementById('loginUsername').value.trim();
-var password=document.getElementById('loginPassword').value.trim();
-var errorEl=document.getElementById('loginError');
-if(!username||!password){errorEl.textContent='همه فیلدها را پر کنید';return}
-var users=getUsers();
-var user=users[username];
-if(!user){errorEl.textContent='کاربری با این نام پیدا نشد';return}
-if(user.password!==password){errorEl.textContent='رمز عبور اشتباه است';return}
-errorEl.textContent='';
-document.getElementById('loginUsername').value='';
-document.getElementById('loginPassword').value='';
-loginUser(username);
-});
+        function updateUserUI() {
+            if (!userData) return;
+            document.getElementById('userName').textContent = userData.username;
+            document.getElementById('userAvatar').textContent = getIconEmoji(userData.icon || 'default');
+            document.getElementById('userCoins').textContent = userData.coins || 0;
+            document.getElementById('userLevel').textContent = userData.level || 0;
+            document.getElementById('userDice').textContent = userData.dice || 40;
+            var progress = ((userData.level || 0) / 62) * 100;
+            document.getElementById('levelFill').style.width = Math.min(progress, 100) + '%';
+        }
 
-document.getElementById('loginPassword').addEventListener('keypress',function(e){if(e.key==='Enter')document.getElementById('loginBtn').click();});
-document.getElementById('registerPassword').addEventListener('keypress',function(e){if(e.key==='Enter')document.getElementById('registerBtn').click();});
+        // ============================================================
+        //  خرید تاس
+        // ============================================================
+        function buyDice(count, price) {
+            if (!userData) { alert('لطفاً وارد شوید'); return; }
+            if ((userData.coins || 0) < price) {
+                alert('❌ سکه کافی ندارید! نیاز به ' + price.toLocaleString('fa-IR') + ' سکه دارید.');
+                return;
+            }
+            if (!confirm('🎲 آیا ' + count + ' تا تاس به قیمت ' + price.toLocaleString('fa-IR') +
+                    ' سکه می‌خواهید؟')) return;
 
-// Logout
-document.getElementById('logoutBtn').addEventListener('click',function(){
-localStorage.removeItem('starloom_current_user');
-currentUser=null;userData=null;
-document.getElementById('authSection').classList.remove('hidden');
-document.getElementById('gameSection').classList.add('hidden');
-document.getElementById('guestInfo').classList.remove('hidden');
-document.getElementById('userProfile').classList.add('hidden');
-location.reload();
-});
+            userData.coins -= price;
+            userData.dice = (userData.dice || 0) + count;
 
-// Check saved user
-(function(){
-var saved=localStorage.getItem('starloom_current_user');
-if(saved){
-try{
-var data=JSON.parse(saved);
-var users=getUsers();
-if(users[data.username]){
-userData=users[data.username];
-currentUser=data.username;
-document.getElementById('authSection').classList.add('hidden');
-document.getElementById('gameSection').classList.remove('hidden');
-document.getElementById('guestInfo').classList.add('hidden');
-document.getElementById('userProfile').classList.remove('hidden');
-updateUserUI();
-var hour=new Date().getHours();
-var g='👋 خوش آمدی';
-if(hour<12)g='🌅 صبح بخیر';
-else if(hour<18)g='☀️ ظهر بخیر';
-else g='🌙 شب بخیر';
-document.getElementById('welcomeMsg').textContent=g+' '+userData.username+'!';
-}
-}catch(e){localStorage.removeItem('starloom_current_user');}
-}
-})();
+            var users = getUsers();
+            users[currentUser] = userData;
+            saveUsers(users);
+            localStorage.setItem('starloom_current_user', JSON.stringify({
+                username: currentUser,
+                coins: userData.coins,
+                level: userData.level,
+                icon: userData.icon,
+                dice: userData.dice
+            }));
 
-console.log('🌟 StarLoom_Game - آماده!');
-console.log('🐍 مار و پله 6 نفره با وای‌فای/بلوتوث');
-</script>
+            updateUserUI();
+            alert('🎉 ' + count + ' تا تاس خریداری شد!');
+        }
+
+        // ============================================================
+        //  ورود کاربر
+        // ============================================================
+        function loginUser(username) {
+            var users = getUsers();
+            var user = users[username];
+            if (!user) return;
+            currentUser = username;
+            userData = user;
+
+            if (!userData.dice || userData.dice === 0) {
+                userData.dice = 40;
+                users[currentUser].dice = 40;
+                saveUsers(users);
+            }
+
+            localStorage.setItem('starloom_current_user', JSON.stringify({
+                username: username,
+                coins: user.coins,
+                level: user.level,
+                icon: user.icon,
+                dice: userData.dice
+            }));
+
+            document.getElementById('authSection').classList.add('hidden');
+            document.getElementById('gameSection').classList.remove('hidden');
+            document.getElementById('guestInfo').classList.add('hidden');
+            document.getElementById('userProfile').classList.remove('hidden');
+            updateUserUI();
+            updateWelcomeMessage();
+        }
+
+        function updateWelcomeMessage() {
+            if (!userData) return;
+            var hour = new Date().getHours();
+            var g = '👋 خوش آمدی';
+            if (hour < 12) g = '🌅 صبح بخیر';
+            else if (hour < 18) g = '☀️ ظهر بخیر';
+            else g = '🌙 شب بخیر';
+            var newMsg = '';
+            if (userData.isNew) {
+                newMsg = ' 🎁 600 سکه + 40 تاس هدیه!';
+                userData.isNew = false;
+                var users = getUsers();
+                if (users[currentUser]) { users[currentUser].isNew = false;
+                    saveUsers(users); }
+            }
+            document.getElementById('welcomeMsg').textContent = g + ' ' + userData.username + '!' + newMsg;
+        }
+
+        // Auth Events
+        document.querySelectorAll('.auth-tabs button').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.auth-tabs button').forEach(function(b) { b.classList.remove('active'); });
+                this.classList.add('active');
+                var tab = this.dataset.tab;
+                document.getElementById('loginForm').classList.toggle('hidden', tab !== 'login');
+                document.getElementById('registerForm').classList.toggle('hidden', tab !== 'register');
+                document.getElementById('loginError').textContent = '';
+                document.getElementById('registerError').textContent = '';
+            });
+        });
+
+        document.getElementById('registerBtn').addEventListener('click', function() {
+            var username = document.getElementById('registerUsername').value.trim();
+            var password = document.getElementById('registerPassword').value.trim();
+            var errorEl = document.getElementById('registerError');
+            if (!username || username.length < 3) { errorEl.textContent = 'نام کاربری حداقل 3 کاراکتر'; return; }
+            if (!password || password.length < 4) { errorEl.textContent = 'رمز عبور حداقل 4 کاراکتر'; return; }
+            var users = getUsers();
+            if (users[username]) { errorEl.textContent = 'این نام کاربری قبلاً ثبت شده است'; return; }
+            users[username] = {
+                username: username,
+                password: password,
+                coins: 600,
+                level: 0,
+                icon: 'default',
+                icons: ['default', 'smile', 'heart', 'star'],
+                dice: 40,
+                createdAt: new Date().toISOString(),
+                snakeWins: 0,
+                boomWins: 0,
+                totalGames: 0,
+                isNew: true
+            };
+            saveUsers(users);
+            errorEl.textContent = '';
+            document.getElementById('registerUsername').value = '';
+            document.getElementById('registerPassword').value = '';
+            loginUser(username);
+        });
+
+        document.getElementById('loginBtn').addEventListener('click', function() {
+            var username = document.getElementById('loginUsername').value.trim();
+            var password = document.getElementById('loginPassword').value.trim();
+            var errorEl = document.getElementById('loginError');
+            if (!username || !password) { errorEl.textContent = 'همه فیلدها را پر کنید'; return; }
+            var users = getUsers();
+            var user = users[username];
+            if (!user) { errorEl.textContent = 'کاربری با این نام پیدا نشد'; return; }
+            if (user.password !== password) { errorEl.textContent = 'رمز عبور اشتباه است'; return; }
+            errorEl.textContent = '';
+            document.getElementById('loginUsername').value = '';
+            document.getElementById('loginPassword').value = '';
+            loginUser(username);
+        });
+
+        document.getElementById('loginPassword').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') document.getElementById('loginBtn').click();
+        });
+        document.getElementById('registerPassword').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') document.getElementById('registerBtn').click();
+        });
+
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            localStorage.removeItem('starloom_current_user');
+            currentUser = null;
+            userData = null;
+            document.getElementById('authSection').classList.remove('hidden');
+            document.getElementById('gameSection').classList.add('hidden');
+            document.getElementById('guestInfo').classList.remove('hidden');
+            document.getElementById('userProfile').classList.add('hidden');
+            location.reload();
+        });
+
+        // Check saved user
+        (function() {
+            var saved = localStorage.getItem('starloom_current_user');
+            if (saved) {
+                try {
+                    var data = JSON.parse(saved);
+                    var users = getUsers();
+                    if (users[data.username]) {
+                        userData = users[data.username];
+                        currentUser = data.username;
+                        if (!userData.dice || userData.dice === 0) {
+                            userData.dice = 40;
+                            users[currentUser].dice = 40;
+                            saveUsers(users);
+                        }
+                        document.getElementById('authSection').classList.add('hidden');
+                        document.getElementById('gameSection').classList.remove('hidden');
+                        document.getElementById('guestInfo').classList.add('hidden');
+                        document.getElementById('userProfile').classList.remove('hidden');
+                        updateUserUI();
+                        updateWelcomeMessage();
+                    }
+                } catch (e) {
+                    localStorage.removeItem('starloom_current_user');
+                }
+            }
+        })();
+
+        console.log('🌟 StarLoom_Game - آماده!');
+        console.log('👥 مار و پله 1 تا 6 نفر آنلاین');
+        console.log('🎲 هر تاس 1 بار مصرف');
+        console.log('💰 برنده 800+ ، بازنده 300-');
+    </script>
 </body>
 </html>
