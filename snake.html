@@ -17,10 +17,10 @@ body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#0b0e1a
 .user-info-bar .user-icon{font-size:1.5rem}
 .game-container{background:rgba(255,255,255,0.06);border-radius:40px;padding:20px;border:1px solid rgba(255,215,0,0.15)}
 .board-wrapper{background:#1e2538;border-radius:30px;padding:12px;margin-bottom:15px;position:relative}
-#board{display:grid;grid-template-columns:repeat(10,1fr);gap:4px;aspect-ratio:1/1;background:#131a2a;border-radius:25px;padding:6px}
-.cell{background:#222b41;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:.5rem;font-weight:600;color:#a0b5d9;position:relative;aspect-ratio:1/1;box-shadow:0 0 0 1px #2d3852}
-.cell .number{font-size:.55rem;opacity:.7;pointer-events:none}
-.cell .player-marker{position:absolute;width:30%;height:30%;border-radius:50%;border:3px solid #f1c40f;box-shadow:0 0 20px #f1c40f;pointer-events:none;bottom:6%;right:6%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;background:rgba(0,0,0,0.5);transition:all .4s cubic-bezier(.34,1.56,.64,1);z-index:5}
+#board{display:grid;grid-template-columns:repeat(10,1fr);gap:3px;aspect-ratio:1/1;background:#131a2a;border-radius:25px;padding:5px}
+.cell{background:#222b41;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:.4rem;font-weight:600;color:#a0b5d9;position:relative;aspect-ratio:1/1;box-shadow:0 0 0 1px #2d3852}
+.cell .number{font-size:.45rem;opacity:.7;pointer-events:none}
+.cell .player-marker{position:absolute;width:28%;height:28%;border-radius:50%;border:3px solid #f1c40f;box-shadow:0 0 20px #f1c40f;pointer-events:none;bottom:4%;right:4%;display:flex;align-items:center;justify-content:center;font-size:1rem;background:rgba(0,0,0,0.5);transition:all .4s cubic-bezier(.34,1.56,.64,1);z-index:5}
 .cell .player-marker.moving{animation:bounceMove .4s ease}
 @keyframes bounceMove{0%{transform:scale(.5) rotate(-20deg)}50%{transform:scale(1.4) rotate(10deg)}100%{transform:scale(1) rotate(0)}}
 .cell.has-snake{background:#3a1e2a;box-shadow:0 0 0 2px #e74c3c}
@@ -36,6 +36,9 @@ body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#0b0e1a
 #rollBtn:disabled{opacity:.4;transform:translateY(4px);pointer-events:none;box-shadow:0 2px 0 #6b5500}
 .status{background:#131b2b;padding:8px 20px;border-radius:60px;color:#cfdef5;font-size:.9rem;border-left:2px solid #f1c40f;border-right:2px solid #f1c40f;min-width:120px;text-align:center}
 .status.winner{border-color:#f1c40f;background:#1a2a1a;color:#f1c40f}
+.players-status{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;padding:10px;background:rgba(0,0,0,0.2);border-radius:15px}
+.player-status{display:flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;background:rgba(255,255,255,0.05);font-size:.75rem}
+.player-status .me{border:2px solid #f1c40f}
 .game-ended-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.85);border-radius:25px;display:none;flex-direction:column;align-items:center;justify-content:center;z-index:10;padding:20px}
 .game-ended-overlay.show{display:flex}
 .game-ended-overlay .big-icon{font-size:4rem;margin-bottom:10px}
@@ -46,7 +49,7 @@ body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#0b0e1a
 .game-ended-overlay .back-btn:hover{transform:scale(1.05)}
 .disable-msg{text-align:center;margin-top:15px;padding:10px;background:rgba(255,0,0,0.05);border-radius:15px;border:1px solid rgba(255,0,0,0.1)}
 .disable-msg p{color:#7a8bb0;font-size:.75rem}
-@media(max-width:500px){.cell .number{font-size:.4rem}#dice{font-size:1.5rem;min-width:45px}.user-info-bar{font-size:.7rem;padding:4px 10px}.game-ended-overlay .big-icon{font-size:3rem}.game-ended-overlay .title{font-size:1.3rem}.cell .player-marker{font-size:.8rem;width:28%;height:28%}}
+@media(max-width:500px){.cell .number{font-size:.35rem}#dice{font-size:1.5rem;min-width:45px}.user-info-bar{font-size:.7rem;padding:4px 10px}.game-ended-overlay .big-icon{font-size:3rem}.game-ended-overlay .title{font-size:1.3rem}.cell .player-marker{font-size:.7rem;width:25%;height:25%}}
 </style>
 </head>
 <body>
@@ -58,20 +61,24 @@ body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#0b0e1a
 <span class="user-icon" id="userIcon">😊</span>
 <span>👤 <span id="displayName">کاربر</span></span>
 <span>💰 <span id="displayCoins">۰</span></span>
-<span>🏆 لول <span id="displayLevel">۰</span></span>
+<span>🏆 لول <span id="displayLevel">۰</span>/۶۲</span>
 </div>
 <a href="index.html" class="back-home">← بازگشت</a>
 </div>
 </div>
 
 <div class="game-container">
-<div style="text-align:center;margin-bottom:10px;"><h3 style="color:#f5e9c4;">🐍 مار و پله</h3><p style="color:#7a8bb0;font-size:.85rem;">برنده ۶۰۰ سکه و لول +۱</p></div>
+<div style="text-align:center;margin-bottom:10px;">
+<h3 style="color:#f5e9c4;">🐍 مار و پله</h3>
+<p style="color:#7a8bb0;font-size:.85rem;">مسیر ۱۹۰ خانه - برنده ۶۰۰ سکه و لول +۱</p>
+<div id="playersStatus" class="players-status"></div>
+</div>
 <div class="board-wrapper">
 <div id="board"></div>
 <div class="game-ended-overlay" id="gameEndedOverlay">
 <div class="big-icon">🏆</div>
 <div class="title">تبریک! برنده شدی!</div>
-<div class="subtitle">به خانه ۱۶۲ رسیدی</div>
+<div class="subtitle">به خانه ۱۹۰ رسیدی</div>
 <div class="reward">🎁 +۶۰۰ سکه و لول +۱</div>
 <a href="index.html" class="back-btn">← بازگشت به خانه</a>
 </div>
@@ -85,36 +92,87 @@ body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#0b0e1a
 </div>
 
 <script>
-const BOARD_SIZE=162,COLS=10,ROWS=17;
-const snakes=[{start:99,end:54},{start:87,end:28},{start:72,end:18},{start:45,end:23},{start:130,end:78},{start:112,end:60},{start:142,end:85},{start:155,end:120}];
-const ladders=[{start:8,end:42},{start:25,end:58},{start:38,end:79},{start:57,end:96},{start:68,end:118},{start:101,end:135},{start:122,end:148},{start:140,end:160}];
-const ICONS={'default':'😊','smile':'😄','heart':'❤️','star':'⭐','lion':'🦁','tiger':'🐯','eagle':'🦅','wolf':'🐺','dragon':'🐉','phoenix':'🔥','crown':'👑','diamond':'💎','king':'👸','gold':'🏆','robot':'🤖','pizza':'🍕','burger':'🍔','cake':'🎂','ninja':'🥷','mage':'🧙','knight':'⚔️','angel':'👼','demon':'👿','legendary':'🌟'};
-let playerPosition=1,gameOver=false,isRolling=false,username='کاربر',userIcon='😊';
+// ============================================================
+//  مار و پله - ۱۹۰ خانه - لول تا ۶۲
+// ============================================================
 
+const BOARD_SIZE=190,COLS=10,ROWS=19;
+const snakes=[
+{start:120,end:70},{start:105,end:45},{start:88,end:32},{start:65,end:28},
+{start:160,end:100},{start:145,end:55},{start:175,end:130},{start:185,end:140}
+];
+const ladders=[
+{start:10,end:50},{start:30,end:75},{start:48,end:95},{start:68,end:115},
+{start:85,end:135},{start:110,end:155},{start:138,end:170},{start:165,end:188}
+];
+const ICONS={'default':'😊','smile':'😄','heart':'❤️','star':'⭐','lion':'🦁','tiger':'🐯','eagle':'🦅','wolf':'🐺','dragon':'🐉','phoenix':'🔥','crown':'👑','diamond':'💎','king':'👸','gold':'🏆','robot':'🤖','pizza':'🍕','burger':'🍔','cake':'🎂','ninja':'🥷','mage':'🧙','knight':'⚔️','angel':'👼','demon':'👿','legendary':'🌟'};
+
+let players=[];
+let currentPlayerIndex=0;
+let gameOver=false;
+let isRolling=false;
+let username='کاربر',userIcon='😊';
+
+// ============================================================
+//  بارگذاری کاربران
+// ============================================================
 function loadUser(){
 const saved=localStorage.getItem('starloom_current_user');
-if(saved){try{const data=JSON.parse(saved);username=data.username;userIcon=ICONS[data.icon]||'😊';document.getElementById('displayName').textContent=username;document.getElementById('displayCoins').textContent=data.coins||0;document.getElementById('displayLevel').textContent=data.level||0;document.getElementById('userIcon').textContent=userIcon;}catch(e){}}
+if(saved){
+try{
+const data=JSON.parse(saved);
+username=data.username;
+userIcon=ICONS[data.icon]||'😊';
+document.getElementById('displayName').textContent=username;
+document.getElementById('displayCoins').textContent=data.coins||0;
+document.getElementById('displayLevel').textContent=data.level||0;
+document.getElementById('userIcon').textContent=userIcon;
+}catch(e){}
+}
+// بارگذاری بازیکنان دوستان
+const friends=JSON.parse(localStorage.getItem('starloom_game_players')) || [username];
+players=friends.map((name,index)=>({
+name:name,
+position:1,
+icon:ICONS[getUserIcon(name)]||'😊',
+color:['#00e5ff','#ff6b81','#f1c40f','#2ecc71','#9b59b6','#e67e22'][index%6],
+isMe:name===username
+}));
+updatePlayersStatus();
+}
+
+function getUserIcon(name){
+const users=JSON.parse(localStorage.getItem('starloom_users'))||{};
+return users[name]?.icon||'default';
 }
 
 function saveUserCoins(coins,level){
 const users=JSON.parse(localStorage.getItem('starloom_users'))||{};
 if(users[username]){
 users[username].coins=(users[username].coins||0)+coins;
-if(level)users[username].level=Math.max(users[username].level||0,level);
+const newLevel=(users[username].level||0)+level;
+users[username].level=Math.min(newLevel,62);
 users[username].snakeWins=(users[username].snakeWins||0)+1;
 users[username].totalGames=(users[username].totalGames||0)+1;
 localStorage.setItem('starloom_users',JSON.stringify(users));
 const current=JSON.parse(localStorage.getItem('starloom_current_user'))||{};
-current.coins=users[username].coins;current.level=users[username].level;
+current.coins=users[username].coins;
+current.level=users[username].level;
 localStorage.setItem('starloom_current_user',JSON.stringify(current));
 document.getElementById('displayCoins').textContent=users[username].coins;
 document.getElementById('displayLevel').textContent=users[username].level;
 }
 }
 
-const boardEl=document.getElementById('board'),diceEl=document.getElementById('dice'),rollBtn=document.getElementById('rollBtn'),statusMsg=document.getElementById('statusMessage'),gameEndedOverlay=document.getElementById('gameEndedOverlay');
+// ============================================================
+//  تخته
+// ============================================================
+const boardEl=document.getElementById('board'),diceEl=document.getElementById('dice');
+const rollBtn=document.getElementById('rollBtn'),statusMsg=document.getElementById('statusMessage');
+const gameEndedOverlay=document.getElementById('gameEndedOverlay');
 
 function getNumberFromRowCol(row,col){let c=col;if(row%2===1)c=COLS-1-col;return row*COLS+c+1}
+
 function buildBoard(){
 boardEl.innerHTML='';
 for(let row=ROWS-1;row>=0;row--){
@@ -123,61 +181,126 @@ const num=getNumberFromRowCol(row,col);
 const cell=document.createElement('div');
 cell.className='cell';cell.dataset.number=num;
 const numSpan=document.createElement('span');numSpan.className='number';numSpan.textContent=num;cell.appendChild(numSpan);
-const snake=snakes.find(s=>s.start===num);if(snake){cell.classList.add('has-snake');const m=document.createElement('span');m.textContent='🐍';m.style.cssText='font-size:1rem;position:absolute;top:2px;left:2px;pointer-events:none';cell.appendChild(m)}
-const ladder=ladders.find(l=>l.start===num);if(ladder){cell.classList.add('has-ladder');const m=document.createElement('span');m.textContent='🪜';m.style.cssText='font-size:1rem;position:absolute;top:2px;right:2px;pointer-events:none';cell.appendChild(m)}
+const snake=snakes.find(s=>s.start===num);if(snake){cell.classList.add('has-snake');const m=document.createElement('span');m.textContent='🐍';m.style.cssText='font-size:.8rem;position:absolute;top:1px;left:2px;pointer-events:none';cell.appendChild(m)}
+const ladder=ladders.find(l=>l.start===num);if(ladder){cell.classList.add('has-ladder');const m=document.createElement('span');m.textContent='🪜';m.style.cssText='font-size:.8rem;position:absolute;top:1px;right:2px;pointer-events:none';cell.appendChild(m)}
 if(num===BOARD_SIZE)cell.classList.add('win-cell');
 boardEl.appendChild(cell);
 }}
-updatePlayer();
+updateBoard();
 }
 
-function updatePlayer(animate=false){
+function updateBoard(){
 document.querySelectorAll('.player-marker').forEach(el=>el.remove());
-const cell=boardEl.querySelector(`.cell[data-number="${playerPosition}"]`);
+players.forEach((p,i)=>{
+const pos=Math.min(p.position,BOARD_SIZE);
+const cell=boardEl.querySelector(`.cell[data-number="${pos}"]`);
 if(!cell)return;
 const marker=document.createElement('div');
-marker.className='player-marker';if(animate)marker.classList.add('moving');
-marker.textContent=userIcon;
+marker.className='player-marker';
+marker.textContent=p.icon||'😊';
+marker.style.borderColor=p.color;
+marker.style.boxShadow=`0 0 20px ${p.color}`;
+if(p.isMe){
+marker.style.border='3px solid #f1c40f';
+marker.style.boxShadow='0 0 30px #f1c40f';
+}
 cell.appendChild(marker);
-if(animate){setTimeout(()=>{const m=document.querySelector('.player-marker');if(m)m.classList.remove('moving');},400);}
+});
 }
 
+function updatePlayersStatus(){
+const container=document.getElementById('playersStatus');
+container.innerHTML='';
+players.forEach((p,i)=>{
+const div=document.createElement('div');
+div.className='player-status';
+if(p.isMe)div.classList.add('me');
+div.innerHTML=`
+<span>${p.icon}</span>
+<span>${p.name}</span>
+<span style="font-size:.7rem;color:#7a8bb0;">🏠${p.position}</span>
+${i===currentPlayerIndex&&!gameOver?'<span style="font-size:.7rem;color:#f1c40f;">🎯</span>':''}
+`;
+container.appendChild(div);
+});
+}
+
+// ============================================================
+//  حرکت
+// ============================================================
 function movePlayer(steps){
 if(gameOver)return false;
-let newPos=playerPosition+steps;
-if(newPos>BOARD_SIZE){statusMsg.textContent='⛔ تاس زیاد بود! در جای خود ماندی.';return false}
+const p=players[currentPlayerIndex];
+let newPos=p.position+steps;
+if(newPos>BOARD_SIZE){
+statusMsg.textContent='⛔ تاس زیاد بود! در جای خود ماندی.';
+return false;
+}
 const snake=snakes.find(s=>s.start===newPos);
-if(snake){newPos=snake.end;statusMsg.textContent='🐍 مار! به خانه '+newPos+' افتادی!';}
-else{const ladder=ladders.find(l=>l.start===newPos);if(ladder){newPos=ladder.end;statusMsg.textContent='🪜 نردبان! به خانه '+newPos+' رفتی!';}else{statusMsg.textContent='🎲 به خانه '+newPos+' رفتی';}}
-playerPosition=newPos;updatePlayer(true);
-if(playerPosition>=BOARD_SIZE){
-playerPosition=BOARD_SIZE;gameOver=true;
-statusMsg.textContent='🎉 برنده شدی! +۶۰۰ سکه و لول +۱';
+if(snake){newPos=snake.end;statusMsg.textContent=`🐍 ${p.name} به مار خورد! رفت به ${newPos}`;}
+else{
+const ladder=ladders.find(l=>l.start===newPos);
+if(ladder){newPos=ladder.end;statusMsg.textContent=`🪜 ${p.name} از نردبان رفت به ${newPos}`;}
+else{statusMsg.textContent=`🎲 ${p.name} به ${newPos} رفت`;}
+}
+p.position=newPos;
+updateBoard();
+updatePlayersStatus();
+
+if(p.position>=BOARD_SIZE){
+p.position=BOARD_SIZE;
+gameOver=true;
+statusMsg.textContent=`🎉 ${p.name} برنده شد! +۶۰۰ سکه و لول +۱`;
 statusMsg.className='status winner';
 rollBtn.disabled=true;
+if(p.isMe){
 saveUserCoins(600,1);
 document.getElementById('displayCoins').textContent=(parseInt(document.getElementById('displayCoins').textContent)||0)+600;
-document.getElementById('displayLevel').textContent=(parseInt(document.getElementById('displayLevel').textContent)||0)+1;
+document.getElementById('displayLevel').textContent=Math.min((parseInt(document.getElementById('displayLevel').textContent)||0)+1,62);
+}
 gameEndedOverlay.classList.add('show');
-updatePlayer(false);
+updateBoard();
 return true;
 }
 return true;
 }
 
 function rollDice(){
-if(gameOver){statusMsg.textContent='⛔ بازی تمام شده! به صفحه اصلی برو.';return}
+if(gameOver){statusMsg.textContent='⛔ بازی تمام شد! به صفحه اصلی برو.';return}
 if(isRolling)return;
 isRolling=true;rollBtn.disabled=true;
 const val=Math.floor(Math.random()*6)+1;
 const sym=['⚀','⚁','⚂','⚃','⚄','⚅'];
 diceEl.textContent=sym[val-1];
-setTimeout(()=>{movePlayer(val);isRolling=false;if(!gameOver)rollBtn.disabled=false;},400);
+setTimeout(()=>{
+movePlayer(val);
+isRolling=false;
+if(!gameOver){
+currentPlayerIndex=(currentPlayerIndex+1)%players.length;
+updatePlayersStatus();
+rollBtn.disabled=false;
+statusMsg.textContent=`🎯 نوبت ${players[currentPlayerIndex].name}`;
+}
+},500);
 }
 
-function startGame(){rollBtn.disabled=false;statusMsg.textContent='🎲 تاس بینداز!';statusMsg.className='status';}
-loadUser();buildBoard();rollBtn.addEventListener('click',rollDice);startGame();
-console.log('🐍 Snake Game Ready!');
+function startGame(){
+rollBtn.disabled=false;
+statusMsg.textContent=`🎯 نوبت ${players[0].name}`;
+statusMsg.className='status';
+}
+
+// ============================================================
+//  مقداردهی
+// ============================================================
+loadUser();
+buildBoard();
+rollBtn.addEventListener('click',rollDice);
+startGame();
+
+console.log('🐍 Snake Game 190 - Ready!');
+console.log('👥 تعداد بازیکنان:', players.length);
+console.log('🏆 لول نهایی: 62');
 </script>
 </body>
 </html>
