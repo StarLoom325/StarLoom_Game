@@ -1,67 +1,64 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>StarLoom_Game - بوم بوم</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#0b0e1a,#1a1f30);min-height:100vh;color:#f0f4ff;padding:15px}
-.main-container{max-width:1200px;margin:0 auto}
-.header{display:flex;justify-content:space-between;align-items:center;padding:15px 25px;background:rgba(255,255,255,0.05);border-radius:25px;border:1px solid rgba(255,215,0,0.15);flex-wrap:wrap;gap:10px;margin-bottom:20px}
-.logo{font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,#f9d976,#f39c12);-webkit-background-clip:text;background-clip:text;color:transparent}
-.logo span{color:#b9c7e6;background:none;font-weight:300}
-.back-home{background:#2d3852;border:none;padding:10px 25px;border-radius:50px;color:#f0f4ff;font-weight:600;cursor:pointer;border:1px solid #5a6a8a;font-size:.95rem;text-decoration:none;display:inline-block}
-.back-home:hover{background:#3f4d70;border-color:#f1c40f}
-.user-info-bar{display:flex;gap:15px;background:rgba(0,0,0,0.3);padding:8px 18px;border-radius:50px;font-size:.85rem;align-items:center;flex-wrap:wrap}
-.user-info-bar .user-icon{font-size:1.5rem}
-.boom-container{background:#131a2a;border-radius:25px;padding:20px;position:relative}
-.boom-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px;margin-bottom:20px}
-.boom-title{font-size:1.3rem;font-weight:700}
-.boom-stats{display:flex;gap:12px;font-size:.8rem;background:rgba(0,0,0,0.3);padding:6px 16px;border-radius:50px;flex-wrap:wrap}
-.boom-stats span{display:flex;align-items:center;gap:4px}
-.boom-stats .key-count{color:#f1c40f;font-weight:700}
-.boom-grid{display:grid;grid-template-columns:repeat(20,1fr);gap:3px;max-width:100%;margin:0 auto}
-.boom-cell{aspect-ratio:1/1;background:#222b41;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.7rem;cursor:pointer;transition:all .15s;border:1px solid #2d3852;user-select:none;min-width:18px;min-height:18px}
-.boom-cell:hover:not(.revealed):not(.disabled){background:#2d3852;transform:scale(1.05);z-index:2}
-.boom-cell.revealed{cursor:default;border-color:#4a5575}
-.boom-cell.coin{background:#1e3a2a;border-color:#f1c40f}
-.boom-cell.bomb{background:#3a1e2a;border-color:#e74c3c}
-.boom-cell.snake{background:#2a1e3a;border-color:#9b59b6}
-.boom-cell.key{background:#1a2a4a;border-color:#3498db;animation:keyGlow 1s ease-in-out infinite alternate}
-.boom-cell.chest{background:#3a2a1a;border-color:#e67e22;animation:chestGlow 1.5s ease-in-out infinite alternate}
-.boom-cell.empty{background:#1a2235;border-color:#2d3852}
-.boom-cell.disabled{cursor:not-allowed;opacity:.5}
-@keyframes keyGlow{0%{box-shadow:0 0 5px #3498db}100%{box-shadow:0 0 20px #3498db,0 0 40px #3498db33}}
-@keyframes chestGlow{0%{box-shadow:0 0 5px #e67e22}100%{box-shadow:0 0 25px #e67e22,0 0 50px #e67e2233}}
-.boom-msg{text-align:center;margin-top:15px;padding:12px;border-radius:15px;background:rgba(0,0,0,0.3);font-size:1rem;min-height:50px}
-.boom-msg.winner{background:rgba(241,196,15,0.15);border:1px solid #f1c40f;color:#f1c40f}
-.progress-bar{width:100%;height:8px;background:#1a2235;border-radius:10px;margin-top:15px;overflow:hidden}
-.progress-bar .fill{height:100%;background:linear-gradient(90deg,#f1c40f,#f39c12);border-radius:10px;transition:width .3s;width:0%}
-.progress-bar .fill.complete{background:linear-gradient(90deg,#f1c40f,#2ecc71);animation:progressComplete 1s ease-in-out infinite alternate}
-@keyframes progressComplete{0%{opacity:1}100%{opacity:.6}}
-.game-ended-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.85);border-radius:25px;display:none;flex-direction:column;align-items:center;justify-content:center;z-index:10;padding:30px}
-.game-ended-overlay.show{display:flex}
-.game-ended-overlay .big-icon{font-size:5rem;margin-bottom:10px}
-.game-ended-overlay .title{font-size:2rem;font-weight:700;color:#f1c40f}
-.game-ended-overlay .subtitle{color:#a0b5d9;font-size:1.1rem;margin:5px 0}
-.game-ended-overlay .reward{color:#f1c40f;font-size:1.4rem;margin:10px 0}
-.game-ended-overlay .stats-summary{color:#7a8bb0;font-size:.9rem;margin:5px 0;text-align:center;line-height:1.8}
-.game-ended-overlay .back-btn{background:#f1c40f;border:none;padding:14px 50px;border-radius:50px;color:#1a1f30;font-weight:700;font-size:1.1rem;cursor:pointer;text-decoration:none;margin-top:20px;transition:all .2s}
-.game-ended-overlay .back-btn:hover{transform:scale(1.05)}
-.timer-bar{display:flex;align-items:center;gap:8px;background:rgba(0,0,0,0.4);padding:4px 14px;border-radius:50px;border:1px solid #4a5575}
-.timer-bar .timer-text{font-family:monospace;font-size:1rem;color:#f1c40f;min-width:65px}
-.timer-bar .timer-text.ready{color:#2ecc71}
-.boom-controls{display:flex;gap:15px;margin-top:20px;justify-content:center;flex-wrap:wrap}
-.boom-btn{background:#2d3852;border:none;padding:10px 25px;border-radius:50px;color:#f0f4ff;font-weight:600;cursor:pointer;border:1px solid #5a6a8a;font-size:.9rem;transition:all .2s}
-.boom-btn:hover{background:#3f4d70;border-color:#f1c40f}
-.boom-btn.primary{background:linear-gradient(145deg,#f1c40f,#d4a800);color:#1a1f30;border-color:#f1c40f}
-.boom-btn.primary:hover{transform:scale(1.02)}
-.disable-msg{text-align:center;margin-top:15px;padding:10px;background:rgba(255,0,0,0.05);border-radius:15px;border:1px solid rgba(255,0,0,0.1)}
-.disable-msg p{color:#7a8bb0;font-size:.75rem}
-@media(max-width:768px){.boom-grid{grid-template-columns:repeat(10,1fr);gap:2px}.boom-cell{font-size:.5rem;min-width:14px;min-height:14px}.boom-stats{font-size:.7rem;padding:4px 10px}}
-@media(max-width:480px){.boom-grid{gap:1px}.boom-cell{font-size:.35rem;min-width:10px;min-height:10px}.boom-container{padding:10px}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StarLoom_Game - بوم بوم</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#0b0e1a,#1a1f30);min-height:100vh;color:#f0f4ff;padding:15px}
+        .main-container{max-width:1200px;margin:0 auto}
+        .header{display:flex;justify-content:space-between;align-items:center;padding:15px 25px;background:rgba(255,255,255,0.05);border-radius:25px;border:1px solid rgba(255,215,0,0.15);flex-wrap:wrap;gap:10px;margin-bottom:20px}
+        .logo{font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,#f9d976,#f39c12);-webkit-background-clip:text;background-clip:text;color:transparent}
+        .logo span{color:#b9c7e6;background:none;font-weight:300}
+        .back-home{background:#2d3852;border:none;padding:10px 25px;border-radius:50px;color:#f0f4ff;font-weight:600;cursor:pointer;border:1px solid #5a6a8a;font-size:.95rem;text-decoration:none;display:inline-block}
+        .back-home:hover{background:#3f4d70;border-color:#f1c40f}
+        .user-info-bar{display:flex;gap:15px;background:rgba(0,0,0,0.3);padding:8px 18px;border-radius:50px;font-size:.85rem;align-items:center;flex-wrap:wrap}
+        .user-info-bar .user-icon{font-size:1.5rem}
+        .boom-container{background:#131a2a;border-radius:25px;padding:20px;position:relative}
+        .boom-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px;margin-bottom:20px}
+        .boom-title{font-size:1.3rem;font-weight:700}
+        .boom-stats{display:flex;gap:12px;font-size:.8rem;background:rgba(0,0,0,0.3);padding:6px 16px;border-radius:50px;flex-wrap:wrap}
+        .boom-stats span{display:flex;align-items:center;gap:4px}
+        .boom-stats .key-count{color:#f1c40f;font-weight:700}
+        .boom-grid{display:grid;grid-template-columns:repeat(20,1fr);gap:3px;max-width:100%;margin:0 auto}
+        .boom-cell{aspect-ratio:1/1;background:#222b41;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.7rem;cursor:pointer;transition:all .15s;border:1px solid #2d3852;user-select:none;min-width:18px;min-height:18px}
+        .boom-cell:hover:not(.revealed):not(.disabled){background:#2d3852;transform:scale(1.05);z-index:2}
+        .boom-cell.revealed{cursor:default;border-color:#4a5575}
+        .boom-cell.coin{background:#1e3a2a;border-color:#f1c40f}
+        .boom-cell.bomb{background:#3a1e2a;border-color:#e74c3c}
+        .boom-cell.snake{background:#2a1e3a;border-color:#9b59b6}
+        .boom-cell.key{background:#1a2a4a;border-color:#3498db;animation:keyGlow 1s ease-in-out infinite alternate}
+        .boom-cell.chest{background:#3a2a1a;border-color:#e67e22;animation:chestGlow 1.5s ease-in-out infinite alternate}
+        .boom-cell.empty{background:#1a2235;border-color:#2d3852}
+        .boom-cell.disabled{cursor:not-allowed;opacity:.5}
+        @keyframes keyGlow{0%{box-shadow:0 0 5px #3498db}100%{box-shadow:0 0 20px #3498db,0 0 40px #3498db33}}
+        @keyframes chestGlow{0%{box-shadow:0 0 5px #e67e22}100%{box-shadow:0 0 25px #e67e22,0 0 50px #e67e2233}}
+        .boom-msg{text-align:center;margin-top:15px;padding:12px;border-radius:15px;background:rgba(0,0,0,0.3);font-size:1rem;min-height:50px}
+        .boom-msg.winner{background:rgba(241,196,15,0.15);border:1px solid #f1c40f;color:#f1c40f}
+        .progress-bar{width:100%;height:8px;background:#1a2235;border-radius:10px;margin-top:15px;overflow:hidden}
+        .progress-bar .fill{height:100%;background:linear-gradient(90deg,#f1c40f,#f39c12);border-radius:10px;transition:width .3s;width:0%}
+        .progress-bar .fill.complete{background:linear-gradient(90deg,#f1c40f,#2ecc71);animation:progressComplete 1s ease-in-out infinite alternate}
+        @keyframes progressComplete{0%{opacity:1}100%{opacity:.6}}
+        .game-ended-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.85);border-radius:25px;display:none;flex-direction:column;align-items:center;justify-content:center;z-index:10;padding:30px}
+        .game-ended-overlay.show{display:flex}
+        .game-ended-overlay .big-icon{font-size:5rem;margin-bottom:10px}
+        .game-ended-overlay .title{font-size:2rem;font-weight:700;color:#f1c40f}
+        .game-ended-overlay .subtitle{color:#a0b5d9;font-size:1.1rem;margin:5px 0}
+        .game-ended-overlay .reward{color:#f1c40f;font-size:1.4rem;margin:10px 0}
+        .game-ended-overlay .stats-summary{color:#7a8bb0;font-size:.9rem;margin:5px 0;text-align:center;line-height:1.8}
+        .game-ended-overlay .back-btn{background:#f1c40f;border:none;padding:14px 50px;border-radius:50px;color:#1a1f30;font-weight:700;font-size:1.1rem;cursor:pointer;text-decoration:none;margin-top:20px;transition:all .2s}
+        .game-ended-overlay .back-btn:hover{transform:scale(1.05)}
+        .boom-controls{display:flex;gap:15px;margin-top:20px;justify-content:center;flex-wrap:wrap}
+        .boom-btn{background:#2d3852;border:none;padding:10px 25px;border-radius:50px;color:#f0f4ff;font-weight:600;cursor:pointer;border:1px solid #5a6a8a;font-size:.9rem;transition:all .2s}
+        .boom-btn:hover{background:#3f4d70;border-color:#f1c40f}
+        .boom-btn.primary{background:linear-gradient(145deg,#f1c40f,#d4a800);color:#1a1f30;border-color:#f1c40f}
+        .boom-btn.primary:hover{transform:scale(1.02)}
+        .disable-msg{text-align:center;margin-top:15px;padding:10px;background:rgba(255,0,0,0.05);border-radius:15px;border:1px solid rgba(255,0,0,0.1)}
+        .disable-msg p{color:#7a8bb0;font-size:.75rem}
+        @media(max-width:768px){.boom-grid{grid-template-columns:repeat(10,1fr);gap:2px}.boom-cell{font-size:.5rem;min-width:14px;min-height:14px}.boom-stats{font-size:.7rem;padding:4px 10px}}
+        @media(max-width:480px){.boom-grid{gap:1px}.boom-cell{font-size:.35rem;min-width:10px;min-height:10px}.boom-container{padding:10px}}
+    </style>
 </head>
 <body>
 <div class="main-container">
@@ -71,185 +68,261 @@ body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#0b0e1a
 <div class="user-info-bar" id="userInfoBar">
 <span class="user-icon" id="userIcon">😊</span>
 <span>👤 <span id="displayName">کاربر</span></span>
-<span>💰 <span id="displayCoins">۰</span></span>
+<span>💰 <span id="displayCoins">0</span></span>
 </div>
-<div class="timer-bar"><span>⏳</span><span class="timer-text" id="keyTimer">--:--:--</span></div>
 <a href="index.html" class="back-home">← بازگشت</a>
 </div>
 </div>
 
 <div class="boom-container">
-<div style="text-align:center;margin-bottom:15px;"><h3 style="color:#f5e9c4;">💣 بوم بوم ۱۰۰۰</h3><p style="color:#7a8bb0;font-size:.85rem;">با ۴۳ چکشت شروع کن. هر ۳ ساعت ۲۰ چکشت رایگان!</p></div>
+<div style="text-align:center;margin-bottom:15px;">
+<h3 style="color:#f5e9c4;">💣 بوم بوم</h3>
+<p style="color:#7a8bb0;font-size:.85rem;">1000 مکعب - برنده <strong style="color:#f1c40f;">۳۰۰۰</strong> سکه</p>
+</div>
+
 <div class="boom-header">
 <div class="boom-title">💣 بوم بوم</div>
 <div class="boom-stats">
-<span>🔑 <span class="key-count" id="boomKeys">۴۳</span></span>
-<span>💰 <span id="boomCoins">۰</span></span>
-<span>💣 <span id="boomBombs">۰</span></span>
-<span>🐍 <span id="boomSnakes">۰</span></span>
-<span>🎁 <span id="boomChests">۰</span></span>
-<span>📦 <span id="boomRevealed">۰</span>/۱۰۰۰</span>
+<span>🔑 <span class="key-count" id="boomKeys">43</span></span>
+<span>💰 <span id="boomCoins">0</span></span>
+<span>📦 <span id="boomRevealed">0</span>/1000</span>
 </div>
 </div>
+
 <div class="boom-grid" id="boomGrid"></div>
 <div class="progress-bar"><div class="fill" id="progressFill"></div></div>
+
 <div class="boom-controls">
-<button class="boom-btn" id="claimKeyBtn" style="display:none;">🔑 دریافت ۲۰ چکشت</button>
+<button class="boom-btn primary" id="resetBtn">🔄 بازی جدید</button>
 </div>
-<div class="boom-msg" id="boomMsg">💡 روی مکعب‌ها کلیک کن! (هر مکعب ۱ چکشت)</div>
+
+<div class="boom-msg" id="boomMsg">💡 روی مکعب‌ها کلیک کن!</div>
+
 <div class="game-ended-overlay" id="gameEndedOverlay">
 <div class="big-icon">🎉</div>
 <div class="title">همه مکعب‌ها باز شد!</div>
 <div class="subtitle">شما برنده شدید!</div>
-<div class="reward">🎁 +۲۰۰۰ سکه</div>
-<div class="stats-summary" id="finalStats">💰 سکه: ۰</div>
+<div class="reward">🎁 +۳۰۰۰ سکه</div>
+<div class="stats-summary" id="finalStats">💰 سکه: 0</div>
 <a href="index.html" class="back-btn">← بازگشت به خانه</a>
 </div>
-<div class="disable-msg"><p>⚠️ پس از اتمام بازی، برای بازی جدید از صفحه اصلی وارد شوید</p></div>
+
+<div class="disable-msg">
+<p>⚠️ پس از اتمام بازی، برای بازی جدید از صفحه اصلی وارد شوید</p>
+</div>
 </div>
 </div>
 
 <script>
-const TOTAL_CELLS=1000,COLS=20,ROWS=50,INITIAL_KEYS=43,HIDDEN_KEYS_COUNT=10,CHEST_COUNT=15,KEY_REGEN_TIME=3*60*60*1000,KEY_REGEN_AMOUNT=20;
-const CHEST_ITEMS=[{name:'سکه',icon:'🪙',min:10,max:50},{name:'چکشت',icon:'🔑',min:1,max:5},{name:'بمب',icon:'💣',min:1,max:3},{name:'مار',icon:'🐍',min:1,max:2},{name:'هیچی',icon:'😐',min:0,max:0}];
-const ICONS={'default':'😊','smile':'😄','heart':'❤️','star':'⭐','lion':'🦁','tiger':'🐯','eagle':'🦅','wolf':'🐺','dragon':'🐉','phoenix':'🔥','crown':'👑','diamond':'💎','king':'👸','gold':'🏆','robot':'🤖','pizza':'🍕','burger':'🍔','cake':'🎂','ninja':'🥷','mage':'🧙','knight':'⚔️','angel':'👼','demon':'👿','legendary':'🌟'};
+var TOTAL_CELLS=1000, COLS=20, ROWS=50;
+var ICONS={'default':'😊','smile':'😄','heart':'❤️','star':'⭐','lion':'🦁','tiger':'🐯','eagle':'🦅','wolf':'🐺','dragon':'🐉','phoenix':'🔥','unicorn':'🦄','crown':'👑','diamond':'💎','king':'👸','gold':'🏆','robot':'🤖','gem':'💠','pizza':'🍕','burger':'🍔','cake':'🎂','donut':'🍩','ninja':'🥷','mage':'🧙','knight':'⚔️','angel':'👼','demon':'👿','skeleton':'💀','galaxy':'🌌','crystal':'🔮','cosmic':'🚀','legendary':'🌟','ultimate':'⚡','void':'🌑'};
 
-let boomState={grid:[],revealed:[],keys:INITIAL_KEYS,coins:0,bombsTriggered:0,snakesTriggered:0,keysFound:0,chestsFound:0,revealedCount:0,gameOver:false,isAutoReveal:false,lastKeyClaim:Date.now()};
-let username='کاربر',userIcon='😊';
+var boomState={
+grid:[],
+revealed:[],
+keys:43,
+coins:0,
+revealedCount:0,
+gameOver:false
+};
+
+var username='کاربر',userIcon='😊';
 
 function loadUser(){
-const saved=localStorage.getItem('starloom_current_user');
-if(saved){try{const data=JSON.parse(saved);username=data.username;userIcon=ICONS[data.icon]||'😊';document.getElementById('displayName').textContent=username;document.getElementById('displayCoins').textContent=data.coins||0;document.getElementById('userIcon').textContent=userIcon;}catch(e){}}
+var saved=localStorage.getItem('starloom_current_user');
+if(saved){
+try{
+var data=JSON.parse(saved);
+username=data.username;
+userIcon=ICONS[data.icon]||'😊';
+document.getElementById('displayName').textContent=username;
+document.getElementById('displayCoins').textContent=data.coins||0;
+document.getElementById('userIcon').textContent=userIcon;
+}catch(e){}
+}
 }
 
 function saveUserCoins(amount){
-const users=JSON.parse(localStorage.getItem('starloom_users'))||{};
+var users=JSON.parse(localStorage.getItem('starloom_users'))||{};
 if(users[username]){
 users[username].coins=(users[username].coins||0)+amount;
 users[username].boomWins=(users[username].boomWins||0)+1;
 users[username].totalGames=(users[username].totalGames||0)+1;
 localStorage.setItem('starloom_users',JSON.stringify(users));
-const current=JSON.parse(localStorage.getItem('starloom_current_user'))||{};
+var current=JSON.parse(localStorage.getItem('starloom_current_user'))||{};
 current.coins=users[username].coins;
 localStorage.setItem('starloom_current_user',JSON.stringify(current));
 document.getElementById('displayCoins').textContent=users[username].coins;
 }
 }
 
-function saveBoomState(){try{localStorage.setItem('starloom_boom_state',JSON.stringify(boomState))}catch(e){}}
-function loadBoomState(){try{const raw=localStorage.getItem('starloom_boom_state');if(!raw)return false;const data=JSON.parse(raw);if(!data.grid||data.grid.length!==TOTAL_CELLS)return false;boomState=data;return true;}catch(e){return false;}}
-
-function initBoomGame(){
-let items=[];
-for(let i=0;i<150;i++)items.push('coin');
-for(let i=0;i<50;i++)items.push('bomb');
-for(let i=0;i<30;i++)items.push('snake');
-for(let i=0;i<HIDDEN_KEYS_COUNT;i++)items.push('key');
-for(let i=0;i<CHEST_COUNT;i++)items.push('chest');
+function initGame(){
+var items=[];
+for(var i=0;i<150;i++)items.push('coin');
+for(var i=0;i<50;i++)items.push('bomb');
+for(var i=0;i<30;i++)items.push('snake');
+for(var i=0;i<10;i++)items.push('key');
+for(var i=0;i<15;i++)items.push('chest');
 while(items.length<TOTAL_CELLS)items.push('empty');
-for(let i=items.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[items[i],items[j]]=[items[j],items[i]];}
-boomState.grid=items;boomState.revealed=new Array(TOTAL_CELLS).fill(false);boomState.keys=INITIAL_KEYS;boomState.coins=0;boomState.bombsTriggered=0;boomState.snakesTriggered=0;boomState.keysFound=0;boomState.chestsFound=0;boomState.revealedCount=0;boomState.gameOver=false;boomState.isAutoReveal=false;boomState.lastKeyClaim=Date.now();
-localStorage.removeItem('starloom_boom_state');
-renderGrid();updateStats();document.getElementById('boomMsg').textContent='💡 روی مکعب‌ها کلیک کن! (هر مکعب ۱ چکشت)';document.getElementById('boomMsg').className='boom-msg';document.getElementById('gameEndedOverlay').classList.remove('show');document.getElementById('progressFill').className='fill';startKeyTimer();
+
+for(var i=items.length-1;i>0;i--){
+var j=Math.floor(Math.random()*(i+1));
+var temp=items[i];
+items[i]=items[j];
+items[j]=temp;
+}
+
+boomState.grid=items;
+boomState.revealed=new Array(TOTAL_CELLS).fill(false);
+boomState.keys=43;
+boomState.coins=0;
+boomState.revealedCount=0;
+boomState.gameOver=false;
+
+renderGrid();
+updateStats();
+document.getElementById('boomMsg').textContent='💡 روی مکعب‌ها کلیک کن!';
+document.getElementById('boomMsg').className='boom-msg';
+document.getElementById('gameEndedOverlay').classList.remove('show');
+document.getElementById('progressFill').className='fill';
 }
 
 function renderGrid(){
-const gridEl=document.getElementById('boomGrid');gridEl.innerHTML='';
-for(let i=0;i<TOTAL_CELLS;i++){
-const cell=document.createElement('div');cell.className='boom-cell';cell.dataset.index=i;
+var gridEl=document.getElementById('boomGrid');
+gridEl.innerHTML='';
+
+for(var i=0;i<TOTAL_CELLS;i++){
+var cell=document.createElement('div');
+cell.className='boom-cell';
+cell.dataset.index=i;
+
 if(boomState.revealed[i]){
-cell.classList.add('revealed');const val=boomState.grid[i];
-if(val==='coin'){cell.classList.add('coin');cell.textContent='🪙'}
-else if(val==='bomb'){cell.classList.add('bomb');cell.textContent='💣'}
-else if(val==='snake'){cell.classList.add('snake');cell.textContent='🐍'}
-else if(val==='key'){cell.classList.add('key');cell.textContent='🔑'}
-else if(val==='chest'){cell.classList.add('chest');cell.textContent='🎁'}
-else{cell.classList.add('empty');cell.textContent='⬜'}
+cell.classList.add('revealed');
+var val=boomState.grid[i];
+if(val==='coin'){cell.classList.add('coin');cell.textContent='🪙';}
+else if(val==='bomb'){cell.classList.add('bomb');cell.textContent='💣';}
+else if(val==='snake'){cell.classList.add('snake');cell.textContent='🐍';}
+else if(val==='key'){cell.classList.add('key');cell.textContent='🔑';}
+else if(val==='chest'){cell.classList.add('chest');cell.textContent='🎁';}
+else{cell.classList.add('empty');cell.textContent='⬜';}
 }else{
 cell.textContent='❓';
-if(boomState.keys<=0||boomState.gameOver){cell.classList.add('disabled');}
-else{cell.addEventListener('click',function(){const idx=parseInt(this.dataset.index);revealCell(idx);});}
+if(boomState.keys<=0||boomState.gameOver){
+cell.classList.add('disabled');
+}else{
+cell.addEventListener('click',function(){
+var idx=parseInt(this.dataset.index);
+revealCell(idx);
+});
+}
 }
 gridEl.appendChild(cell);
-}}
+}
+}
 
 function revealCell(index){
-if(boomState.gameOver){document.getElementById('boomMsg').textContent='⛔ بازی تمام شده! به صفحه اصلی برو.';return}
-if(boomState.revealed[index]||boomState.isAutoReveal)return;
-if(boomState.keys<=0){document.getElementById('boomMsg').textContent='❌ چکشت تمام شد! صبر کن تا چکشت جدید دریافت کنی.';return}
-boomState.keys--;const val=boomState.grid[index];boomState.revealed[index]=true;boomState.revealedCount++;
-let msg='';
-if(val==='coin'){boomState.coins+=20;msg='🪙 +۲۰ سکه!';}
-else if(val==='bomb'){boomState.bombsTriggered++;const neighbors=getNeighbors(index,4);let opened=0;neighbors.forEach(idx=>{if(!boomState.revealed[idx]&&!boomState.gameOver){boomState.revealed[idx]=true;boomState.revealedCount++;opened++;}});msg=`💣 بمب! ${opened} مکعب باز شد.`;}
-else if(val==='snake'){boomState.snakesTriggered++;boomState.coins=Math.max(0,boomState.coins-5);msg='🐍 مار! ۵ سکه از دست دادی!';}
-else if(val==='key'){boomState.keysFound++;boomState.keys+=1;msg='🔑 چکشت پنهان پیدا شد! +۱ چکشت';}
-else if(val==='chest'){boomState.chestsFound++;const reward=openChest();msg=`🎁 صندوق! ${reward.icon} ${reward.name} +${reward.amount}`;applyReward(reward);showRewardPopup(reward);}
-else{msg='⬜ خالی!';}
+if(boomState.gameOver){
+document.getElementById('boomMsg').textContent='⛔ بازی تمام شده! به صفحه اصلی برو.';
+return;
+}
+if(boomState.revealed[index])return;
+if(boomState.keys<=0){
+document.getElementById('boomMsg').textContent='❌ چکشت تمام شد!';
+return;
+}
+
+boomState.keys--;
+var val=boomState.grid[index];
+boomState.revealed[index]=true;
+boomState.revealedCount++;
+
+var msg='';
+
+if(val==='coin'){
+boomState.coins+=20;
+msg='🪙 +20 سکه!';
+}else if(val==='bomb'){
+msg='💣 بمب!';
+var neighbors=getNeighbors(index,4);
+var opened=0;
+for(var n=0;n<neighbors.length;n++){
+var idx=neighbors[n];
+if(!boomState.revealed[idx]&&!boomState.gameOver){
+boomState.revealed[idx]=true;
+boomState.revealedCount++;
+opened++;
+}
+}
+msg='💣 بمب! '+opened+' مکعب باز شد.';
+}else if(val==='snake'){
+boomState.coins=Math.max(0,boomState.coins-5);
+msg='🐍 مار! -5 سکه';
+}else if(val==='key'){
+boomState.keys+=1;
+msg='🔑 +1 چکشت';
+}else if(val==='chest'){
+var reward=Math.floor(Math.random()*30)+10;
+boomState.coins+=reward;
+msg='🎁 صندوق! +'+reward+' سکه';
+}else{
+msg='⬜ خالی!';
+}
+
 document.getElementById('boomMsg').textContent=msg;
+
 if(boomState.revealedCount>=TOTAL_CELLS){
-boomState.gameOver=true;document.getElementById('boomMsg').textContent='🎉 همه مکعب‌ها باز شدند! +۲۰۰۰ سکه';document.getElementById('boomMsg').className='boom-msg winner';document.getElementById('progressFill').className='fill complete';saveUserCoins(2000);document.getElementById('displayCoins').textContent=(parseInt(document.getElementById('displayCoins').textContent)||0)+2000;
-document.getElementById('finalStats').innerHTML=`💰 سکه: ${boomState.coins}<br>💣 بمب: ${boomState.bombsTriggered}<br>🐍 مار: ${boomState.snakesTriggered}<br>🎁 صندوق: ${boomState.chestsFound}<br>🔑 چکشت پنهان: ${boomState.keysFound}`;
+boomState.gameOver=true;
+document.getElementById('boomMsg').textContent='🎉 همه مکعب‌ها باز شدند! +۳۰۰۰ سکه';
+document.getElementById('boomMsg').className='boom-msg winner';
+document.getElementById('progressFill').className='fill complete';
+saveUserCoins(3000);
+document.getElementById('displayCoins').textContent=(parseInt(document.getElementById('displayCoins').textContent)||0)+3000;
+document.getElementById('finalStats').innerHTML='💰 سکه: '+boomState.coins;
 document.getElementById('gameEndedOverlay').classList.add('show');
 }
-saveBoomState();updateStats();renderGrid();updateKeyTimer();
+
+updateStats();
+renderGrid();
 }
 
-function openChest(){const item=CHEST_ITEMS[Math.floor(Math.random()*CHEST_ITEMS.length)];let amount=0;if(item.max>0){amount=Math.floor(Math.random()*(item.max-item.min+1))+item.min;}return{name:item.name,icon:item.icon,amount:amount,type:item.name==='چکشت'?'key':item.name==='سکه'?'coin':item.name==='بمب'?'bomb':item.name==='مار'?'snake':'none'};}
-function applyReward(reward){if(reward.type==='key'){boomState.keys+=reward.amount;}else if(reward.type==='coin'){boomState.coins+=reward.amount;}else if(reward.type==='bomb'){boomState.bombsTriggered+=reward.amount;let opened=0;for(let i=0;i<reward.amount*2;i++){const randomIdx=Math.floor(Math.random()*TOTAL_CELLS);if(!boomState.revealed[randomIdx]){boomState.revealed[randomIdx]=true;boomState.revealedCount++;opened++;}}document.getElementById('boomMsg').textContent+=` (${opened} مکعب تصادفی باز شد)`;}else if(reward.type==='snake'){boomState.snakesTriggered+=reward.amount;boomState.coins=Math.max(0,boomState.coins-(reward.amount*3));}saveBoomState();}
-function showRewardPopup(reward){alert(`🎁 ${reward.icon} ${reward.name}!\n+${reward.amount} ${reward.name} دریافت کردی!`);}
-
 function getNeighbors(index,count){
-const row=Math.floor(index/COLS),col=index%COLS;
-const candidates=[];
+var row=Math.floor(index/COLS),col=index%COLS;
+var candidates=[];
 if(row>0)candidates.push(index-COLS);
 if(row<ROWS-1)candidates.push(index+COLS);
 if(col>0)candidates.push(index-1);
 if(col<COLS-1)candidates.push(index+1);
-for(let i=candidates.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[candidates[i],candidates[j]]=[candidates[j],candidates[i]];}
+
+for(var i=candidates.length-1;i>0;i--){
+var j=Math.floor(Math.random()*(i+1));
+var temp=candidates[i];
+candidates[i]=candidates[j];
+candidates[j]=temp;
+}
+
 return candidates.slice(0,count);
 }
 
 function updateStats(){
 document.getElementById('boomKeys').textContent=boomState.keys;
 document.getElementById('boomCoins').textContent=boomState.coins;
-document.getElementById('boomBombs').textContent=boomState.bombsTriggered;
-document.getElementById('boomSnakes').textContent=boomState.snakesTriggered;
-document.getElementById('boomChests').textContent=boomState.chestsFound;
 document.getElementById('boomRevealed').textContent=boomState.revealedCount;
-const progress=(boomState.revealedCount/TOTAL_CELLS)*100;
+
+var progress=(boomState.revealedCount/TOTAL_CELLS)*100;
 document.getElementById('progressFill').style.width=Math.min(progress,100)+'%';
 }
 
-let timerInterval=null;
-function startKeyTimer(){if(timerInterval)clearInterval(timerInterval);timerInterval=setInterval(updateKeyTimer,1000);updateKeyTimer();}
-function updateKeyTimer(){
-const now=Date.now(),lastClaim=boomState.lastKeyClaim||now,elapsed=now-lastClaim,remaining=KEY_REGEN_TIME-elapsed;
-const timerEl=document.getElementById('keyTimer'),claimBtn=document.getElementById('claimKeyBtn');
-if(remaining<=0){
-timerEl.textContent='✅ آماده!';timerEl.className='timer-text ready';
-claimBtn.style.display='inline-block';claimBtn.textContent=`🔑 دریافت ${KEY_REGEN_AMOUNT} چکشت`;
-if(boomState.keys<10&&!boomState.gameOver){claimBtn.style.background='#f1c40f';claimBtn.style.color='#1a1f30';}else{claimBtn.style.background='#2d3852';claimBtn.style.color='#f0f4ff';}
-}else{
-const hours=Math.floor(remaining/(60*60*1000)),mins=Math.floor((remaining%(60*60*1000))/(60*1000)),secs=Math.floor((remaining%(60*1000))/1000);
-timerEl.textContent=`${String(hours).padStart(2,'0')}:${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;timerEl.className='timer-text';claimBtn.style.display='none';
-}}
-
-function claimFreeKeys(){
-const now=Date.now(),lastClaim=boomState.lastKeyClaim||now,elapsed=now-lastClaim;
-if(elapsed<KEY_REGEN_TIME){const remaining=KEY_REGEN_TIME-elapsed,hours=Math.floor(remaining/(60*60*1000)),mins=Math.floor((remaining%(60*60*1000))/(60*1000));document.getElementById('boomMsg').textContent=`⏳ باید ${hours} ساعت و ${mins} دقیقه صبر کنی!`;return;}
-boomState.keys+=KEY_REGEN_AMOUNT;boomState.lastKeyClaim=now;saveBoomState();updateStats();renderGrid();document.getElementById('boomMsg').textContent=`🔑 ${KEY_REGEN_AMOUNT} چکشت دریافت شد!`;document.getElementById('claimKeyBtn').style.display='none';updateKeyTimer();
+document.getElementById('resetBtn').addEventListener('click',function(){
+if(confirm('آیا مطمئنی؟ همه پیشرفت از دست می‌ره!')){
+initGame();
 }
-
-document.addEventListener('DOMContentLoaded',function(){
-loadUser();const loaded=loadBoomState();
-if(loaded&&!boomState.gameOver){renderGrid();updateStats();document.getElementById('boomMsg').textContent='🔄 بازی ادامه یافت!';startKeyTimer();const now=Date.now();if(now-(boomState.lastKeyClaim||now)>=KEY_REGEN_TIME){document.getElementById('claimKeyBtn').style.display='inline-block';}}
-else if(loaded&&boomState.gameOver){renderGrid();updateStats();document.getElementById('boomMsg').textContent='🏁 بازی قبلاً تمام شده!';document.getElementById('boomMsg').className='boom-msg winner';document.getElementById('progressFill').className='fill complete';document.getElementById('gameEndedOverlay').classList.add('show');document.getElementById('finalStats').innerHTML=`💰 سکه: ${boomState.coins}`;startKeyTimer();}
-else{initBoomGame();}
 });
 
-document.addEventListener('click',function(e){if(e.target.id==='claimKeyBtn'){claimFreeKeys();}});
-setInterval(()=>{if(!boomState.gameOver)saveBoomState();},5000);
+loadUser();
+initGame();
+
 console.log('💣 Boom Game Ready!');
+console.log('🏆 جایزه برنده: 3000 سکه');
 </script>
 </body>
 </html>
