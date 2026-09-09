@@ -6,29 +6,106 @@
     
     <!-- ===== Google Search Console Verification ===== -->
     <meta name="google-site-verification" content="XXXXXXXXXXXXXXXXXXXXXXXXXXXXX" />
+    <!-- کد بالا را با کدی که گوگل به شما داده جایگزین کنید -->
     
-    <title>StarLoom_Game - خانه</title>
-    <!-- بقیه کدها ... -->
+    <!-- ===== SEO ===== -->
+    <title>StarLoom_Game - بازی‌های آنلاین رایگان | StarLoom325</title>
+    <meta name="description" content="StarLoom_Game: بازی مار و پله، مسابقه سرعت و بوم بوم. بازی‌های آنلاین رایگان با سیستم سکه و لول.">
+    <meta name="keywords" content="استار لوم, StarLoom, StarLoom_Game, StarLoom325, بازی آنلاین, مار و پله">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://starloom325.github.io/StarLoom_Game/">
+    
+    <!-- ===== Open Graph ===== -->
+    <meta property="og:title" content="StarLoom_Game - بازی‌های آنلاین رایگان">
+    <meta property="og:description" content="بازی مار و پله، مسابقه سرعت و بوم بوم با سیستم سکه و لول">
+    <meta property="og:url" content="https://starloom325.github.io/StarLoom_Game/">
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#f1c40f">
+    
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-gradient(135deg,#0b0e1a 0%,#1a1f30 100%);min-height:100vh;color:#f0f4ff;padding:15px;overflow-x:hidden}
+        .main-container{max-width:1200px;margin:0 auto}
+        ::-webkit-scrollbar{width:6px}
+        ::-webkit-scrollbar-track{background:#1a2235;border-radius:10px}
+        ::-webkit-scrollbar-thumb{background:#f1c40f;border-radius:10px}
+        .header{display:flex;justify-content:space-between;align-items:center;padding:15px 25px;background:rgba(255,255,255,0.05);border-radius:25px;backdrop-filter:blur(10px);border:1px solid rgba(255,215,0,0.15);flex-wrap:wrap;gap:10px}
+        .logo{font-size:1.8rem;font-weight:800;background:linear-gradient(135deg,#f9d976,#f39c12);-webkit-background-clip:text;background-clip:text;color:transparent}
+        .logo span{color:#b9c7e6;background:none;font-weight:300}
+        .auth-section{max-width:440px;margin:40px auto;background:rgba(255,255,255,0.05);border-radius:25px;padding:30px;border:1px solid rgba(255,215,0,0.15)}
+        .auth-section h2{text-align:center;margin-bottom:20px;color:#f5e9c4;font-size:1.6rem}
+        .auth-tabs{display:flex;gap:10px;margin-bottom:20px}
+        .auth-tabs button{flex:1;padding:12px;border:none;border-radius:12px;background:#2d3852;color:#a0b5d9;font-weight:600;cursor:pointer;transition:all .3s;font-size:1rem}
+        .auth-tabs button.active{background:#f1c40f;color:#1a1f30}
+        .auth-form{display:flex;flex-direction:column;gap:14px}
+        .auth-form input{padding:14px 18px;border-radius:12px;border:1px solid #4a5575;background:rgba(0,0,0,0.3);color:#f0f4ff;font-size:1rem}
+        .auth-form input:focus{outline:none;border-color:#f1c40f}
+        .auth-form input::placeholder{color:#6a7b9e}
+        .auth-form button{padding:14px;border:none;border-radius:12px;background:linear-gradient(145deg,#f1c40f,#d4a800);color:#1a1f30;font-weight:700;font-size:1.1rem;cursor:pointer;transition:all .3s}
+        .auth-form button:hover{transform:scale(1.02)}
+        .auth-error{color:#e74c3c;text-align:center;font-size:.9rem;min-height:22px;background:rgba(231,76,60,0.1);padding:6px 12px;border-radius:8px}
+        .hidden{display:none!important}
+        .user-profile{display:flex;align-items:center;gap:15px;background:rgba(0,0,0,0.3);padding:8px 18px;border-radius:50px;border:1px solid #f1c40f}
+        .user-profile .avatar{font-size:2rem}
+        .user-profile .info{display:flex;flex-direction:column}
+        .user-profile .info .name{font-weight:700;color:#f5e9c4;font-size:1rem}
+        .user-profile .info .stats{font-size:.8rem;color:#a0b5d9}
+        .user-profile .info .dice-count{font-size:.7rem;color:#f1c40f}
+        .user-profile .info .level-progress{font-size:.65rem;color:#2ecc71}
+        .logout-btn{background:#e74c3c;border:none;padding:6px 16px;border-radius:50px;color:#fff;font-weight:600;cursor:pointer;font-size:.85rem;transition:all .3s}
+        .logout-btn:hover{background:#c0392b}
+        .user-info{background:rgba(0,0,0,0.3);padding:10px 25px;border-radius:50px;border:1px solid #4a5575;font-size:.95rem}
+        .welcome-msg{text-align:center;padding:20px;color:#a0b5d9;font-size:1.1rem}
+        .welcome-msg strong{color:#f1c40f}
+        .dice-shop{background:rgba(255,215,0,0.05);border:1px solid rgba(255,215,0,0.15);border-radius:20px;padding:20px;margin-top:20px}
+        .dice-shop h4{color:#f5e9c4;margin-bottom:12px;font-size:1.2rem}
+        .dice-shop .dice-options{display:flex;gap:15px;flex-wrap:wrap}
+        .dice-shop .dice-options button{background:#2d3852;border:1px solid #4a5575;padding:12px 22px;border-radius:15px;color:#f0f4ff;cursor:pointer;transition:all .3s;text-align:center;flex:1;min-width:100px}
+        .dice-shop .dice-options button:hover{background:#3f4d70;border-color:#f1c40f}
+        .dice-shop .dice-options button .price{color:#f1c40f;font-size:.8rem}
+        .dice-shop .dice-options button .count{font-size:1.2rem;font-weight:700}
+        .games-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:25px;margin-top:30px}
+        .game-card{background:rgba(255,255,255,0.04);border-radius:25px;padding:28px;backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.08);transition:all .4s ease;text-decoration:none;color:inherit;display:block;cursor:pointer;position:relative;overflow:hidden}
+        .game-card:hover{transform:translateY(-8px);border-color:rgba(255,215,0,0.3)}
+        .game-card .badge-new{position:absolute;top:12px;left:12px;background:linear-gradient(135deg,#2ecc71,#27ae60);color:#fff;padding:2px 14px;border-radius:20px;font-size:.65rem;font-weight:700}
+        .game-icon{font-size:3.2rem;margin-bottom:12px;display:block}
+        .game-title{font-size:1.6rem;font-weight:700;margin-bottom:8px;color:#f5e9c4}
+        .game-desc{color:#a0b5d9;line-height:1.6;font-size:.9rem;margin-bottom:12px}
+        .game-stats{display:flex;gap:15px;font-size:.8rem;color:#7a8bb0;padding-top:12px;border-top:1px solid rgba(255,255,255,0.05);flex-wrap:wrap}
+        .game-stats span{display:flex;align-items:center;gap:4px}
+        .play-btn{background:linear-gradient(145deg,#f1c40f,#d4a800);border:none;padding:14px 25px;border-radius:50px;font-size:1rem;font-weight:700;color:#1a1f30;cursor:pointer;transition:all .3s ease;margin-top:14px;width:100%}
+        .play-btn:hover{transform:scale(1.02)}
+        .icon-shop{margin-top:30px;background:rgba(255,255,255,0.03);border-radius:20px;padding:20px;border:1px solid rgba(255,255,255,0.05)}
+        .icon-shop h3{margin-bottom:15px;color:#f5e9c4;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+        .icon-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(85px,1fr));gap:10px}
+        .icon-item{display:flex;flex-direction:column;align-items:center;gap:3px;background:rgba(0,0,0,0.3);padding:12px 6px;border-radius:14px;border:2px solid #2d3852;cursor:pointer;transition:all .3s;position:relative}
+        .icon-item:hover{border-color:#f1c40f;transform:scale(1.05)}
+        .icon-item.owned{border-color:#2ecc71}
+        .icon-item.active{border-color:#f1c40f}
+        .icon-item .icon-preview{font-size:2rem}
+        .icon-item .icon-name{font-size:.55rem;color:#a0b5d9;text-align:center}
+        .icon-item .icon-price{font-size:.55rem;color:#f1c40f}
+        .icon-item .icon-tag{position:absolute;top:-6px;right:-6px;font-size:.4rem;background:#e74c3c;color:#fff;padding:1px 6px;border-radius:10px}
+        .icon-item .icon-tag.free{background:#2ecc71}
+        .icon-item .icon-tag.owned-tag{background:#3498db}
+        .icon-item .icon-tag.best{background:linear-gradient(135deg,#f1c40f,#e67e22);color:#1a1f30;font-weight:700}
+        .icon-item .icon-tag.ultimate{background:linear-gradient(135deg,#9b59b6,#e74c3c,#f1c40f);color:#fff;font-weight:700}
+        .filter-buttons{display:flex;gap:8px;flex-wrap:wrap}
+        .filter-buttons button{padding:4px 14px;border-radius:20px;border:1px solid #4a5575;background:#2d3852;color:#a0b5d9;cursor:pointer;font-size:.75rem;transition:all .3s}
+        .filter-buttons button:hover,.filter-buttons button.active{background:#f1c40f;color:#1a1f30;border-color:#f1c40f}
+        .search-box{display:flex;gap:10px;margin-bottom:15px;flex-wrap:wrap}
+        .search-box input{flex:1;padding:10px 16px;border-radius:10px;border:1px solid #4a5575;background:rgba(0,0,0,0.3);color:#f0f4ff;font-size:.9rem;min-width:150px}
+        .search-box input:focus{outline:none;border-color:#f1c40f}
+        .search-box input::placeholder{color:#6a7b9e}
+        .total-icons{color:#7a8bb0;font-size:.8rem}
+        .footer{text-align:center;margin-top:40px;padding:20px;color:#4a5575;font-size:.8rem;border-top:1px solid rgba(255,255,255,0.05)}
+        @media(max-width:700px){.games-grid{grid-template-columns:1fr}.header{flex-direction:column;text-align:center}.logo{font-size:1.4rem}.icon-grid{grid-template-columns:repeat(auto-fill,minmax(70px,1fr))}}
+        @media(max-width:480px){.user-profile{padding:6px 12px;gap:8px}.user-profile .avatar{font-size:1.5rem}.game-card{padding:18px}.game-title{font-size:1.3rem}.game-icon{font-size:2.5rem}}
+    </style>
 </head>
 <body>
 <div class="main-container">
 
-
-<!-- متا تگ‌های SEO -->
-<title>StarLoom_Game - بازی‌های آنلاین رایگان | StarLoom325</title>
-<meta name="description" content="StarLoom_Game: بازی مار و پله، مسابقه سرعت و بوم بوم. بازی‌های آنلاین رایگان با سیستم سکه و لول.">
-<meta name="keywords" content="استار لوم, StarLoom, StarLoom_Game, StarLoom325, بازی آنلاین, مار و پله, game starloom">
-<meta name="robots" content="index, follow">
-<link rel="canonical" href="https://starloom325.github.io/StarLoom_Game/">
-
-<!-- Open Graph (برای نمایش در شبکه‌های اجتماعی) -->
-<meta property="og:title" content="StarLoom_Game - بازی‌های آنلاین رایگان">
-<meta property="og:description" content="بازی مار و پله، مسابقه سرعت و بوم بوم با سیستم سکه و لول">
-<meta property="og:url" content="https://starloom325.github.io/StarLoom_Game/">
-<meta property="og:type" content="website">
-<meta name="theme-color" content="#f1c40f">
-
-    
 <div class="header">
 <div class="logo">✦ StarLoom_Game <span>| خانه</span></div>
 <div id="userSection">
