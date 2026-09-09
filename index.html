@@ -11,98 +11,76 @@
         ::-webkit-scrollbar{width:6px}
         ::-webkit-scrollbar-track{background:#1a2235;border-radius:10px}
         ::-webkit-scrollbar-thumb{background:#f1c40f;border-radius:10px}
-
-        .header{display:flex;justify-content:space-between;align-items:center;padding:15px 25px;background:rgba(255,255,255,0.05);border-radius:25px;backdrop-filter:blur(10px);border:1px solid rgba(255,215,0,0.15);flex-wrap:wrap;gap:10px;animation:slideDown .6s ease}
-        @keyframes slideDown{0%{opacity:0;transform:translateY(-30px)}100%{opacity:1;transform:translateY(0)}}
-        .logo{font-size:1.8rem;font-weight:800;background:linear-gradient(135deg,#f9d976,#f39c12);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 0 40px rgba(243,156,18,0.15)}
+        .header{display:flex;justify-content:space-between;align-items:center;padding:15px 25px;background:rgba(255,255,255,0.05);border-radius:25px;backdrop-filter:blur(10px);border:1px solid rgba(255,215,0,0.15);flex-wrap:wrap;gap:10px}
+        .logo{font-size:1.8rem;font-weight:800;background:linear-gradient(135deg,#f9d976,#f39c12);-webkit-background-clip:text;background-clip:text;color:transparent}
         .logo span{color:#b9c7e6;background:none;font-weight:300}
-
-        .auth-section{max-width:440px;margin:40px auto;background:rgba(255,255,255,0.05);border-radius:25px;padding:30px;border:1px solid rgba(255,215,0,0.15);animation:fadeUp .8s ease}
-        @keyframes fadeUp{0%{opacity:0;transform:translateY(30px)}100%{opacity:1;transform:translateY(0)}}
+        .auth-section{max-width:440px;margin:40px auto;background:rgba(255,255,255,0.05);border-radius:25px;padding:30px;border:1px solid rgba(255,215,0,0.15)}
         .auth-section h2{text-align:center;margin-bottom:20px;color:#f5e9c4;font-size:1.6rem}
         .auth-tabs{display:flex;gap:10px;margin-bottom:20px}
         .auth-tabs button{flex:1;padding:12px;border:none;border-radius:12px;background:#2d3852;color:#a0b5d9;font-weight:600;cursor:pointer;transition:all .3s;font-size:1rem}
-        .auth-tabs button.active{background:#f1c40f;color:#1a1f30;box-shadow:0 0 30px rgba(241,196,15,0.2)}
-        .auth-tabs button:hover:not(.active){background:#3f4d70}
+        .auth-tabs button.active{background:#f1c40f;color:#1a1f30}
         .auth-form{display:flex;flex-direction:column;gap:14px}
-        .auth-form input{padding:14px 18px;border-radius:12px;border:1px solid #4a5575;background:rgba(0,0,0,0.3);color:#f0f4ff;font-size:1rem;transition:border .3s}
-        .auth-form input:focus{outline:none;border-color:#f1c40f;box-shadow:0 0 20px rgba(241,196,15,0.1)}
+        .auth-form input{padding:14px 18px;border-radius:12px;border:1px solid #4a5575;background:rgba(0,0,0,0.3);color:#f0f4ff;font-size:1rem}
+        .auth-form input:focus{outline:none;border-color:#f1c40f}
         .auth-form input::placeholder{color:#6a7b9e}
-        .auth-form button{padding:14px;border:none;border-radius:12px;background:linear-gradient(145deg,#f1c40f,#d4a800);color:#1a1f30;font-weight:700;font-size:1.1rem;cursor:pointer;transition:all .3s;box-shadow:0 4px 15px rgba(241,196,15,0.2)}
-        .auth-form button:hover{transform:scale(1.02);box-shadow:0 6px 25px rgba(241,196,15,0.3)}
+        .auth-form button{padding:14px;border:none;border-radius:12px;background:linear-gradient(145deg,#f1c40f,#d4a800);color:#1a1f30;font-weight:700;font-size:1.1rem;cursor:pointer;transition:all .3s}
+        .auth-form button:hover{transform:scale(1.02)}
         .auth-error{color:#e74c3c;text-align:center;font-size:.9rem;min-height:22px;background:rgba(231,76,60,0.1);padding:6px 12px;border-radius:8px}
         .hidden{display:none!important}
-
-        .user-profile{display:flex;align-items:center;gap:15px;background:rgba(0,0,0,0.3);padding:8px 18px;border-radius:50px;border:1px solid #f1c40f;animation:slideDown .6s ease}
-        .user-profile .avatar{font-size:2rem;transition:transform .3s}
-        .user-profile .avatar:hover{transform:scale(1.1) rotate(10deg)}
+        .user-profile{display:flex;align-items:center;gap:15px;background:rgba(0,0,0,0.3);padding:8px 18px;border-radius:50px;border:1px solid #f1c40f}
+        .user-profile .avatar{font-size:2rem}
         .user-profile .info{display:flex;flex-direction:column}
         .user-profile .info .name{font-weight:700;color:#f5e9c4;font-size:1rem}
         .user-profile .info .stats{font-size:.8rem;color:#a0b5d9}
         .user-profile .info .dice-count{font-size:.7rem;color:#f1c40f}
         .user-profile .info .level-progress{font-size:.65rem;color:#2ecc71}
         .logout-btn{background:#e74c3c;border:none;padding:6px 16px;border-radius:50px;color:#fff;font-weight:600;cursor:pointer;font-size:.85rem;transition:all .3s}
-        .logout-btn:hover{background:#c0392b;transform:scale(1.05)}
+        .logout-btn:hover{background:#c0392b}
         .user-info{background:rgba(0,0,0,0.3);padding:10px 25px;border-radius:50px;border:1px solid #4a5575;font-size:.95rem}
-
-        .welcome-msg{text-align:center;padding:20px;color:#a0b5d9;font-size:1.1rem;animation:fadeUp .8s ease}
+        .welcome-msg{text-align:center;padding:20px;color:#a0b5d9;font-size:1.1rem}
         .welcome-msg strong{color:#f1c40f}
-
         .dice-shop{background:rgba(255,215,0,0.05);border:1px solid rgba(255,215,0,0.15);border-radius:20px;padding:20px;margin-top:20px}
         .dice-shop h4{color:#f5e9c4;margin-bottom:12px;font-size:1.2rem}
         .dice-shop .dice-options{display:flex;gap:15px;flex-wrap:wrap}
         .dice-shop .dice-options button{background:#2d3852;border:1px solid #4a5575;padding:12px 22px;border-radius:15px;color:#f0f4ff;cursor:pointer;transition:all .3s;text-align:center;flex:1;min-width:100px}
-        .dice-shop .dice-options button:hover{background:#3f4d70;border-color:#f1c40f;transform:translateY(-3px);box-shadow:0 8px 25px rgba(0,0,0,0.3)}
+        .dice-shop .dice-options button:hover{background:#3f4d70;border-color:#f1c40f}
         .dice-shop .dice-options button .price{color:#f1c40f;font-size:.8rem}
         .dice-shop .dice-options button .count{font-size:1.2rem;font-weight:700}
-
         .games-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:25px;margin-top:30px}
         .game-card{background:rgba(255,255,255,0.04);border-radius:25px;padding:28px;backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.08);transition:all .4s ease;text-decoration:none;color:inherit;display:block;cursor:pointer;position:relative;overflow:hidden}
-        .game-card:hover{transform:translateY(-8px);border-color:rgba(255,215,0,0.3);box-shadow:0 25px 50px rgba(0,0,0,0.5)}
-        .game-card .badge-new{position:absolute;top:12px;left:12px;background:linear-gradient(135deg,#2ecc71,#27ae60);color:#fff;padding:2px 14px;border-radius:20px;font-size:.65rem;font-weight:700;animation:pulse 1.5s ease-in-out infinite}
-        @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+        .game-card:hover{transform:translateY(-8px);border-color:rgba(255,215,0,0.3)}
+        .game-card .badge-new{position:absolute;top:12px;left:12px;background:linear-gradient(135deg,#2ecc71,#27ae60);color:#fff;padding:2px 14px;border-radius:20px;font-size:.65rem;font-weight:700}
         .game-icon{font-size:3.2rem;margin-bottom:12px;display:block}
         .game-title{font-size:1.6rem;font-weight:700;margin-bottom:8px;color:#f5e9c4}
         .game-desc{color:#a0b5d9;line-height:1.6;font-size:.9rem;margin-bottom:12px}
         .game-stats{display:flex;gap:15px;font-size:.8rem;color:#7a8bb0;padding-top:12px;border-top:1px solid rgba(255,255,255,0.05);flex-wrap:wrap}
         .game-stats span{display:flex;align-items:center;gap:4px}
-        .play-btn{background:linear-gradient(145deg,#f1c40f,#d4a800);border:none;padding:14px 25px;border-radius:50px;font-size:1rem;font-weight:700;color:#1a1f30;cursor:pointer;transition:all .3s ease;margin-top:14px;width:100%;box-shadow:0 4px 15px rgba(241,196,15,0.15)}
-        .play-btn:hover{transform:scale(1.02);box-shadow:0 6px 25px rgba(241,196,15,0.25)}
-        .play-btn:active{transform:scale(.98)}
-
-        /* ===== فروشگاه آیکون (برگشت داده شده) ===== */
-        .icon-shop{margin-top:30px;background:rgba(255,255,255,0.03);border-radius:20px;padding:20px;border:1px solid rgba(255,255,255,0.05);animation:fadeUp .8s ease}
+        .play-btn{background:linear-gradient(145deg,#f1c40f,#d4a800);border:none;padding:14px 25px;border-radius:50px;font-size:1rem;font-weight:700;color:#1a1f30;cursor:pointer;transition:all .3s ease;margin-top:14px;width:100%}
+        .play-btn:hover{transform:scale(1.02)}
+        .icon-shop{margin-top:30px;background:rgba(255,255,255,0.03);border-radius:20px;padding:20px;border:1px solid rgba(255,255,255,0.05)}
         .icon-shop h3{margin-bottom:15px;color:#f5e9c4;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
         .icon-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(85px,1fr));gap:10px}
         .icon-item{display:flex;flex-direction:column;align-items:center;gap:3px;background:rgba(0,0,0,0.3);padding:12px 6px;border-radius:14px;border:2px solid #2d3852;cursor:pointer;transition:all .3s;position:relative}
-        .icon-item:hover{border-color:#f1c40f;transform:scale(1.05);box-shadow:0 8px 25px rgba(0,0,0,0.3)}
+        .icon-item:hover{border-color:#f1c40f;transform:scale(1.05)}
         .icon-item.owned{border-color:#2ecc71}
-        .icon-item.active{border-color:#f1c40f;box-shadow:0 0 30px rgba(241,196,15,0.2)}
+        .icon-item.active{border-color:#f1c40f}
         .icon-item .icon-preview{font-size:2rem}
         .icon-item .icon-name{font-size:.55rem;color:#a0b5d9;text-align:center}
         .icon-item .icon-price{font-size:.55rem;color:#f1c40f}
         .icon-item .icon-tag{position:absolute;top:-6px;right:-6px;font-size:.4rem;background:#e74c3c;color:#fff;padding:1px 6px;border-radius:10px}
         .icon-item .icon-tag.free{background:#2ecc71}
         .icon-item .icon-tag.owned-tag{background:#3498db}
-        .icon-item .icon-tag.best{background:linear-gradient(135deg,#f1c40f,#e67e22);color:#1a1f30;font-weight:700;animation:bestPulse 1.5s ease-in-out infinite alternate}
-        .icon-item .icon-tag.ultimate{background:linear-gradient(135deg,#9b59b6,#e74c3c,#f1c40f);color:#fff;font-weight:700;animation:ultimatePulse 1s ease-in-out infinite alternate}
-        @keyframes bestPulse{0%{transform:scale(1)}100%{transform:scale(1.1)}}
-        @keyframes ultimatePulse{0%{transform:scale(1);box-shadow:0 0 10px rgba(155,89,182,0.5)}100%{transform:scale(1.15);box-shadow:0 0 30px rgba(155,89,182,0.8),0 0 60px rgba(231,76,60,0.4)}}
+        .icon-item .icon-tag.best{background:linear-gradient(135deg,#f1c40f,#e67e22);color:#1a1f30;font-weight:700}
+        .icon-item .icon-tag.ultimate{background:linear-gradient(135deg,#9b59b6,#e74c3c,#f1c40f);color:#fff;font-weight:700}
         .filter-buttons{display:flex;gap:8px;flex-wrap:wrap}
         .filter-buttons button{padding:4px 14px;border-radius:20px;border:1px solid #4a5575;background:#2d3852;color:#a0b5d9;cursor:pointer;font-size:.75rem;transition:all .3s}
         .filter-buttons button:hover,.filter-buttons button.active{background:#f1c40f;color:#1a1f30;border-color:#f1c40f}
         .search-box{display:flex;gap:10px;margin-bottom:15px;flex-wrap:wrap}
-        .search-box input{flex:1;padding:10px 16px;border-radius:10px;border:1px solid #4a5575;background:rgba(0,0,0,0.3);color:#f0f4ff;font-size:.9rem;min-width:150px;transition:border .3s}
+        .search-box input{flex:1;padding:10px 16px;border-radius:10px;border:1px solid #4a5575;background:rgba(0,0,0,0.3);color:#f0f4ff;font-size:.9rem;min-width:150px}
         .search-box input:focus{outline:none;border-color:#f1c40f}
         .search-box input::placeholder{color:#6a7b9e}
         .total-icons{color:#7a8bb0;font-size:.8rem}
-
-        .level-display{display:flex;align-items:center;gap:10px;background:rgba(0,0,0,0.2);padding:5px 15px;border-radius:50px}
-        .level-display .level-bar{width:100px;height:6px;background:#1a2235;border-radius:10px;overflow:hidden}
-        .level-display .level-bar .fill{height:100%;background:linear-gradient(90deg,#f1c40f,#e67e22);border-radius:10px;transition:width .8s ease}
-
         .footer{text-align:center;margin-top:40px;padding:20px;color:#4a5575;font-size:.8rem;border-top:1px solid rgba(255,255,255,0.05)}
-
         @media(max-width:700px){.games-grid{grid-template-columns:1fr}.header{flex-direction:column;text-align:center}.logo{font-size:1.4rem}.icon-grid{grid-template-columns:repeat(auto-fill,minmax(70px,1fr))}}
         @media(max-width:480px){.user-profile{padding:6px 12px;gap:8px}.user-profile .avatar{font-size:1.5rem}.game-card{padding:18px}.game-title{font-size:1.3rem}.game-icon{font-size:2.5rem}}
     </style>
@@ -165,7 +143,7 @@
 <span class="badge-new">🔥 محبوب</span>
 <span class="game-icon">🐍</span>
 <div class="game-title">مار و پله</div>
-<div class="game-desc">🎯 تک‌نفره | ۲۲۰ خانه | با تاس به خانه آخر برسید! <strong style="color:#f1c40f;">+1 لول</strong></div>
+<div class="game-desc">🎯 تک‌نفره | ۲۲۰ خانه | برنده <strong style="color:#f1c40f;">+1 لول</strong></div>
 <div class="game-stats"><span>👤 ۱ نفره</span><span>🎲 استراتژیک</span><span>🏆 ۸۰۰ سکه</span></div>
 <button class="play-btn">▶ بازی کن</button>
 </a>
@@ -174,7 +152,7 @@
 <span class="badge-new">⚡ جدید</span>
 <span class="game-icon">🏎️</span>
 <div class="game-title">مسابقه سرعت</div>
-<div class="game-desc">⚡ با کلیک سریع به خط پایان برسید! برنده ۳۰۰ سکه <strong style="color:#2ecc71;">+0.5 لول</strong></div>
+<div class="game-desc">⚡ با کلیک سریع به خط پایان برسید! <strong style="color:#2ecc71;">+0.5 لول</strong></div>
 <div class="game-stats"><span>👤 ۱ نفره</span><span>⚡ سرعتی</span><span>🏆 ۳۰۰ سکه</span></div>
 <button class="play-btn">▶ بازی کن</button>
 </a>
@@ -182,13 +160,12 @@
 <a href="boom.html" class="game-card">
 <span class="game-icon">💣</span>
 <div class="game-title">بوم بوم</div>
-<div class="game-desc">💥 ۱۰۰۰ مکعب! سکه، بمب، مار، چکشت و صندوق پیدا کن! <strong style="color:#9b59b6;">+1 لول</strong></div>
+<div class="game-desc">💥 ۱۰۰۰ مکعب! سکه، بمب، مار، چکشت و صندوق! <strong style="color:#9b59b6;">+1 لول</strong></div>
 <div class="game-stats"><span>👤 ۱ نفره</span><span>🎮 ماجراجویی</span><span>🏆 ۲۰۰۰ سکه</span></div>
 <button class="play-btn">▶ بازی کن</button>
 </a>
 </div>
 
-<!-- ===== فروشگاه آیکون (برگشت داده شده) ===== -->
 <div class="icon-shop">
 <h3>
 <span>🎨 فروشگاه آیکون <span class="total-icons" id="iconCount">۳۳ آیکون</span></span>
@@ -212,317 +189,482 @@
 </div>
 
 <script>
-// ============================================================
-//  StarLoom_Game - با ۳۳ آیکون و سیستم لول جدید
-// ============================================================
-
-var ICONS = {
-'default':{name:'پیش‌فرض',emoji:'😊',price:0},
-'smile':{name:'خندان',emoji:'😄',price:0},
-'heart':{name:'قلب',emoji:'❤️',price:0},
-'star':{name:'ستاره',emoji:'⭐',price:0},
-'lion':{name:'شیر',emoji:'🦁',price:600},
-'tiger':{name:'ببر',emoji:'🐯',price:700},
-'eagle':{name:'عقاب',emoji:'🦅',price:800},
-'wolf':{name:'گرگ',emoji:'🐺',price:650},
-'dragon':{name:'اژدها',emoji:'🐉',price:1300},
-'phoenix':{name:'ققنوس',emoji:'🔥',price:1600},
-'unicorn':{name:'تک‌شاخ',emoji:'🦄',price:2000},
-'crown':{name:'تاج',emoji:'👑',price:900},
-'diamond':{name:'الماس',emoji:'💎',price:1600},
-'king':{name:'سلطنتی',emoji:'👸',price:2600},
-'gold':{name:'طلایی',emoji:'🏆',price:1000},
-'robot':{name:'ربات',emoji:'🤖',price:1100},
-'gem':{name:'جواهر',emoji:'💠',price:1800},
-'pizza':{name:'پیتزا',emoji:'🍕',price:500},
-'burger':{name:'برگر',emoji:'🍔',price:450},
-'cake':{name:'کیک',emoji:'🎂',price:550},
-'donut':{name:'دونات',emoji:'🍩',price:400},
-'ninja':{name:'نینجا',emoji:'🥷',price:1900},
-'mage':{name:'جادوگر',emoji:'🧙',price:2100},
-'knight':{name:'شوالیه',emoji:'⚔️',price:1700},
-'angel':{name:'فرشته',emoji:'👼',price:3100},
-'demon':{name:'اهریمن',emoji:'👿',price:3600},
-'skeleton':{name:'اسکلت',emoji:'💀',price:2500},
-'galaxy':{name:'کهکشان',emoji:'🌌',price:4000},
-'crystal':{name:'بلورین',emoji:'🔮',price:5000},
-'cosmic':{name:'کیهانی',emoji:'🚀',price:7000},
-'legendary':{name:'افسانه‌ای',emoji:'🌟',price:13100},
-'ultimate':{name:'نهایی',emoji:'⚡',price:16000},
-'void':{name:'ابدیت',emoji:'🌑',price:20000}
-};
-
-var currentUser=null;
-var userData=null;
-var currentFilter='all';
-var searchQuery='';
-
-function getUsers(){try{return JSON.parse(localStorage.getItem('starloom_users'))||{}}catch(e){return {}}}
-function saveUsers(u){localStorage.setItem('starloom_users',JSON.stringify(u));}
-function getIconEmoji(id){return ICONS[id]?ICONS[id].emoji:'😊';}
-
-function updateUserUI(){
-if(!userData)return;
-document.getElementById('userName').textContent=userData.username;
-document.getElementById('userAvatar').textContent=getIconEmoji(userData.icon||'default');
-document.getElementById('userCoins').textContent=userData.coins||0;
-document.getElementById('userLevel').textContent=userData.level||0;
-document.getElementById('userDice').textContent=userData.dice||40;
-document.getElementById('welcomeName').textContent=userData.username;
-
-// نمایش درصد پیشرفت لول
-var levelProgress = userData.levelProgress || 0;
-var progressPercent = Math.min(levelProgress * 100, 100);
-document.getElementById('levelProgress').textContent = '📊 پیشرفت لول: ' + Math.floor(progressPercent) + '%';
-}
-
-function buyDice(count,price){
-if(!userData){alert('لطفاً وارد شوید');return}
-if((userData.coins||0)<price){alert('❌ سکه کافی ندارید! نیاز به '+price.toLocaleString('fa-IR')+' سکه دارید.');return}
-if(!confirm('🎲 آیا '+count+' تا تاس به قیمت '+price.toLocaleString('fa-IR')+' سکه می‌خواهید؟'))return;
-userData.coins-=price;
-userData.dice=(userData.dice||0)+count;
-var users=getUsers();
-users[currentUser]=userData;
-saveUsers(users);
-localStorage.setItem('starloom_current_user',JSON.stringify({
-username:currentUser,
-coins:userData.coins,
-level:userData.level,
-levelProgress:userData.levelProgress||0,
-icon:userData.icon,
-dice:userData.dice
-}));
-updateUserUI();
-alert('🎉 '+count+' تا تاس خریداری شد!');
-}
-
-function loginUser(username){
-var users=getUsers();
-var user=users[username];
-if(!user)return;
-currentUser=username;
-userData=user;
-if(!userData.dice||userData.dice===0){userData.dice=40;users[currentUser].dice=40;saveUsers(users);}
-if(!userData.levelProgress){userData.levelProgress=0;}
-localStorage.setItem('starloom_current_user',JSON.stringify({
-username:username,
-coins:user.coins,
-level:user.level,
-levelProgress:userData.levelProgress||0,
-icon:user.icon,
-dice:userData.dice
-}));
-document.getElementById('authSection').classList.add('hidden');
-document.getElementById('gameSection').classList.remove('hidden');
-document.getElementById('guestInfo').classList.add('hidden');
-document.getElementById('userProfile').classList.remove('hidden');
-updateUserUI();
-updateWelcomeMessage();
-loadIcons();
-}
-
-function updateWelcomeMessage(){
-if(!userData)return;
-var hour=new Date().getHours();
-var g='👋 خوش آمدی';
-if(hour<12)g='🌅 صبح بخیر';
-else if(hour<18)g='☀️ ظهر بخیر';
-else g='🌙 شب بخیر';
-var newMsg='';
-if(userData.isNew){newMsg=' 🎁 ۶۰۰ سکه + ۴۰ تاس هدیه!';userData.isNew=false;var users=getUsers();if(users[currentUser]){users[currentUser].isNew=false;saveUsers(users);}}
-document.getElementById('welcomeMsg').innerHTML=g+' <strong>'+userData.username+'</strong>!'+newMsg;
-}
-
-// Auth Events
-document.querySelectorAll('.auth-tabs button').forEach(function(btn){
-btn.addEventListener('click',function(){
-document.querySelectorAll('.auth-tabs button').forEach(function(b){b.classList.remove('active');});
-this.classList.add('active');
-var tab=this.dataset.tab;
-document.getElementById('loginForm').classList.toggle('hidden',tab!=='login');
-document.getElementById('registerForm').classList.toggle('hidden',tab!=='register');
-document.getElementById('loginError').textContent='';
-document.getElementById('registerError').textContent='';
-});
-});
-
-document.getElementById('registerBtn').addEventListener('click',function(){
-var username=document.getElementById('registerUsername').value.trim();
-var password=document.getElementById('registerPassword').value.trim();
-var errorEl=document.getElementById('registerError');
-if(!username||username.length<3){errorEl.textContent='نام کاربری حداقل ۳ کاراکتر';return}
-if(!password||password.length<4){errorEl.textContent='رمز عبور حداقل ۴ کاراکتر';return}
-var users=getUsers();
-if(users[username]){errorEl.textContent='این نام کاربری قبلاً ثبت شده است';return}
-users[username]={
-username:username,
-password:password,
-coins:600,
-level:0,
-levelProgress:0,
-icon:'default',
-icons:['default','smile','heart','star'],
-dice:40,
-createdAt:new Date().toISOString(),
-snakeWins:0,
-boomWins:0,
-raceWins:0,
-totalGames:0,
-isNew:true
-};
-saveUsers(users);
-errorEl.textContent='';
-document.getElementById('registerUsername').value='';
-document.getElementById('registerPassword').value='';
-loginUser(username);
-});
-
-document.getElementById('loginBtn').addEventListener('click',function(){
-var username=document.getElementById('loginUsername').value.trim();
-var password=document.getElementById('loginPassword').value.trim();
-var errorEl=document.getElementById('loginError');
-if(!username||!password){errorEl.textContent='همه فیلدها را پر کنید';return}
-var users=getUsers();
-var user=users[username];
-if(!user){errorEl.textContent='کاربری با این نام پیدا نشد';return}
-if(user.password!==password){errorEl.textContent='رمز عبور اشتباه است';return}
-errorEl.textContent='';
-document.getElementById('loginUsername').value='';
-document.getElementById('loginPassword').value='';
-loginUser(username);
-});
-
-document.getElementById('loginPassword').addEventListener('keypress',function(e){if(e.key==='Enter')document.getElementById('loginBtn').click();});
-document.getElementById('registerPassword').addEventListener('keypress',function(e){if(e.key==='Enter')document.getElementById('registerBtn').click();});
-
-// ============================================================
-//  فروشگاه آیکون (برگشت داده شده)
-// ============================================================
-function loadIcons(){if(!userData)return;document.getElementById('iconCount').textContent=Object.keys(ICONS).length+' آیکون';renderIcons();}
-function renderIcons(){
-var owned=userData.icons||['default','smile','heart','star'];
-var search=searchQuery.toLowerCase().trim();
-var filtered=Object.keys(ICONS).map(function(key){return [key,ICONS[key]];});
-if(search){filtered=filtered.filter(function(item){var id=item[0],icon=item[1];return icon.name.indexOf(search)!==-1||id.indexOf(search)!==-1||icon.emoji===search;});}
-if(currentFilter==='free'){filtered=filtered.filter(function(item){return item[1].price===0;});}
-else if(currentFilter==='premium'){filtered=filtered.filter(function(item){return item[1].price>0;});}
-else if(currentFilter==='owned'){filtered=filtered.filter(function(item){return owned.indexOf(item[0])!==-1;});}
-var grid=document.getElementById('iconGrid');
-grid.innerHTML='';
-if(filtered.length===0){grid.innerHTML='<div style="grid-column:1/-1;text-align:center;color:#7a8bb0;padding:20px;">❌ آیکونی پیدا نشد</div>';return;}
-for(var i=0;i<filtered.length;i++){
-var id=filtered[i][0],icon=filtered[i][1];
-var isOwned=owned.indexOf(id)!==-1;
-var isActive=userData.icon===id;
-var isUltimate=id==='ultimate'||id==='void';
-var isLegendary=id==='legendary';
-var div=document.createElement('div');
-div.className='icon-item';
-if(isOwned)div.classList.add('owned');
-if(isActive)div.classList.add('active');
-var tags='';
-if(isUltimate)tags+='<span class="icon-tag ultimate">👑 نهایی</span>';
-else if(isLegendary)tags+='<span class="icon-tag best">⭐ بهترین</span>';
-else if(icon.price===0&&!isOwned)tags+='<span class="icon-tag free">رایگان</span>';
-else if(isOwned&&!isActive)tags+='<span class="icon-tag owned-tag">مالک</span>';
-else if(isActive)tags+='<span class="icon-tag" style="background:#f1c40f;color:#1a1f30;">فعال</span>';
-div.innerHTML=tags+'<span class="icon-preview">'+icon.emoji+'</span><span class="icon-name">'+icon.name+'</span>'+(icon.price>0?'<span class="icon-price">💰 '+icon.price.toLocaleString('fa-IR')+'</span>':'<span class="icon-price">رایگان</span>');
-div.dataset.id=id;
-div.addEventListener('click',function(e){var id=this.dataset.id;handleIconClick(id);});
-grid.appendChild(div);
-}}
-function handleIconClick(iconId){
-if(!userData||iconId===userData.icon)return;
-var owned=userData.icons||['default','smile','heart','star'];
-if(owned.indexOf(iconId)!==-1){
-userData.icon=iconId;
-var users=getUsers();
-users[currentUser].icon=iconId;
-saveUsers(users);
-localStorage.setItem('starloom_current_user',JSON.stringify({
-username:currentUser,
-coins:userData.coins,
-level:userData.level,
-levelProgress:userData.levelProgress||0,
-icon:userData.icon,
-dice:userData.dice
-}));
-updateUserUI();
-renderIcons();
-return;}
-var price=ICONS[iconId].price;
-if((userData.coins||0)<price){alert('❌ سکه کافی ندارید! نیاز به '+price.toLocaleString('fa-IR')+' سکه دارید.');return;}
-if(!confirm('آیا '+ICONS[iconId].emoji+' '+ICONS[iconId].name+' رو به قیمت '+price.toLocaleString('fa-IR')+' سکه می‌خواهید؟'))return;
-userData.coins-=price;
-if(!userData.icons)userData.icons=['default','smile','heart','star'];
-userData.icons.push(iconId);
-userData.icon=iconId;
-var users=getUsers();
-users[currentUser]=userData;
-saveUsers(users);
-localStorage.setItem('starloom_current_user',JSON.stringify({
-username:currentUser,
-coins:userData.coins,
-level:userData.level,
-levelProgress:userData.levelProgress||0,
-icon:userData.icon,
-dice:userData.dice
-}));
-updateUserUI();
-renderIcons();
-alert('🎉 '+ICONS[iconId].emoji+' '+ICONS[iconId].name+' خریداری شد!');
-}
-
-// Filters
-document.querySelectorAll('.filter-buttons button').forEach(function(btn){
-btn.addEventListener('click',function(){
-document.querySelectorAll('.filter-buttons button').forEach(function(b){b.classList.remove('active');});
-this.classList.add('active');
-currentFilter=this.dataset.filter;
-renderIcons();
-});
-});
-document.getElementById('iconSearch').addEventListener('input',function(){searchQuery=this.value;renderIcons();});
-
-// Logout
-document.getElementById('logoutBtn').addEventListener('click',function(){
-localStorage.removeItem('starloom_current_user');
-currentUser=null;userData=null;
-document.getElementById('authSection').classList.remove('hidden');
-document.getElementById('gameSection').classList.add('hidden');
-document.getElementById('guestInfo').classList.remove('hidden');
-document.getElementById('userProfile').classList.add('hidden');
-location.reload();
-});
-
-// Check saved user
 (function(){
-var saved=localStorage.getItem('starloom_current_user');
-if(saved){
-try{
-var data=JSON.parse(saved);
-var users=getUsers();
-if(users[data.username]){
-userData=users[data.username];
-currentUser=data.username;
-if(!userData.dice||userData.dice===0){userData.dice=40;users[currentUser].dice=40;saveUsers(users);}
-if(!userData.levelProgress){userData.levelProgress=0;}
-document.getElementById('authSection').classList.add('hidden');
-document.getElementById('gameSection').classList.remove('hidden');
-document.getElementById('guestInfo').classList.add('hidden');
-document.getElementById('userProfile').classList.remove('hidden');
-updateUserUI();
-loadIcons();
-updateWelcomeMessage();
-}
-}catch(e){localStorage.removeItem('starloom_current_user');}
-}
-})();
+    var ICONS = {
+        'default':{name:'پیش‌فرض',emoji:'😊',price:0},
+        'smile':{name:'خندان',emoji:'😄',price:0},
+        'heart':{name:'قلب',emoji:'❤️',price:0},
+        'star':{name:'ستاره',emoji:'⭐',price:0},
+        'lion':{name:'شیر',emoji:'🦁',price:600},
+        'tiger':{name:'ببر',emoji:'🐯',price:700},
+        'eagle':{name:'عقاب',emoji:'🦅',price:800},
+        'wolf':{name:'گرگ',emoji:'🐺',price:650},
+        'dragon':{name:'اژدها',emoji:'🐉',price:1300},
+        'phoenix':{name:'ققنوس',emoji:'🔥',price:1600},
+        'unicorn':{name:'تک‌شاخ',emoji:'🦄',price:2000},
+        'crown':{name:'تاج',emoji:'👑',price:900},
+        'diamond':{name:'الماس',emoji:'💎',price:1600},
+        'king':{name:'سلطنتی',emoji:'👸',price:2600},
+        'gold':{name:'طلایی',emoji:'🏆',price:1000},
+        'robot':{name:'ربات',emoji:'🤖',price:1100},
+        'gem':{name:'جواهر',emoji:'💠',price:1800},
+        'pizza':{name:'پیتزا',emoji:'🍕',price:500},
+        'burger':{name:'برگر',emoji:'🍔',price:450},
+        'cake':{name:'کیک',emoji:'🎂',price:550},
+        'donut':{name:'دونات',emoji:'🍩',price:400},
+        'ninja':{name:'نینجا',emoji:'🥷',price:1900},
+        'mage':{name:'جادوگر',emoji:'🧙',price:2100},
+        'knight':{name:'شوالیه',emoji:'⚔️',price:1700},
+        'angel':{name:'فرشته',emoji:'👼',price:3100},
+        'demon':{name:'اهریمن',emoji:'👿',price:3600},
+        'skeleton':{name:'اسکلت',emoji:'💀',price:2500},
+        'galaxy':{name:'کهکشان',emoji:'🌌',price:4000},
+        'crystal':{name:'بلورین',emoji:'🔮',price:5000},
+        'cosmic':{name:'کیهانی',emoji:'🚀',price:7000},
+        'legendary':{name:'افسانه‌ای',emoji:'🌟',price:13100},
+        'ultimate':{name:'نهایی',emoji:'⚡',price:16000},
+        'void':{name:'ابدیت',emoji:'🌑',price:20000}
+    };
 
-console.log('🌟 StarLoom_Game v2.0 - آماده!');
-console.log('🎨 تعداد آیکون‌ها:', Object.keys(ICONS).length);
-console.log('🎮 ۳ بازی: مار و پله (+1 لول)، مسابقه سرعت (+0.5 لول)، بوم بوم (+1 لول)');
+    var currentUser = null;
+    var userData = null;
+    var currentFilter = 'all';
+    var searchQuery = '';
+
+    function getUsers(){
+        try {
+            return JSON.parse(localStorage.getItem('starloom_users')) || {};
+        } catch(e) {
+            return {};
+        }
+    }
+
+    function saveUsers(u){
+        try {
+            localStorage.setItem('starloom_users', JSON.stringify(u));
+        } catch(e) {}
+    }
+
+    function getIconEmoji(id){
+        return ICONS[id] ? ICONS[id].emoji : '😊';
+    }
+
+    function updateUserUI(){
+        if(!userData) return;
+        document.getElementById('userName').textContent = userData.username;
+        document.getElementById('userAvatar').textContent = getIconEmoji(userData.icon || 'default');
+        document.getElementById('userCoins').textContent = userData.coins || 0;
+        document.getElementById('userLevel').textContent = userData.level || 0;
+        document.getElementById('userDice').textContent = userData.dice || 40;
+        document.getElementById('welcomeName').textContent = userData.username;
+        
+        var levelProgress = userData.levelProgress || 0;
+        var progressPercent = Math.min(levelProgress * 100, 100);
+        var el = document.getElementById('levelProgress');
+        if(el) el.textContent = '📊 پیشرفت لول: ' + Math.floor(progressPercent) + '%';
+    }
+
+    window.buyDice = function(count, price){
+        if(!userData){
+            alert('لطفاً وارد شوید');
+            return;
+        }
+        if((userData.coins || 0) < price){
+            alert('❌ سکه کافی ندارید! نیاز به ' + price.toLocaleString('fa-IR') + ' سکه دارید.');
+            return;
+        }
+        if(!confirm('🎲 آیا ' + count + ' تا تاس به قیمت ' + price.toLocaleString('fa-IR') + ' سکه می‌خواهید؟')) return;
+        
+        userData.coins -= price;
+        userData.dice = (userData.dice || 0) + count;
+        var users = getUsers();
+        users[currentUser] = userData;
+        saveUsers(users);
+        
+        try {
+            localStorage.setItem('starloom_current_user', JSON.stringify({
+                username: currentUser,
+                coins: userData.coins,
+                level: userData.level,
+                levelProgress: userData.levelProgress || 0,
+                icon: userData.icon,
+                dice: userData.dice
+            }));
+        } catch(e) {}
+        
+        updateUserUI();
+        alert('🎉 ' + count + ' تا تاس خریداری شد!');
+    };
+
+    function loginUser(username){
+        var users = getUsers();
+        var user = users[username];
+        if(!user) return;
+        
+        currentUser = username;
+        userData = user;
+        
+        if(!userData.dice || userData.dice === 0){
+            userData.dice = 40;
+            users[currentUser].dice = 40;
+            saveUsers(users);
+        }
+        if(!userData.levelProgress){
+            userData.levelProgress = 0;
+        }
+        
+        try {
+            localStorage.setItem('starloom_current_user', JSON.stringify({
+                username: username,
+                coins: user.coins,
+                level: user.level,
+                levelProgress: userData.levelProgress || 0,
+                icon: user.icon,
+                dice: userData.dice
+            }));
+        } catch(e) {}
+        
+        document.getElementById('authSection').classList.add('hidden');
+        document.getElementById('gameSection').classList.remove('hidden');
+        document.getElementById('guestInfo').classList.add('hidden');
+        document.getElementById('userProfile').classList.remove('hidden');
+        
+        updateUserUI();
+        updateWelcomeMessage();
+        loadIcons();
+    }
+
+    function updateWelcomeMessage(){
+        if(!userData) return;
+        var hour = new Date().getHours();
+        var g = '👋 خوش آمدی';
+        if(hour < 12) g = '🌅 صبح بخیر';
+        else if(hour < 18) g = '☀️ ظهر بخیر';
+        else g = '🌙 شب بخیر';
+        
+        var newMsg = '';
+        if(userData.isNew){
+            newMsg = ' 🎁 ۶۰۰ سکه + ۴۰ تاس هدیه!';
+            userData.isNew = false;
+            var users = getUsers();
+            if(users[currentUser]){
+                users[currentUser].isNew = false;
+                saveUsers(users);
+            }
+        }
+        document.getElementById('welcomeMsg').innerHTML = g + ' <strong>' + userData.username + '</strong>!' + newMsg;
+    }
+
+    document.querySelectorAll('.auth-tabs button').forEach(function(btn){
+        btn.addEventListener('click', function(){
+            document.querySelectorAll('.auth-tabs button').forEach(function(b){
+                b.classList.remove('active');
+            });
+            this.classList.add('active');
+            var tab = this.dataset.tab;
+            document.getElementById('loginForm').classList.toggle('hidden', tab !== 'login');
+            document.getElementById('registerForm').classList.toggle('hidden', tab !== 'register');
+            document.getElementById('loginError').textContent = '';
+            document.getElementById('registerError').textContent = '';
+        });
+    });
+
+    document.getElementById('registerBtn').addEventListener('click', function(){
+        var username = document.getElementById('registerUsername').value.trim();
+        var password = document.getElementById('registerPassword').value.trim();
+        var errorEl = document.getElementById('registerError');
+        
+        if(!username || username.length < 3){
+            errorEl.textContent = 'نام کاربری حداقل ۳ کاراکتر';
+            return;
+        }
+        if(!password || password.length < 4){
+            errorEl.textContent = 'رمز عبور حداقل ۴ کاراکتر';
+            return;
+        }
+        
+        var users = getUsers();
+        if(users[username]){
+            errorEl.textContent = 'این نام کاربری قبلاً ثبت شده است';
+            return;
+        }
+        
+        users[username] = {
+            username: username,
+            password: password,
+            coins: 600,
+            level: 0,
+            levelProgress: 0,
+            icon: 'default',
+            icons: ['default','smile','heart','star'],
+            dice: 40,
+            createdAt: new Date().toISOString(),
+            snakeWins: 0,
+            boomWins: 0,
+            raceWins: 0,
+            totalGames: 0,
+            isNew: true
+        };
+        saveUsers(users);
+        errorEl.textContent = '';
+        document.getElementById('registerUsername').value = '';
+        document.getElementById('registerPassword').value = '';
+        loginUser(username);
+    });
+
+    document.getElementById('loginBtn').addEventListener('click', function(){
+        var username = document.getElementById('loginUsername').value.trim();
+        var password = document.getElementById('loginPassword').value.trim();
+        var errorEl = document.getElementById('loginError');
+        
+        if(!username || !password){
+            errorEl.textContent = 'همه فیلدها را پر کنید';
+            return;
+        }
+        
+        var users = getUsers();
+        var user = users[username];
+        if(!user){
+            errorEl.textContent = 'کاربری با این نام پیدا نشد';
+            return;
+        }
+        if(user.password !== password){
+            errorEl.textContent = 'رمز عبور اشتباه است';
+            return;
+        }
+        
+        errorEl.textContent = '';
+        document.getElementById('loginUsername').value = '';
+        document.getElementById('loginPassword').value = '';
+        loginUser(username);
+    });
+
+    document.getElementById('loginPassword').addEventListener('keypress', function(e){
+        if(e.key === 'Enter') document.getElementById('loginBtn').click();
+    });
+    document.getElementById('registerPassword').addEventListener('keypress', function(e){
+        if(e.key === 'Enter') document.getElementById('registerBtn').click();
+    });
+
+    function loadIcons(){
+        if(!userData) return;
+        document.getElementById('iconCount').textContent = Object.keys(ICONS).length + ' آیکون';
+        renderIcons();
+    }
+
+    function renderIcons(){
+        var owned = userData.icons || ['default','smile','heart','star'];
+        var search = searchQuery.toLowerCase().trim();
+        var filtered = Object.keys(ICONS).map(function(key){
+            return [key, ICONS[key]];
+        });
+        
+        if(search){
+            filtered = filtered.filter(function(item){
+                var id = item[0];
+                var icon = item[1];
+                return icon.name.indexOf(search) !== -1 || id.indexOf(search) !== -1 || icon.emoji === search;
+            });
+        }
+        
+        if(currentFilter === 'free'){
+            filtered = filtered.filter(function(item){
+                return item[1].price === 0;
+            });
+        } else if(currentFilter === 'premium'){
+            filtered = filtered.filter(function(item){
+                return item[1].price > 0;
+            });
+        } else if(currentFilter === 'owned'){
+            filtered = filtered.filter(function(item){
+                return owned.indexOf(item[0]) !== -1;
+            });
+        }
+        
+        var grid = document.getElementById('iconGrid');
+        grid.innerHTML = '';
+        
+        if(filtered.length === 0){
+            grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:#7a8bb0;padding:20px;">❌ آیکونی پیدا نشد</div>';
+            return;
+        }
+        
+        for(var i = 0; i < filtered.length; i++){
+            var id = filtered[i][0];
+            var icon = filtered[i][1];
+            var isOwned = owned.indexOf(id) !== -1;
+            var isActive = userData.icon === id;
+            var isUltimate = id === 'ultimate' || id === 'void';
+            var isLegendary = id === 'legendary';
+            
+            var div = document.createElement('div');
+            div.className = 'icon-item';
+            if(isOwned) div.classList.add('owned');
+            if(isActive) div.classList.add('active');
+            
+            var tags = '';
+            if(isUltimate){
+                tags += '<span class="icon-tag ultimate">👑 نهایی</span>';
+            } else if(isLegendary){
+                tags += '<span class="icon-tag best">⭐ بهترین</span>';
+            } else if(icon.price === 0 && !isOwned){
+                tags += '<span class="icon-tag free">رایگان</span>';
+            } else if(isOwned && !isActive){
+                tags += '<span class="icon-tag owned-tag">مالک</span>';
+            } else if(isActive){
+                tags += '<span class="icon-tag" style="background:#f1c40f;color:#1a1f30;">فعال</span>';
+            }
+            
+            var priceText = icon.price > 0 ? '💰 ' + icon.price.toLocaleString('fa-IR') : 'رایگان';
+            
+            div.innerHTML = tags +
+                '<span class="icon-preview">' + icon.emoji + '</span>' +
+                '<span class="icon-name">' + icon.name + '</span>' +
+                '<span class="icon-price">' + priceText + '</span>';
+            
+            div.dataset.id = id;
+            
+            div.addEventListener('click', function(e){
+                var iconId = this.dataset.id;
+                handleIconClick(iconId);
+            });
+            
+            grid.appendChild(div);
+        }
+    }
+
+    function handleIconClick(iconId){
+        if(!userData || iconId === userData.icon) return;
+        
+        var owned = userData.icons || ['default','smile','heart','star'];
+        
+        if(owned.indexOf(iconId) !== -1){
+            userData.icon = iconId;
+            var users = getUsers();
+            users[currentUser].icon = iconId;
+            saveUsers(users);
+            
+            try {
+                localStorage.setItem('starloom_current_user', JSON.stringify({
+                    username: currentUser,
+                    coins: userData.coins,
+                    level: userData.level,
+                    levelProgress: userData.levelProgress || 0,
+                    icon: userData.icon,
+                    dice: userData.dice
+                }));
+            } catch(e) {}
+            
+            updateUserUI();
+            renderIcons();
+            return;
+        }
+        
+        var price = ICONS[iconId].price;
+        if((userData.coins || 0) < price){
+            alert('❌ سکه کافی ندارید! نیاز به ' + price.toLocaleString('fa-IR') + ' سکه دارید.');
+            return;
+        }
+        
+        if(!confirm('آیا ' + ICONS[iconId].emoji + ' ' + ICONS[iconId].name + ' رو به قیمت ' + price.toLocaleString('fa-IR') + ' سکه می‌خواهید؟')) return;
+        
+        userData.coins -= price;
+        if(!userData.icons) userData.icons = ['default','smile','heart','star'];
+        userData.icons.push(iconId);
+        userData.icon = iconId;
+        
+        var users = getUsers();
+        users[currentUser] = userData;
+        saveUsers(users);
+        
+        try {
+            localStorage.setItem('starloom_current_user', JSON.stringify({
+                username: currentUser,
+                coins: userData.coins,
+                level: userData.level,
+                levelProgress: userData.levelProgress || 0,
+                icon: userData.icon,
+                dice: userData.dice
+            }));
+        } catch(e) {}
+        
+        updateUserUI();
+        renderIcons();
+        alert('🎉 ' + ICONS[iconId].emoji + ' ' + ICONS[iconId].name + ' خریداری شد!');
+    }
+
+    document.querySelectorAll('.filter-buttons button').forEach(function(btn){
+        btn.addEventListener('click', function(){
+            document.querySelectorAll('.filter-buttons button').forEach(function(b){
+                b.classList.remove('active');
+            });
+            this.classList.add('active');
+            currentFilter = this.dataset.filter;
+            renderIcons();
+        });
+    });
+
+    document.getElementById('iconSearch').addEventListener('input', function(){
+        searchQuery = this.value;
+        renderIcons();
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', function(){
+        try {
+            localStorage.removeItem('starloom_current_user');
+        } catch(e) {}
+        currentUser = null;
+        userData = null;
+        document.getElementById('authSection').classList.remove('hidden');
+        document.getElementById('gameSection').classList.add('hidden');
+        document.getElementById('guestInfo').classList.remove('hidden');
+        document.getElementById('userProfile').classList.add('hidden');
+        location.reload();
+    });
+
+    (function(){
+        var saved = null;
+        try {
+            saved = localStorage.getItem('starloom_current_user');
+        } catch(e) {}
+        
+        if(saved){
+            try {
+                var data = JSON.parse(saved);
+                var users = getUsers();
+                if(users[data.username]){
+                    userData = users[data.username];
+                    currentUser = data.username;
+                    
+                    if(!userData.dice || userData.dice === 0){
+                        userData.dice = 40;
+                        users[currentUser].dice = 40;
+                        saveUsers(users);
+                    }
+                    if(!userData.levelProgress){
+                        userData.levelProgress = 0;
+                    }
+                    
+                    document.getElementById('authSection').classList.add('hidden');
+                    document.getElementById('gameSection').classList.remove('hidden');
+                    document.getElementById('guestInfo').classList.add('hidden');
+                    document.getElementById('userProfile').classList.remove('hidden');
+                    updateUserUI();
+                    loadIcons();
+                    updateWelcomeMessage();
+                }
+            } catch(e) {
+                try {
+                    localStorage.removeItem('starloom_current_user');
+                } catch(ex) {}
+            }
+        }
+    })();
+
+    console.log('🌟 StarLoom_Game v2.0 - آماده!');
+    console.log('🎨 تعداد آیکون‌ها:', Object.keys(ICONS).length);
+
+})();
 </script>
 </body>
 </html>
