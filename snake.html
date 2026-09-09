@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StarLoom_Game - مار و پله</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#0b0e1a,#1a1f30);min-height:100vh;color:#f0f4ff;padding:15px}
+.main-container{max-width:800px;margin:0 auto}
+.header{display:flex;justify-content:space-between;align-items:center;padding:15px 25px;background:rgba(255,255,255,0.05);border-radius:25px;border:1px solid rgba(255,215,0,0.15);flex-wrap:wrap;gap:10px;margin-bottom:20px}
+.logo{font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,#f9d976,#f39c12);-webkit-background-clip:text;background-clip:text;color:transparent}
+.logo span{color:#b9c7e6;background:none;font-weight:300}
+.back-home{background:#2d3852;border:none;padding:10px 25px;border-radius:50px;color:#f0f4ff;font-weight:600;cursor:pointer;border:1px solid #5a6a8a;font-size:.95rem;text-decoration:none;display:inline-block}
+.back-home:hover{background:#3f4d70;border-color:#f1c40f}
+.user-info-bar{display:flex;gap:15px;background:rgba(0,0,0,0.3);padding:8px 18px;border-radius:50px;font-size:.85rem;align-items:center;flex-wrap:wrap}
+.user-info-bar .user-icon{font-size:1.5rem}
+.game-container{background:rgba(255,255,255,0.06);border-radius:40px;padding:20px;border:1px solid rgba(255,215,0,0.15)}
+.board-wrapper{background:#1e2538;border-radius:30px;padding:12px;margin-bottom:15px;position:relative}
+#board{display:grid;grid-template-columns:repeat(10,1fr);gap:4px;aspect-ratio:1/1;background:#131a2a;border-radius:25px;padding:6px}
+.cell{background:#222b41;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:.5rem;font-weight:600;color:#a0b5d9;position:relative;aspect-ratio:1/1;box-shadow:0 0 0 1px #2d3852}
+.cell .number{font-size:.55rem;opacity:.7;pointer-events:none}
+.cell .player-marker{position:absolute;width:30%;height:30%;border-radius:50%;border:3px solid #f1c40f;box-shadow:0 0 20px #f1c40f;pointer-events:none;bottom:6%;right:6%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;background:rgba(0,0,0,0.5);transition:all .4s cubic-bezier(.34,1.56,.64,1);z-index:5}
+.cell .player-marker.moving{animation:bounceMove .4s ease}
+@keyframes bounceMove{0%{transform:scale(.5) rotate(-20deg)}50%{transform:scale(1.4) rotate(10deg)}100%{transform:scale(1) rotate(0)}}
+.cell.has-snake{background:#3a1e2a;box-shadow:0 0 0 2px #e74c3c}
+.cell.has-ladder{background:#1e3a2a;box-shadow:0 0 0 2px #2ecc71}
+.cell.win-cell{background:#f1c40f;box-shadow:0 0 30px #f1c40f;color:#1a1f30;animation:winPulse 1s ease-in-out infinite alternate}
+.cell.win-cell .number{color:#1a1f30;opacity:1;font-weight:800}
+@keyframes winPulse{0%{box-shadow:0 0 20px #f1c40f}100%{box-shadow:0 0 50px #f1c40f,0 0 80px #f1c40f44}}
+.controls{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;padding-top:10px}
+.dice-area{display:flex;align-items:center;gap:15px;background:rgba(0,0,0,0.3);padding:5px 18px;border-radius:60px;border:1px solid #4a5575}
+#dice{font-size:2rem;background:#0b0f1a;padding:4px 16px;border-radius:30px;color:#f5e9c4;min-width:60px;text-align:center;font-weight:700}
+#rollBtn{background:linear-gradient(145deg,#f1c40f,#d4a800);border:none;padding:10px 25px;border-radius:50px;font-size:1rem;font-weight:700;color:#1a1f30;cursor:pointer;box-shadow:0 6px 0 #8b6d00;transition:all .1s}
+#rollBtn:active:not(:disabled){transform:translateY(4px);box-shadow:0 2px 0 #8b6d00}
+#rollBtn:disabled{opacity:.4;transform:translateY(4px);pointer-events:none;box-shadow:0 2px 0 #6b5500}
+.status{background:#131b2b;padding:8px 20px;border-radius:60px;color:#cfdef5;font-size:.9rem;border-left:2px solid #f1c40f;border-right:2px solid #f1c40f;min-width:120px;text-align:center}
+.status.winner{border-color:#f1c40f;background:#1a2a1a;color:#f1c40f}
+.game-ended-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.85);border-radius:25px;display:none;flex-direction:column;align-items:center;justify-content:center;z-index:10;padding:20px}
+.game-ended-overlay.show{display:flex}
+.game-ended-overlay .big-icon{font-size:4rem;margin-bottom:10px}
+.game-ended-overlay .title{font-size:1.8rem;font-weight:700;color:#f1c40f}
+.game-ended-overlay .subtitle{color:#a0b5d9;font-size:1rem;margin:5px 0}
+.game-ended-overlay .reward{color:#f1c40f;font-size:1.2rem;margin:10px 0}
+.game-ended-overlay .back-btn{background:#f1c40f;border:none;padding:12px 40px;border-radius:50px;color:#1a1f30;font-weight:700;font-size:1rem;cursor:pointer;text-decoration:none;margin-top:15px;transition:all .2s}
+.game-ended-overlay .back-btn:hover{transform:scale(1.05)}
+.disable-msg{text-align:center;margin-top:15px;padding:10px;background:rgba(255,0,0,0.05);border-radius:15px;border:1px solid rgba(255,0,0,0.1)}
+.disable-msg p{color:#7a8bb0;font-size:.75rem}
+@media(max-width:500px){.cell .number{font-size:.4rem}#dice{font-size:1.5rem;min-width:45px}.user-info-bar{font-size:.7rem;padding:4px 10px}.game-ended-overlay .big-icon{font-size:3rem}.game-ended-overlay .title{font-size:1.3rem}.cell .player-marker{font-size:.8rem;width:28%;height:28%}}
+</style>
+</head>
+<body>
+<div class="main-container">
+<div class="header">
+<div class="logo">✦ StarLoom_Game <span>| مار و پله</span></div>
+<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+<div class="user-info-bar" id="userInfoBar">
+<span class="user-icon" id="userIcon">😊</span>
+<span>👤 <span id="displayName">کاربر</span></span>
+<span>💰 <span id="displayCoins">۰</span></span>
+<span>🏆 لول <span id="displayLevel">۰</span></span>
+</div>
+<a href="index.html" class="back-home">← بازگشت</a>
+</div>
+</div>
+
+<div class="game-container">
+<div style="text-align:center;margin-bottom:10px;"><h3 style="color:#f5e9c4;">🐍 مار و پله</h3><p style="color:#7a8bb0;font-size:.85rem;">برنده ۶۰۰ سکه و لول +۱</p></div>
+<div class="board-wrapper">
+<div id="board"></div>
+<div class="game-ended-overlay" id="gameEndedOverlay">
+<div class="big-icon">🏆</div>
+<div class="title">تبریک! برنده شدی!</div>
+<div class="subtitle">به خانه ۱۶۲ رسیدی</div>
+<div class="reward">🎁 +۶۰۰ سکه و لول +۱</div>
+<a href="index.html" class="back-btn">← بازگشت به خانه</a>
+</div>
+</div>
+<div class="controls">
+<div class="dice-area"><span style="color:#b9c7e6;">تاس</span><div id="dice">⚀</div><button id="rollBtn" disabled>🗲 بینداز</button></div>
+<div class="status" id="statusMessage">🎲 برای شروع تاس بینداز</div>
+</div>
+<div class="disable-msg"><p>⚠️ پس از اتمام بازی، برای بازی جدید از صفحه اصلی وارد شوید</p></div>
+</div>
+</div>
+
+<script>
+const BOARD_SIZE=162,COLS=10,ROWS=17;
+const snakes=[{start:99,end:54},{start:87,end:28},{start:72,end:18},{start:45,end:23},{start:130,end:78},{start:112,end:60},{start:142,end:85},{start:155,end:120}];
+const ladders=[{start:8,end:42},{start:25,end:58},{start:38,end:79},{start:57,end:96},{start:68,end:118},{start:101,end:135},{start:122,end:148},{start:140,end:160}];
+const ICONS={'default':'😊','smile':'😄','heart':'❤️','star':'⭐','lion':'🦁','tiger':'🐯','eagle':'🦅','wolf':'🐺','dragon':'🐉','phoenix':'🔥','crown':'👑','diamond':'💎','king':'👸','gold':'🏆','robot':'🤖','pizza':'🍕','burger':'🍔','cake':'🎂','ninja':'🥷','mage':'🧙','knight':'⚔️','angel':'👼','demon':'👿','legendary':'🌟'};
+let playerPosition=1,gameOver=false,isRolling=false,username='کاربر',userIcon='😊';
+
+function loadUser(){
+const saved=localStorage.getItem('starloom_current_user');
+if(saved){try{const data=JSON.parse(saved);username=data.username;userIcon=ICONS[data.icon]||'😊';document.getElementById('displayName').textContent=username;document.getElementById('displayCoins').textContent=data.coins||0;document.getElementById('displayLevel').textContent=data.level||0;document.getElementById('userIcon').textContent=userIcon;}catch(e){}}
+}
+
+function saveUserCoins(coins,level){
+const users=JSON.parse(localStorage.getItem('starloom_users'))||{};
+if(users[username]){
+users[username].coins=(users[username].coins||0)+coins;
+if(level)users[username].level=Math.max(users[username].level||0,level);
+users[username].snakeWins=(users[username].snakeWins||0)+1;
+users[username].totalGames=(users[username].totalGames||0)+1;
+localStorage.setItem('starloom_users',JSON.stringify(users));
+const current=JSON.parse(localStorage.getItem('starloom_current_user'))||{};
+current.coins=users[username].coins;current.level=users[username].level;
+localStorage.setItem('starloom_current_user',JSON.stringify(current));
+document.getElementById('displayCoins').textContent=users[username].coins;
+document.getElementById('displayLevel').textContent=users[username].level;
+}
+}
+
+const boardEl=document.getElementById('board'),diceEl=document.getElementById('dice'),rollBtn=document.getElementById('rollBtn'),statusMsg=document.getElementById('statusMessage'),gameEndedOverlay=document.getElementById('gameEndedOverlay');
+
+function getNumberFromRowCol(row,col){let c=col;if(row%2===1)c=COLS-1-col;return row*COLS+c+1}
+function buildBoard(){
+boardEl.innerHTML='';
+for(let row=ROWS-1;row>=0;row--){
+for(let col=0;col<COLS;col++){
+const num=getNumberFromRowCol(row,col);
+const cell=document.createElement('div');
+cell.className='cell';cell.dataset.number=num;
+const numSpan=document.createElement('span');numSpan.className='number';numSpan.textContent=num;cell.appendChild(numSpan);
+const snake=snakes.find(s=>s.start===num);if(snake){cell.classList.add('has-snake');const m=document.createElement('span');m.textContent='🐍';m.style.cssText='font-size:1rem;position:absolute;top:2px;left:2px;pointer-events:none';cell.appendChild(m)}
+const ladder=ladders.find(l=>l.start===num);if(ladder){cell.classList.add('has-ladder');const m=document.createElement('span');m.textContent='🪜';m.style.cssText='font-size:1rem;position:absolute;top:2px;right:2px;pointer-events:none';cell.appendChild(m)}
+if(num===BOARD_SIZE)cell.classList.add('win-cell');
+boardEl.appendChild(cell);
+}}
+updatePlayer();
+}
+
+function updatePlayer(animate=false){
+document.querySelectorAll('.player-marker').forEach(el=>el.remove());
+const cell=boardEl.querySelector(`.cell[data-number="${playerPosition}"]`);
+if(!cell)return;
+const marker=document.createElement('div');
+marker.className='player-marker';if(animate)marker.classList.add('moving');
+marker.textContent=userIcon;
+cell.appendChild(marker);
+if(animate){setTimeout(()=>{const m=document.querySelector('.player-marker');if(m)m.classList.remove('moving');},400);}
+}
+
+function movePlayer(steps){
+if(gameOver)return false;
+let newPos=playerPosition+steps;
+if(newPos>BOARD_SIZE){statusMsg.textContent='⛔ تاس زیاد بود! در جای خود ماندی.';return false}
+const snake=snakes.find(s=>s.start===newPos);
+if(snake){newPos=snake.end;statusMsg.textContent='🐍 مار! به خانه '+newPos+' افتادی!';}
+else{const ladder=ladders.find(l=>l.start===newPos);if(ladder){newPos=ladder.end;statusMsg.textContent='🪜 نردبان! به خانه '+newPos+' رفتی!';}else{statusMsg.textContent='🎲 به خانه '+newPos+' رفتی';}}
+playerPosition=newPos;updatePlayer(true);
+if(playerPosition>=BOARD_SIZE){
+playerPosition=BOARD_SIZE;gameOver=true;
+statusMsg.textContent='🎉 برنده شدی! +۶۰۰ سکه و لول +۱';
+statusMsg.className='status winner';
+rollBtn.disabled=true;
+saveUserCoins(600,1);
+document.getElementById('displayCoins').textContent=(parseInt(document.getElementById('displayCoins').textContent)||0)+600;
+document.getElementById('displayLevel').textContent=(parseInt(document.getElementById('displayLevel').textContent)||0)+1;
+gameEndedOverlay.classList.add('show');
+updatePlayer(false);
+return true;
+}
+return true;
+}
+
+function rollDice(){
+if(gameOver){statusMsg.textContent='⛔ بازی تمام شده! به صفحه اصلی برو.';return}
+if(isRolling)return;
+isRolling=true;rollBtn.disabled=true;
+const val=Math.floor(Math.random()*6)+1;
+const sym=['⚀','⚁','⚂','⚃','⚄','⚅'];
+diceEl.textContent=sym[val-1];
+setTimeout(()=>{movePlayer(val);isRolling=false;if(!gameOver)rollBtn.disabled=false;},400);
+}
+
+function startGame(){rollBtn.disabled=false;statusMsg.textContent='🎲 تاس بینداز!';statusMsg.className='status';}
+loadUser();buildBoard();rollBtn.addEventListener('click',rollDice);startGame();
+console.log('🐍 Snake Game Ready!');
+</script>
+</body>
+</html>
