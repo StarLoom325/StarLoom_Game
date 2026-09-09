@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StarLoom_Game - مسابقه سرعت</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#0b0e1a,#1a1f30);min-height:100vh;color:#f0f4ff;padding:15px}
+        .main-container{max-width:900px;margin:0 auto}
+        .header{display:flex;justify-content:space-between;align-items:center;padding:15px 25px;background:rgba(255,255,255,0.05);border-radius:25px;border:1px solid rgba(255,215,0,0.15);flex-wrap:wrap;gap:10px;margin-bottom:20px}
+        .logo{font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,#f9d976,#f39c12);-webkit-background-clip:text;background-clip:text;color:transparent}
+        .logo span{color:#b9c7e6;background:none;font-weight:300}
+        .back-home{background:#2d3852;border:none;padding:10px 25px;border-radius:50px;color:#f0f4ff;font-weight:600;cursor:pointer;border:1px solid #5a6a8a;font-size:.95rem;text-decoration:none;display:inline-block}
+        .back-home:hover{background:#3f4d70;border-color:#f1c40f}
+        .user-info-bar{display:flex;gap:15px;background:rgba(0,0,0,0.3);padding:8px 18px;border-radius:50px;font-size:.85rem;align-items:center;flex-wrap:wrap}
+        .user-info-bar .user-icon{font-size:1.5rem}
+        .game-container{background:rgba(255,255,255,0.06);border-radius:40px;padding:30px;border:1px solid rgba(255,215,0,0.15)}
+        .race-title{text-align:center;margin-bottom:20px}
+        .race-title h3{color:#f5e9c4;font-size:1.8rem}
+        .race-title p{color:#7a8bb0;font-size:.9rem;margin-top:5px}
+        .track-container{background:#1e2538;border-radius:20px;padding:20px;margin:15px 0;position:relative;overflow:hidden}
+        .track{position:relative;height:80px;margin:10px 0;background:linear-gradient(90deg,#1a2235,#2d3852);border-radius:15px;border:2px solid #4a5575}
+        .track .player-label{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:.7rem;color:#7a8bb0;z-index:2;background:rgba(0,0,0,0.5);padding:2px 10px;border-radius:10px}
+        .track .car{position:absolute;top:50%;transform:translateY(-50%);font-size:2.4rem;transition:left .15s ease;z-index:3}
+        .track .car.player{filter:drop-shadow(0 0 15px #f1c40f)}
+        .track .car.bot{filter:drop-shadow(0 0 15px #e74c3c)}
+        .track .finish-line{position:absolute;right:10px;top:0;bottom:0;width:3px;background:linear-gradient(180deg,#f1c40f,#e74c3c,#f1c40f,#e74c3c);background-size:100% 20px;animation:finishPulse 0.5s ease-in-out infinite alternate;z-index:1}
+        @keyframes finishPulse{0%{opacity:.5}100%{opacity:1}}
+        .track .progress-bar{position:absolute;bottom:0;left:0;height:4px;background:linear-gradient(90deg,#f1c40f,#f39c12);border-radius:0 0 15px 15px;transition:width .3s;width:0%}
+        .race-stats{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px;margin:15px 0}
+        .race-stats .stat{background:rgba(0,0,0,0.3);padding:8px 20px;border-radius:50px;font-size:.9rem;border:1px solid #4a5575}
+        .race-stats .stat .num{color:#f1c40f;font-weight:700;font-size:1.2rem}
+        .race-controls{display:flex;gap:15px;justify-content:center;flex-wrap:wrap;margin-top:20px}
+        .race-controls button{padding:15px 40px;border-radius:50px;border:none;font-size:1.2rem;font-weight:700;cursor:pointer;transition:all .2s}
+        .race-controls button.primary{background:linear-gradient(145deg,#f1c40f,#d4a800);color:#1a1f30;box-shadow:0 6px 0 #8b6d00}
+        .race-controls button.primary:active{transform:translateY(4px);box-shadow:0 2px 0 #8b6d00}
+        .race-controls button.primary:disabled{opacity:.4;transform:translateY(4px);pointer-events:none;box-shadow:0 2px 0 #6b5500}
+        .race-controls button.secondary{background:#2d3852;color:#f0f4ff;border:1px solid #5a6a8a}
+        .race-controls button.secondary:hover{background:#3f4d70;border-color:#f1c40f}
+        .status-box{text-align:center;margin-top:15px;padding:12px;border-radius:15px;background:rgba(0,0,0,0.3);font-size:1rem;min-height:50px}
+        .status-box.winner{background:rgba(241,196,15,0.15);border:1px solid #f1c40f;color:#f1c40f}
+        .status-box.loser{background:rgba(231,76,60,0.15);border:1px solid #e74c3c;color:#e74c3c}
+        .car-shop{margin-top:20px;background:rgba(255,255,255,0.03);border-radius:20px;padding:20px;border:1px solid rgba(255,255,255,0.05)}
+        .car-shop h4{color:#f5e9c4;margin-bottom:15px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+        .car-shop h4 .selected-car{color:#f1c40f;font-size:1.2rem}
+        .car-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:12px}
+        .car-item{display:flex;flex-direction:column;align-items:center;gap:4px;background:rgba(0,0,0,0.3);padding:12px 8px;border-radius:15px;border:2px solid #2d3852;cursor:pointer;transition:all .2s;position:relative}
+        .car-item:hover{border-color:#f1c40f;transform:scale(1.05)}
+        .car-item.owned{border-color:#2ecc71}
+        .car-item.active{border-color:#f1c40f;box-shadow:0 0 25px rgba(241,196,15,0.25)}
+        .car-item .car-preview{font-size:2.2rem}
+        .car-item .car-name{font-size:.6rem;color:#a0b5d9;text-align:center}
+        .car-item .car-price{font-size:.6rem;color:#f1c40f}
+        .car-item .car-tag{position:absolute;top:-6px;right:-6px;font-size:.4rem;background:#e74c3c;color:#fff;padding:1px 6px;border-radius:10px}
+        .car-item .car-tag.owned-tag{background:#3498db}
+        .car-item .car-tag.free{background:#2ecc71}
+        .car-item .car-tag.best{background:linear-gradient(135deg,#f1c40f,#e67e22);color:#1a1f30;font-weight:700;animation:bestPulse 1.5s ease-in-out infinite alternate}
+        @keyframes bestPulse{0%{transform:scale(1)}100%{transform:scale(1.1)}}
+        .disable-msg{text-align:center;margin-top:15px;padding:10px;background:rgba(255,0,0,0.05);border-radius:15px;border:1px solid rgba(255,0,0,0.1)}
+        .disable-msg p{color:#7a8bb0;font-size:.75rem}
+        @media(max-width:500px){.track .car{font-size:1.8rem}.race-controls button{padding:12px 25px;font-size:1rem}.race-stats .stat{font-size:.75rem;padding:5px 12px}.car-grid{grid-template-columns:repeat(auto-fill,minmax(75px,1fr))}.car-item .car-preview{font-size:1.6rem}}
+    </style>
+</head>
+<body>
+<div class="main-container">
+<div class="header">
+<div class="logo">✦ StarLoom_Game <span>| مسابقه سرعت</span></div>
+<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+<div class="user-info-bar" id="userInfoBar">
+<span class="user-icon" id="userIcon">😊</span>
+<span>👤 <span id="displayName">کاربر</span></span>
+<span>💰 <span id="displayCoins">0</span></span>
+</div>
+<a href="index.html" class="back-home">← بازگشت</a>
+</div>
+</div>
+
+<div class="game-container">
+<div class="race-title">
+<h3>🏎️ مسابقه سرعت</h3>
+<p>با کلیک سریع به خط پایان برسید! برنده <strong style="color:#f1c40f;">۳۰۰</strong> سکه و <strong style="color:#2ecc71;">+۰.۵ لول</strong></p>
+</div>
+
+<div class="track-container">
+<div class="track" id="playerTrack">
+<div class="player-label" id="playerLabel">🚗 شما</div>
+<div class="car player" id="playerCar" style="left:5%">🚗</div>
+<div class="finish-line"></div>
+<div class="progress-bar" id="playerProgress"></div>
+</div>
+
+<div class="track" id="botTrack">
+<div class="player-label">🤖 کامپیوتر</div>
+<div class="car bot" id="botCar" style="left:5%">🏎️</div>
+<div class="finish-line"></div>
+<div class="progress-bar" id="botProgress"></div>
+</div>
+</div>
+
+<div class="race-stats">
+<div class="stat">🚗 شما: <span class="num" id="playerPos">0</span>/50</div>
+<div class="stat">🤖 کامپیوتر: <span class="num" id="botPos">0</span>/50</div>
+<div class="stat">🎯 کلیک: <span class="num" id="clickCount">0</span></div>
+</div>
+
+<div class="race-controls">
+<button class="primary" id="gasBtn">🚦 گاز!</button>
+<button class="secondary" id="resetBtn">🔄 بازی جدید</button>
+</div>
+
+<div class="status-box" id="statusMsg">🏁 آماده‌ای؟ شروع کن!</div>
+
+<div class="car-shop">
+<h4>
+<span>🏎️ فروشگاه ماشین <span class="selected-car" id="selectedCarDisplay">🚗</span></span>
+<span style="font-size:.8rem;color:#7a8bb0;">ماشین انتخابی شما</span>
+</h4>
+<div class="car-grid" id="carGrid"></div>
+</div>
+
+<div class="disable-msg">
+<p>⚠️ پس از اتمام بازی، برای بازی جدید از همین صفحه استفاده کنید</p>
+</div>
+</div>
+</div>
+
+<script>
+var TOTAL_STEPS=50;
+var playerPos=0;
+var botPos=0;
+var clickCount=0;
+var gameOver=false;
+var isRunning=false;
+var botInterval=null;
+var username='کاربر',userIcon='😊';
+var selectedCar='🚗';
+
+var CARS={
+'car1':{name:'ماشین ساده',emoji:'🚗',price:0},
+'car2':{name:'اسپرت',emoji:'🏎️',price:300},
+'car3':{name:'شاسی‌بلند',emoji:'🚙',price:400},
+'car4':{name:'آتشین',emoji:'🔥',price:600},
+'car5':{name:'طلایی',emoji:'✨',price:800},
+'car6':{name:'الماسی',emoji:'💎',price:1200},
+'car7':{name:'سلطنتی',emoji:'👑',price:1500},
+'car8':{name:'اژدها',emoji:'🐉',price:2000},
+'car9':{name:'شبح',emoji:'👻',price:2500},
+'car10':{name:'کهکشانی',emoji:'🌌',price:3500},
+'car11':{name:'افسانه‌ای',emoji:'⭐',price:5000},
+'car12':{name:'نهایی',emoji:'⚡',price:10000}
+};
+
+var ICONS={'default':'😊','smile':'😄','heart':'❤️','star':'⭐','lion':'🦁','tiger':'🐯','eagle':'🦅','wolf':'🐺','dragon':'🐉','phoenix':'🔥','unicorn':'🦄','crown':'👑','diamond':'💎','king':'👸','gold':'🏆','robot':'🤖','gem':'💠','pizza':'🍕','burger':'🍔','cake':'🎂','donut':'🍩','ninja':'🥷','mage':'🧙','knight':'⚔️','angel':'👼','demon':'👿','skeleton':'💀','galaxy':'🌌','crystal':'🔮','cosmic':'🚀','legendary':'🌟','ultimate':'⚡','void':'🌑'};
+
+function loadUser(){
+var saved=localStorage.getItem('starloom_current_user');
+if(saved){
+try{
+var data=JSON.parse(saved);
+username=data.username;
+userIcon=ICONS[data.icon]||'😊';
+document.getElementById('displayName').textContent=username;
+document.getElementById('displayCoins').textContent=data.coins||0;
+document.getElementById('userIcon').textContent=userIcon;
+var savedCar=localStorage.getItem('starloom_selected_car');
+if(savedCar){selectedCar=savedCar;document.getElementById('playerCar').textContent=selectedCar;document.getElementById('playerLabel').textContent='🚗 '+username;document.getElementById('selectedCarDisplay').textContent=selectedCar;}
+}catch(e){}
+}
+}
+
+function saveUserCoinsAndLevel(coins, levelAmount){
+var users=JSON.parse(localStorage.getItem('starloom_users'))||{};
+if(users[username]){
+users[username].coins=(users[username].coins||0)+coins;
+// مسابقه سرعت = 0.5 لول
+var currentProgress = users[username].levelProgress || 0;
+var newProgress = currentProgress + levelAmount;
+if(newProgress >= 1){
+var fullLevels = Math.floor(newProgress);
+users[username].level = Math.min((users[username].level||0) + fullLevels, 62);
+users[username].levelProgress = newProgress - fullLevels;
+} else {
+users[username].levelProgress = newProgress;
+}
+users[username].raceWins=(users[username].raceWins||0)+1;
+users[username].totalGames=(users[username].totalGames||0)+1;
+localStorage.setItem('starloom_users',JSON.stringify(users));
+var current=JSON.parse(localStorage.getItem('starloom_current_user'))||{};
+current.coins=users[username].coins;
+current.level=users[username].level;
+current.levelProgress=users[username].levelProgress;
+localStorage.setItem('starloom_current_user',JSON.stringify(current));
+document.getElementById('displayCoins').textContent=users[username].coins;
+}
+}
+
+function getUsers(){try{return JSON.parse(localStorage.getItem('starloom_users'))||{}}catch(e){return {}}}
+function saveUsers(u){localStorage.setItem('starloom_users',JSON.stringify(u));}
+
+function updateUI(){
+var playerPercent=(playerPos/TOTAL_STEPS)*85+5;
+var botPercent=(botPos/TOTAL_STEPS)*85+5;
+document.getElementById('playerCar').style.left=Math.min(playerPercent,90)+'%';
+document.getElementById('botCar').style.left=Math.min(botPercent,90)+'%';
+document.getElementById('playerProgress').style.width=Math.min((playerPos/TOTAL_STEPS)*100,100)+'%';
+document.getElementById('botProgress').style.width=Math.min((botPos/TOTAL_STEPS)*100,100)+'%';
+document.getElementById('playerPos').textContent=playerPos;
+document.getElementById('botPos').textContent=botPos;
+document.getElementById('clickCount').textContent=clickCount;
+}
+
+function resetGame(){
+if(botInterval){clearInterval(botInterval);botInterval=null;}
+playerPos=0;botPos=0;clickCount=0;gameOver=false;isRunning=false;
+document.getElementById('gasBtn').disabled=false;
+document.getElementById('gasBtn').textContent='🚦 گاز!';
+document.getElementById('statusMsg').textContent='🏁 بازی جدید! شروع کن!';
+document.getElementById('statusMsg').className='status-box';
+updateUI();
+}
+
+function endGame(winner){
+gameOver=true;isRunning=false;
+if(botInterval){clearInterval(botInterval);botInterval=null;}
+document.getElementById('gasBtn').disabled=true;
+if(winner==='player'){
+document.getElementById('statusMsg').textContent='🎉 شما برنده شدید! +۳۰۰ سکه و +۰.۵ لول';
+document.getElementById('statusMsg').className='status-box winner';
+saveUserCoinsAndLevel(300, 0.5);
+document.getElementById('displayCoins').textContent=(parseInt(document.getElementById('displayCoins').textContent)||0)+300;
+}else{
+document.getElementById('statusMsg').textContent='😢 کامپیوتر برنده شد! دوباره تلاش کن';
+document.getElementById('statusMsg').className='status-box loser';
+}
+}
+
+function botMove(){
+if(gameOver||!isRunning)return;
+botPos+=Math.floor(Math.random()*2)+1;
+if(botPos>TOTAL_STEPS)botPos=TOTAL_STEPS;
+updateUI();
+if(botPos>=TOTAL_STEPS){endGame('bot');}
+}
+
+function playerMove(){
+if(gameOver)return;
+if(!isRunning){
+isRunning=true;
+document.getElementById('statusMsg').textContent='🏁 شروع! سریع کلیک کن!';
+document.getElementById('gasBtn').textContent='🏎️ گاز!';
+setTimeout(function(){
+if(!gameOver&&isRunning){botInterval=setInterval(botMove,400+Math.random()*300);}
+},500);
+}
+clickCount++;
+playerPos++;
+updateUI();
+if(playerPos>=TOTAL_STEPS){endGame('player');}
+}
+
+function loadCarShop(){
+var ownedCars=getUserCars();
+var grid=document.getElementById('carGrid');
+grid.innerHTML='';
+Object.keys(CARS).forEach(function(id){
+var car=CARS[id];
+var isOwned=ownedCars.indexOf(id)!==-1;
+var isActive=selectedCar===car.emoji;
+var isBest=car.price>=5000;
+var div=document.createElement('div');
+div.className='car-item';
+if(isOwned)div.classList.add('owned');
+if(isActive)div.classList.add('active');
+var tags='';
+if(isBest)tags+='<span class="car-tag best">⭐ ویژه</span>';
+if(car.price===0&&!isOwned)tags+='<span class="car-tag free">رایگان</span>';
+else if(isOwned&&!isActive)tags+='<span class="car-tag owned-tag">مالک</span>';
+else if(isActive)tags+='<span class="car-tag" style="background:#f1c40f;color:#1a1f30;">فعال</span>';
+var priceText=car.price>0?'💰 '+car.price.toLocaleString('fa-IR'):'رایگان';
+div.innerHTML=tags+'<span class="car-preview">'+car.emoji+'</span><span class="car-name">'+car.name+'</span><span class="car-price">'+priceText+'</span>';
+div.addEventListener('click',function(){handleCarClick(id);});
+grid.appendChild(div);
+});
+}
+
+function getUserCars(){
+var users=getUsers();
+if(users[username]&&users[username].cars){return users[username].cars;}
+return ['car1'];
+}
+
+function handleCarClick(carId){
+var ownedCars=getUserCars();
+var car=CARS[carId];
+if(ownedCars.indexOf(carId)!==-1){
+selectedCar=car.emoji;
+document.getElementById('playerCar').textContent=selectedCar;
+document.getElementById('selectedCarDisplay').textContent=selectedCar;
+localStorage.setItem('starloom_selected_car',selectedCar);
+loadCarShop();
+return;
+}
+var price=car.price;
+var currentCoins=parseInt(document.getElementById('displayCoins').textContent)||0;
+if(currentCoins<price){alert('❌ سکه کافی ندارید! نیاز به '+price.toLocaleString('fa-IR')+' سکه دارید.');return;}
+if(!confirm('آیا '+car.emoji+' '+car.name+' رو به قیمت '+price.toLocaleString('fa-IR')+' سکه می‌خواهید؟'))return;
+var users=getUsers();
+if(users[username]){
+users[username].coins=(users[username].coins||0)-price;
+if(!users[username].cars)users[username].cars=['car1'];
+users[username].cars.push(carId);
+saveUsers(users);
+document.getElementById('displayCoins').textContent=users[username].coins;
+selectedCar=car.emoji;
+document.getElementById('playerCar').textContent=selectedCar;
+document.getElementById('selectedCarDisplay').textContent=selectedCar;
+localStorage.setItem('starloom_selected_car',selectedCar);
+loadCarShop();
+alert('🎉 '+car.emoji+' '+car.name+' خریداری شد!');
+}
+}
+
+document.getElementById('gasBtn').addEventListener('click',playerMove);
+document.getElementById('resetBtn').addEventListener('click',resetGame);
+document.addEventListener('keydown',function(e){
+if(e.key===' '||e.key==='Space'){
+e.preventDefault();
+if(!document.getElementById('gasBtn').disabled){playerMove();}
+}
+});
+
+loadUser();
+resetGame();
+loadCarShop();
+
+console.log('🏎️ Speed Race Ready!');
+console.log('🏆 جایزه: 300 سکه + 0.5 لول');
+</script>
+</body>
+</html>
