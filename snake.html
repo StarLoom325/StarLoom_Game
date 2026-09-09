@@ -3,1182 +3,655 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StarLoom_Game - مار و پله آنلاین</title>
+    <title>StarLoom_Game - مار و پله</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #0b0e1a, #1a1f30);
-            min-height: 100vh;
-            color: #f0f4ff;
-            padding: 15px;
-        }
-        .main-container {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 25px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 25px;
-            border: 1px solid rgba(255, 215, 0, 0.15);
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #f9d976, #f39c12);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        .logo span {
-            color: #b9c7e6;
-            background: none;
-            font-weight: 300;
-        }
-        .back-home {
-            background: #2d3852;
-            border: none;
-            padding: 10px 25px;
-            border-radius: 50px;
-            color: #f0f4ff;
-            font-weight: 600;
-            cursor: pointer;
-            border: 1px solid #5a6a8a;
-            font-size: 0.95rem;
-            text-decoration: none;
-            display: inline-block;
-        }
-        .back-home:hover {
-            background: #3f4d70;
-            border-color: #f1c40f;
-        }
-        .user-info-bar {
-            display: flex;
-            gap: 15px;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 8px 18px;
-            border-radius: 50px;
-            font-size: 0.85rem;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        .user-info-bar .user-icon {
-            font-size: 1.5rem;
-        }
-        .game-container {
-            background: rgba(255, 255, 255, 0.06);
-            border-radius: 40px;
-            padding: 20px;
-            border: 1px solid rgba(255, 215, 0, 0.15);
-        }
-        .board-wrapper {
-            background: #1e2538;
-            border-radius: 30px;
-            padding: 12px;
-            margin-bottom: 15px;
-            position: relative;
-        }
-        #board {
-            display: grid;
-            grid-template-columns: repeat(10, 1fr);
-            gap: 3px;
-            aspect-ratio: 1/1;
-            background: #131a2a;
-            border-radius: 25px;
-            padding: 5px;
-        }
-        .cell {
-            background: #222b41;
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.4rem;
-            font-weight: 600;
-            color: #a0b5d9;
-            position: relative;
-            aspect-ratio: 1/1;
-            box-shadow: 0 0 0 1px #2d3852;
-        }
-        .cell .number {
-            font-size: 0.45rem;
-            opacity: 0.7;
-            pointer-events: none;
-        }
-        .cell .player-marker {
-            position: absolute;
-            width: 22%;
-            height: 22%;
-            border-radius: 50%;
-            border: 2px solid #f1c40f;
-            box-shadow: 0 0 20px currentColor;
-            pointer-events: none;
-            bottom: 3%;
-            right: 3%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
-            background: rgba(0, 0, 0, 0.7);
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            z-index: 5;
-        }
-        .cell .player-marker.moving {
-            animation: bounceMove 0.4s ease;
-        }
-        @keyframes bounceMove {
-            0% {
-                transform: scale(0.5) rotate(-20deg);
-            }
-            50% {
-                transform: scale(1.4) rotate(10deg);
-            }
-            100% {
-                transform: scale(1) rotate(0deg);
-            }
-        }
-        .cell.has-snake {
-            background: #3a1e2a;
-            box-shadow: 0 0 0 2px #e74c3c;
-        }
-        .cell.has-ladder {
-            background: #1e3a2a;
-            box-shadow: 0 0 0 2px #2ecc71;
-        }
-        .cell.win-cell {
-            background: #f1c40f;
-            box-shadow: 0 0 30px #f1c40f;
-            color: #1a1f30;
-            animation: winPulse 1s ease-in-out infinite alternate;
-        }
-        .cell.win-cell .number {
-            color: #1a1f30;
-            opacity: 1;
-            font-weight: 800;
-        }
-        @keyframes winPulse {
-            0% {
-                box-shadow: 0 0 20px #f1c40f;
-            }
-            100% {
-                box-shadow: 0 0 50px #f1c40f, 0 0 80px #f1c40f44;
-            }
-        }
-        .controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            padding-top: 10px;
-        }
-        .dice-area {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 5px 18px;
-            border-radius: 60px;
-            border: 1px solid #4a5575;
-        }
-        #dice {
-            font-size: 2rem;
-            background: #0b0f1a;
-            padding: 4px 16px;
-            border-radius: 30px;
-            color: #f5e9c4;
-            min-width: 60px;
-            text-align: center;
-            font-weight: 700;
-        }
-        #rollBtn {
-            background: linear-gradient(145deg, #f1c40f, #d4a800);
-            border: none;
-            padding: 10px 25px;
-            border-radius: 50px;
-            font-size: 1rem;
-            font-weight: 700;
-            color: #1a1f30;
-            cursor: pointer;
-            box-shadow: 0 6px 0 #8b6d00;
-            transition: all 0.1s;
-        }
-        #rollBtn:active:not(:disabled) {
-            transform: translateY(4px);
-            box-shadow: 0 2px 0 #8b6d00;
-        }
-        #rollBtn:disabled {
-            opacity: 0.4;
-            transform: translateY(4px);
-            pointer-events: none;
-            box-shadow: 0 2px 0 #6b5500;
-        }
-        #rollBtn.no-dice {
-            background: #e74c3c;
-            color: #fff;
-            box-shadow: 0 6px 0 #922b21;
-        }
-        .status {
-            background: #131b2b;
-            padding: 8px 20px;
-            border-radius: 60px;
-            color: #cfdef5;
-            font-size: 0.9rem;
-            border-left: 2px solid #f1c40f;
-            border-right: 2px solid #f1c40f;
-            min-width: 120px;
-            text-align: center;
-        }
-        .status.winner {
-            border-color: #f1c40f;
-            background: #1a2a1a;
-            color: #f1c40f;
-        }
-        .status.loser {
-            border-color: #e74c3c;
-            background: #2a1a1a;
-            color: #e74c3c;
-        }
-        .players-status {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-top: 10px;
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 15px;
-            justify-content: center;
-        }
-        .player-status {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 4px 12px;
-            border-radius: 20px;
-            background: rgba(255, 255, 255, 0.05);
-            font-size: 0.7rem;
-        }
-        .player-status .me {
-            border: 2px solid #f1c40f;
-        }
-        .player-status .online {
-            color: #2ecc71;
-            font-size: 0.6rem;
-        }
-        .player-status .dice-left {
-            color: #f1c40f;
-            font-size: 0.6rem;
-        }
-        .game-ended-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.85);
-            border-radius: 25px;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
-            padding: 20px;
-        }
-        .game-ended-overlay.show {
-            display: flex;
-        }
-        .game-ended-overlay .big-icon {
-            font-size: 4rem;
-            margin-bottom: 10px;
-        }
-        .game-ended-overlay .title {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #f1c40f;
-        }
-        .game-ended-overlay .subtitle {
-            color: #a0b5d9;
-            font-size: 1rem;
-            margin: 5px 0;
-        }
-        .game-ended-overlay .reward {
-            color: #f1c40f;
-            font-size: 1.2rem;
-            margin: 10px 0;
-        }
-        .game-ended-overlay .penalty {
-            color: #e74c3c;
-            font-size: 1.2rem;
-            margin: 10px 0;
-        }
-        .game-ended-overlay .back-btn {
-            background: #f1c40f;
-            border: none;
-            padding: 12px 40px;
-            border-radius: 50px;
-            color: #1a1f30;
-            font-weight: 700;
-            font-size: 1rem;
-            cursor: pointer;
-            text-decoration: none;
-            margin-top: 15px;
-            transition: all 0.2s;
-        }
-        .game-ended-overlay .back-btn:hover {
-            transform: scale(1.05);
-        }
-        .network-section {
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 15px;
-            padding: 15px;
-            margin-bottom: 15px;
-            border: 1px solid rgba(255, 215, 0, 0.1);
-        }
-        .network-section h4 {
-            color: #f5e9c4;
-            margin-bottom: 10px;
-        }
-        .network-section .status-text {
-            color: #7a8bb0;
-            font-size: 0.85rem;
-        }
-        .network-section .status-text.connected {
-            color: #2ecc71;
-        }
-        .network-section .status-text.disconnected {
-            color: #e74c3c;
-        }
-        .network-section .btn-group {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 10px;
-        }
-        .network-section .btn-group button {
-            background: #2d3852;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 50px;
-            color: #f0f4ff;
-            cursor: pointer;
-            border: 1px solid #5a6a8a;
-            font-size: 0.85rem;
-            transition: all 0.2s;
-        }
-        .network-section .btn-group button:hover {
-            background: #3f4d70;
-            border-color: #f1c40f;
-        }
-        .network-section .btn-group button.primary {
-            background: linear-gradient(145deg, #f1c40f, #d4a800);
-            color: #1a1f30;
-            border-color: #f1c40f;
-        }
-        .network-section .btn-group button.primary:hover {
-            transform: scale(1.02);
-        }
-        .network-section .btn-group button:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-        .network-section .btn-group button.danger {
-            background: #e74c3c;
-            color: #fff;
-            border-color: #e74c3c;
-        }
-        .network-section .btn-group button.danger:hover {
-            background: #c0392b;
-        }
-        .network-section .player-count {
-            color: #f1c40f;
-            font-weight: 700;
-        }
-        .players-section {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 15px;
-            justify-content: center;
-        }
-        .player-box {
-            flex: 1;
-            min-width: 100px;
-            max-width: 150px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 15px;
-            padding: 10px;
-            text-align: center;
-            border: 2px solid #2d3852;
-            transition: all 0.3s;
-        }
-        .player-box.active {
-            border-color: #f1c40f;
-            box-shadow: 0 0 20px rgba(241, 196, 15, 0.2);
-        }
-        .player-box .icon-display {
-            font-size: 1.8rem;
-        }
-        .player-box .name {
-            font-weight: 700;
-            font-size: 0.85rem;
-        }
-        .player-box .pos {
-            color: #7a8bb0;
-            font-size: 0.7rem;
-        }
-        .player-box .dice-count {
-            color: #f1c40f;
-            font-size: 0.7rem;
-        }
-        .player-box .status-dot {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            margin-right: 4px;
-        }
-        .player-box .status-dot.online {
-            background: #2ecc71;
-        }
-        .player-box .status-dot.offline {
-            background: #e74c3c;
-        }
-        @media (max-width: 500px) {
-            .cell .number {
-                font-size: 0.35rem;
-            }
-            #dice {
-                font-size: 1.5rem;
-                min-width: 45px;
-            }
-            .user-info-bar {
-                font-size: 0.7rem;
-                padding: 4px 10px;
-            }
-            .game-ended-overlay .big-icon {
-                font-size: 3rem;
-            }
-            .game-ended-overlay .title {
-                font-size: 1.3rem;
-            }
-            .cell .player-marker {
-                font-size: 0.6rem;
-                width: 20%;
-                height: 20%;
-            }
-            .player-box {
-                min-width: 70px;
-                padding: 6px;
-            }
-            .player-box .icon-display {
-                font-size: 1.3rem;
-            }
-        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#0b0e1a,#1a1f30);min-height:100vh;color:#f0f4ff;padding:15px}
+        .main-container{max-width:1000px;margin:0 auto}
+        .header{display:flex;justify-content:space-between;align-items:center;padding:15px 25px;background:rgba(255,255,255,0.05);border-radius:25px;border:1px solid rgba(255,215,0,0.15);flex-wrap:wrap;gap:10px;margin-bottom:20px}
+        .logo{font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,#f9d976,#f39c12);-webkit-background-clip:text;background-clip:text;color:transparent}
+        .logo span{color:#b9c7e6;background:none;font-weight:300}
+        .back-home{background:#2d3852;border:none;padding:10px 25px;border-radius:50px;color:#f0f4ff;font-weight:600;cursor:pointer;border:1px solid #5a6a8a;font-size:.95rem;text-decoration:none;display:inline-block}
+        .back-home:hover{background:#3f4d70;border-color:#f1c40f}
+        .user-info-bar{display:flex;gap:15px;background:rgba(0,0,0,0.3);padding:8px 18px;border-radius:50px;font-size:.85rem;align-items:center;flex-wrap:wrap}
+        .user-info-bar .user-icon{font-size:1.5rem}
+        .game-container{background:rgba(255,255,255,0.06);border-radius:40px;padding:20px;border:1px solid rgba(255,215,0,0.15)}
+        .board-wrapper{background:#1e2538;border-radius:30px;padding:12px;margin-bottom:15px;position:relative}
+        #board{display:grid;grid-template-columns:repeat(10,1fr);gap:3px;aspect-ratio:1/1;background:#131a2a;border-radius:25px;padding:5px}
+        .cell{background:#222b41;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:.4rem;font-weight:600;color:#a0b5d9;position:relative;aspect-ratio:1/1;box-shadow:0 0 0 1px #2d3852}
+        .cell .number{font-size:.45rem;opacity:.7;pointer-events:none}
+        .cell .player-marker{position:absolute;width:22%;height:22%;border-radius:50%;border:2px solid #f1c40f;box-shadow:0 0 20px currentColor;pointer-events:none;bottom:3%;right:3%;display:flex;align-items:center;justify-content:center;font-size:.7rem;background:rgba(0,0,0,0.7);transition:all .4s cubic-bezier(.34,1.56,.64,1);z-index:5}
+        .cell .player-marker.moving{animation:bounceMove .4s ease}
+        @keyframes bounceMove{0%{transform:scale(.5) rotate(-20deg)}50%{transform:scale(1.4) rotate(10deg)}100%{transform:scale(1) rotate(0)}}
+        .cell .player-marker.bot{opacity:.7;border-color:#7a8bb0}
+        .cell.has-snake{background:#3a1e2a;box-shadow:0 0 0 2px #e74c3c}
+        .cell.has-ladder{background:#1e3a2a;box-shadow:0 0 0 2px #2ecc71}
+        .cell.win-cell{background:#f1c40f;box-shadow:0 0 30px #f1c40f;color:#1a1f30;animation:winPulse 1s ease-in-out infinite alternate}
+        .cell.win-cell .number{color:#1a1f30;opacity:1;font-weight:800}
+        @keyframes winPulse{0%{box-shadow:0 0 20px #f1c40f}100%{box-shadow:0 0 50px #f1c40f,0 0 80px #f1c40f44}}
+        .controls{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;padding-top:10px}
+        .dice-area{display:flex;align-items:center;gap:15px;background:rgba(0,0,0,0.3);padding:5px 18px;border-radius:60px;border:1px solid #4a5575}
+        #dice{font-size:2rem;background:#0b0f1a;padding:4px 16px;border-radius:30px;color:#f5e9c4;min-width:60px;text-align:center;font-weight:700}
+        #rollBtn{background:linear-gradient(145deg,#f1c40f,#d4a800);border:none;padding:10px 25px;border-radius:50px;font-size:1rem;font-weight:700;color:#1a1f30;cursor:pointer;box-shadow:0 6px 0 #8b6d00;transition:all .1s}
+        #rollBtn:active:not(:disabled){transform:translateY(4px);box-shadow:0 2px 0 #8b6d00}
+        #rollBtn:disabled{opacity:.4;transform:translateY(4px);pointer-events:none;box-shadow:0 2px 0 #6b5500}
+        #rollBtn.no-dice{background:#e74c3c;color:#fff;box-shadow:0 6px 0 #922b21}
+        .status{background:#131b2b;padding:8px 20px;border-radius:60px;color:#cfdef5;font-size:.9rem;border-left:2px solid #f1c40f;border-right:2px solid #f1c40f;min-width:120px;text-align:center}
+        .status.winner{border-color:#f1c40f;background:#1a2a1a;color:#f1c40f}
+        .status.loser{border-color:#e74c3c;background:#2a1a1a;color:#e74c3c}
+        .players-status{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;padding:10px;background:rgba(0,0,0,0.2);border-radius:15px;justify-content:center}
+        .player-status{display:flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;background:rgba(255,255,255,0.05);font-size:.7rem}
+        .player-status .me{border:2px solid #f1c40f}
+        .player-status .bot{opacity:.6;border:1px dashed #4a5575}
+        .game-ended-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.85);border-radius:25px;display:none;flex-direction:column;align-items:center;justify-content:center;z-index:10;padding:20px}
+        .game-ended-overlay.show{display:flex}
+        .game-ended-overlay .big-icon{font-size:4rem;margin-bottom:10px}
+        .game-ended-overlay .title{font-size:1.8rem;font-weight:700;color:#f1c40f}
+        .game-ended-overlay .subtitle{color:#a0b5d9;font-size:1rem;margin:5px 0}
+        .game-ended-overlay .reward{color:#f1c40f;font-size:1.2rem;margin:10px 0}
+        .game-ended-overlay .penalty{color:#e74c3c;font-size:1.2rem;margin:10px 0}
+        .game-ended-overlay .back-btn{background:#f1c40f;border:none;padding:12px 40px;border-radius:50px;color:#1a1f30;font-weight:700;font-size:1rem;cursor:pointer;text-decoration:none;margin-top:15px;transition:all .2s}
+        .game-ended-overlay .back-btn:hover{transform:scale(1.05)}
+        .mode-selector{display:flex;gap:10px;margin-bottom:15px;flex-wrap:wrap;justify-content:center}
+        .mode-selector button{padding:10px 25px;border-radius:50px;border:2px solid #4a5575;background:#2d3852;color:#a0b5d9;cursor:pointer;transition:all .2s;font-weight:600}
+        .mode-selector button:hover{border-color:#f1c40f;color:#f5e9c4}
+        .mode-selector button.active{border-color:#f1c40f;background:#f1c40f;color:#1a1f30}
+        .mode-selector button .badge{font-size:.7rem;opacity:.7}
+        .network-section{background:rgba(255,255,255,0.03);border-radius:15px;padding:15px;margin-bottom:15px;border:1px solid rgba(255,215,0,0.1)}
+        .network-section h4{color:#f5e9c4;margin-bottom:10px}
+        .network-section .status-text{color:#7a8bb0;font-size:.85rem}
+        .network-section .status-text.connected{color:#2ecc71}
+        .network-section .status-text.disconnected{color:#e74c3c}
+        .network-section .btn-group{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+        .network-section .btn-group button{background:#2d3852;border:none;padding:8px 20px;border-radius:50px;color:#f0f4ff;cursor:pointer;border:1px solid #5a6a8a;font-size:.85rem;transition:all .2s}
+        .network-section .btn-group button:hover{background:#3f4d70;border-color:#f1c40f}
+        .network-section .btn-group button.primary{background:linear-gradient(145deg,#f1c40f,#d4a800);color:#1a1f30;border-color:#f1c40f}
+        .network-section .btn-group button.primary:hover{transform:scale(1.02)}
+        .network-section .btn-group button:disabled{opacity:.4;cursor:not-allowed}
+        .network-section .btn-group button.danger{background:#e74c3c;color:#fff;border-color:#e74c3c}
+        .network-section .btn-group button.danger:hover{background:#c0392b}
+        .network-section .btn-group button.solo{background:#2ecc71;color:#1a1f30;border-color:#2ecc71}
+        .network-section .btn-group button.solo:hover{background:#27ae60}
+        .network-section .player-count{color:#f1c40f;font-weight:700}
+        .players-section{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:15px;justify-content:center}
+        .player-box{flex:1;min-width:80px;max-width:120px;background:rgba(0,0,0,0.2);border-radius:15px;padding:8px;text-align:center;border:2px solid #2d3852;transition:all .3s}
+        .player-box.active{border-color:#f1c40f;box-shadow:0 0 20px rgba(241,196,15,0.2)}
+        .player-box .icon-display{font-size:1.8rem}
+        .player-box .name{font-weight:700;font-size:.75rem}
+        .player-box .pos{color:#7a8bb0;font-size:.65rem}
+        .player-box .dice-count{color:#f1c40f;font-size:.65rem}
+        .player-box .status-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}
+        .player-box .status-dot.online{background:#2ecc71}
+        .player-box .status-dot.offline{background:#e74c3c}
+        .player-box .status-dot.bot{background:#7a8bb0}
+        @media(max-width:500px){.cell .number{font-size:.35rem}#dice{font-size:1.5rem;min-width:45px}.user-info-bar{font-size:.7rem;padding:4px 10px}.game-ended-overlay .big-icon{font-size:3rem}.game-ended-overlay .title{font-size:1.3rem}.cell .player-marker{font-size:.6rem;width:20%;height:20%}.player-box{min-width:65px;padding:5px}.player-box .icon-display{font-size:1.3rem}}
     </style>
 </head>
 <body>
-    <div class="main-container">
-        <div class="header">
-            <div class="logo">✦ StarLoom_Game <span>| مار و پله</span></div>
-            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-                <div class="user-info-bar" id="userInfoBar">
-                    <span class="user-icon" id="userIcon">😊</span>
-                    <span>👤 <span id="displayName">کاربر</span></span>
-                    <span>💰 <span id="displayCoins">0</span></span>
-                    <span>🏆 لول <span id="displayLevel">0</span>/62</span>
-                    <span>🎲 <span id="displayDice">40</span></span>
-                </div>
-                <a href="index.html" class="back-home">← بازگشت</a>
-            </div>
-        </div>
-
-        <div class="game-container">
-            <div style="text-align:center;margin-bottom:10px;">
-                <h3 style="color:#f5e9c4;">🐍 مار و پله آنلاین</h3>
-                <p style="color:#7a8bb0;font-size:.85rem;">👥 ۱ تا ۶ نفر | 🎲 هر تاس 1 بار مصرف | برنده 800 سکه</p>
-            </div>
-
-            <!-- بخش شبکه -->
-            <div class="network-section">
-                <h4>🌐 اتاق بازی</h4>
-                <div class="status-text" id="networkStatus">🔴 در حال اتصال...</div>
-                <div class="btn-group">
-                    <button class="primary" id="createRoomBtn">📡 ایجاد اتاق</button>
-                    <button id="joinRoomBtn">🔗 پیوستن به اتاق</button>
-                    <button id="findPlayersBtn">🔍 پیدا کردن بازیکنان</button>
-                    <button class="danger" id="disconnectBtn" disabled>❌ خروج</button>
-                </div>
-                <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
-                    <input type="text" id="roomCode" placeholder="کد اتاق" style="padding:8px 14px;border-radius:10px;border:1px solid #4a5575;background:rgba(0,0,0,0.3);color:#f0f4ff;flex:1;min-width:120px;">
-                    <button id="copyCodeBtn" style="background:#2d3852;border:none;padding:8px 16px;border-radius:10px;color:#f0f4ff;cursor:pointer;">📋 کپی</button>
-                </div>
-                <div id="roomInfo" style="color:#7a8bb0;font-size:.8rem;margin-top:5px;">
-                    👥 بازیکنان: <span class="player-count" id="playerCount">0</span> / 6
-                </div>
-            </div>
-
-            <!-- بازیکنان -->
-            <div class="players-section" id="playersSection"></div>
-
-            <div class="board-wrapper">
-                <div id="board"></div>
-                <div class="game-ended-overlay" id="gameEndedOverlay">
-                    <div class="big-icon" id="endIcon">🏆</div>
-                    <div class="title" id="endTitle">تبریک! برنده شدی!</div>
-                    <div class="subtitle" id="endSub">به خانه 190 رسیدی</div>
-                    <div class="reward" id="endReward">🎁 +800 سکه</div>
-                    <a href="index.html" class="back-btn">← بازگشت به خانه</a>
-                </div>
-            </div>
-
-            <div class="controls">
-                <div class="dice-area">
-                    <span style="color:#b9c7e6;">تاس</span>
-                    <div id="dice">⚀</div>
-                    <button id="rollBtn" disabled>🗲 بینداز</button>
-                </div>
-                <div class="status" id="statusMessage">🎲 منتظر شروع...</div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // ============================================================
-        //  مار و پله آنلاین 1 تا 6 نفره با WebRTC
-        // ============================================================
-
-        var BOARD_SIZE = 190,
-            COLS = 10,
-            ROWS = 19;
-        var snakes = [
-            { start: 120, end: 70 }, { start: 105, end: 45 }, { start: 88, end: 32 },
-            { start: 65, end: 28 }, { start: 160, end: 100 }, { start: 145, end: 55 },
-            { start: 175, end: 130 }, { start: 185, end: 140 }
-        ];
-        var ladders = [
-            { start: 10, end: 50 }, { start: 30, end: 75 }, { start: 48, end: 95 },
-            { start: 68, end: 115 }, { start: 85, end: 135 }, { start: 110, end: 155 },
-            { start: 138, end: 170 }, { start: 165, end: 188 }
-        ];
-
-        var ICONS = {
-            'default': '😊',
-            'smile': '😄',
-            'heart': '❤️',
-            'star': '⭐',
-            'lion': '🦁',
-            'tiger': '🐯',
-            'eagle': '🦅',
-            'wolf': '🐺',
-            'dragon': '🐉',
-            'phoenix': '🔥',
-            'unicorn': '🦄',
-            'crown': '👑',
-            'diamond': '💎',
-            'king': '👸',
-            'gold': '🏆',
-            'robot': '🤖',
-            'gem': '💠',
-            'pizza': '🍕',
-            'burger': '🍔',
-            'cake': '🎂',
-            'donut': '🍩',
-            'ninja': '🥷',
-            'mage': '🧙',
-            'knight': '⚔️',
-            'angel': '👼',
-            'demon': '👿',
-            'skeleton': '💀',
-            'galaxy': '🌌',
-            'crystal': '🔮',
-            'cosmic': '🚀',
-            'legendary': '🌟',
-            'ultimate': '⚡'
-        };
-
-        var COLORS = ['#f1c40f', '#00e5ff', '#ff6b81', '#2ecc71', '#9b59b6', '#e67e22'];
-
-        // ============================================================
-        //  وضعیت بازی
-        // ============================================================
-        var players = [];
-        var currentPlayerIndex = 0;
-        var gameOver = false;
-        var isRolling = false;
-        var isHost = false;
-        var roomId = null;
-        var myId = null;
-        var peerConnections = {};
-        var dataChannels = {};
-        var username = 'کاربر',
-            userIcon = '😊';
-
-        // ============================================================
-        //  کاربر
-        // ============================================================
-        function loadUser() {
-            var saved = localStorage.getItem('starloom_current_user');
-            if (saved) {
-                try {
-                    var data = JSON.parse(saved);
-                    username = data.username;
-                    userIcon = ICONS[data.icon] || '😊';
-                    document.getElementById('displayName').textContent = username;
-                    document.getElementById('displayCoins').textContent = data.coins || 0;
-                    document.getElementById('displayLevel').textContent = data.level || 0;
-                    document.getElementById('displayDice').textContent = data.dice || 40;
-                    document.getElementById('userIcon').textContent = userIcon;
-                } catch (e) {}
-            }
-        }
-
-        function getUsers() {
-            try { return JSON.parse(localStorage.getItem('starloom_users')) || {}; } catch (e) { return {}; }
-        }
-
-        function saveUsers(u) { localStorage.setItem('starloom_users', JSON.stringify(u)); }
-
-        function updateUserCoinsAndDice(coins, dice) {
-            var users = getUsers();
-            if (users[username]) {
-                users[username].coins = (users[username].coins || 0) + coins;
-                users[username].dice = Math.max(0, (users[username].dice || 0) - dice);
-                if (users[username].dice < 0) users[username].dice = 0;
-                localStorage.setItem('starloom_users', JSON.stringify(users));
-                var current = JSON.parse(localStorage.getItem('starloom_current_user')) || {};
-                current.coins = users[username].coins;
-                current.dice = users[username].dice;
-                localStorage.setItem('starloom_current_user', JSON.stringify(current));
-                document.getElementById('displayCoins').textContent = users[username].coins;
-                document.getElementById('displayDice').textContent = users[username].dice;
-                return users[username];
-            }
-            return null;
-        }
-
-        function updateOpponentCoins(name, coins) {
-            var users = getUsers();
-            if (users[name]) {
-                users[name].coins = Math.max(0, (users[name].coins || 0) + coins);
-                localStorage.setItem('starloom_users', JSON.stringify(users));
-            }
-        }
-
-        function getUserDice(name) {
-            var users = getUsers();
-            if (users[name]) return users[name].dice || 0;
-            return 0;
-        }
-
-        // ============================================================
-        //  تخته
-        // ============================================================
-        var boardEl = document.getElementById('board'),
-            diceEl = document.getElementById('dice');
-        var rollBtn = document.getElementById('rollBtn'),
-            statusMsg = document.getElementById('statusMessage');
-        var gameEndedOverlay = document.getElementById('gameEndedOverlay');
-
-        function getNumberFromRowCol(row, col) {
-            var c = col;
-            if (row % 2 === 1) c = COLS - 1 - col;
-            return row * COLS + c + 1;
-        }
-
-        function buildBoard() {
-            boardEl.innerHTML = '';
-            for (var row = ROWS - 1; row >= 0; row--) {
-                for (var col = 0; col < COLS; col++) {
-                    var num = getNumberFromRowCol(row, col);
-                    var cell = document.createElement('div');
-                    cell.className = 'cell';
-                    cell.dataset.number = num;
-                    var numSpan = document.createElement('span');
-                    numSpan.className = 'number';
-                    numSpan.textContent = num;
-                    cell.appendChild(numSpan);
-
-                    for (var s = 0; s < snakes.length; s++) {
-                        if (snakes[s].start === num) {
-                            cell.classList.add('has-snake');
-                            var m = document.createElement('span');
-                            m.textContent = '🐍';
-                            m.style.cssText =
-                                'font-size:.8rem;position:absolute;top:1px;left:2px;pointer-events:none';
-                            cell.appendChild(m);
-                            break;
-                        }
-                    }
-                    for (var l = 0; l < ladders.length; l++) {
-                        if (ladders[l].start === num) {
-                            cell.classList.add('has-ladder');
-                            var m2 = document.createElement('span');
-                            m2.textContent = '🪜';
-                            m2.style.cssText =
-                                'font-size:.8rem;position:absolute;top:1px;right:2px;pointer-events:none';
-                            cell.appendChild(m2);
-                            break;
-                        }
-                    }
-                    if (num === BOARD_SIZE) cell.classList.add('win-cell');
-                    boardEl.appendChild(cell);
-                }
-            }
-            updateBoard();
-        }
-
-        function updateBoard() {
-            document.querySelectorAll('.player-marker').forEach(function(el) { el.remove(); });
-            for (var i = 0; i < players.length; i++) {
-                var p = players[i];
-                var pos = Math.min(p.position, BOARD_SIZE);
-                var cell = boardEl.querySelector('.cell[data-number="' + pos + '"]');
-                if (!cell) continue;
-                var marker = document.createElement('div');
-                marker.className = 'player-marker';
-                marker.textContent = p.icon || '😊';
-                marker.style.borderColor = p.color;
-                marker.style.color = p.color;
-                if (p.isMe) {
-                    marker.style.border = '3px solid #f1c40f';
-                    marker.style.boxShadow = '0 0 30px #f1c40f';
-                }
-                cell.appendChild(marker);
-            }
-            updatePlayersUI();
-        }
-
-        // ============================================================
-        //  UI بازیکنان
-        // ============================================================
-        function updatePlayersUI() {
-            var section = document.getElementById('playersSection');
-            section.innerHTML = '';
-            for (var i = 0; i < players.length; i++) {
-                var p = players[i];
-                var box = document.createElement('div');
-                box.className = 'player-box';
-                if (i === currentPlayerIndex && !gameOver) box.classList.add('active');
-                box.innerHTML =
-                    '<div class="icon-display">' + p.icon + '</div>' +
-                    '<div class="name">' + p.name + (p.isMe ? ' (شما)' : '') + '</div>' +
-                    '<div class="pos">🏠 ' + p.position + '</div>' +
-                    '<div class="dice-count">🎲 ' + (p.dice || 0) + '</div>' +
-                    '<span class="status-dot ' + (p.online !== false ? 'online' : 'offline') + '"></span>';
-                section.appendChild(box);
-            }
-
-            document.getElementById('playerCount').textContent = players.length;
-
-            // بروزرسانی نوبت
-            var boxes = section.querySelectorAll('.player-box');
-            for (var j = 0; j < boxes.length; j++) {
-                boxes[j].classList.toggle('active', j === currentPlayerIndex && !gameOver);
-            }
-        }
-
-        // ============================================================
-        //  شبکه (WebRTC)
-        // ============================================================
-        var configuration = {
-            iceServers: [
-                { urls: 'stun:stun.l.google.com:19302' },
-                { urls: 'stun:stun1.l.google.com:19302' }
-            ]
-        };
-
-        var allPlayers = [];
-        var isConnected = false;
-
-        // ============================================================
-        //  پیدا کردن بازیکنان (شبیه‌سازی)
-        // ============================================================
-        function findPlayers() {
-            var users = getUsers();
-            var available = [];
-            for (var key in users) {
-                if (key !== username) {
-                    available.push({
-                        name: key,
-                        icon: ICONS[users[key].icon] || '😊',
-                        dice: users[key].dice || 40
-                    });
-                }
-            }
-
-            if (available.length === 0) {
-                document.getElementById('networkStatus').textContent = '🔴 هیچ بازیکن آنلاینی پیدا نشد!';
-                document.getElementById('networkStatus').className = 'status-text disconnected';
-                return;
-            }
-
-            // اضافه کردن بازیکنان پیدا شده
-            var count = Math.min(available.length, 5);
-            var msg = '🟢 ' + count + ' بازیکن پیدا شد: ';
-            for (var i = 0; i < count; i++) {
-                msg += available[i].name + ' ';
-            }
-            document.getElementById('networkStatus').textContent = msg;
-            document.getElementById('networkStatus').className = 'status-text connected';
-
-            // شروع بازی با بازیکنان پیدا شده
-            startGameWithPlayers(available.slice(0, count));
-        }
-
-        function startGameWithPlayers(foundPlayers) {
-            initGame();
-
-            // خودمان
-            addPlayer(username, userIcon, true, parseInt(document.getElementById('displayDice').textContent) || 40);
-
-            // بازیکنان پیدا شده
-            for (var i = 0; i < foundPlayers.length; i++) {
-                addPlayer(foundPlayers[i].name, foundPlayers[i].icon, false, foundPlayers[i].dice || 40);
-            }
-
-            document.getElementById('networkStatus').textContent = '🟢 بازی با ' + players.length + ' بازیکن شروع شد!';
-            document.getElementById('networkStatus').className = 'status-text connected';
-            document.getElementById('createRoomBtn').disabled = true;
-            document.getElementById('joinRoomBtn').disabled = true;
-            document.getElementById('findPlayersBtn').disabled = true;
-            document.getElementById('disconnectBtn').disabled = false;
-
-            updateBoard();
-            updatePlayersUI();
-            rollBtn.disabled = false;
-            statusMsg.textContent = '🎯 نوبت ' + players[currentPlayerIndex].name;
-            document.getElementById('roomInfo').innerHTML = '👥 بازیکنان: <span class="player-count">' + players.length +
-                '</span> / 6';
-        }
-
-        // ============================================================
-        //  ایجاد اتاق (میزبان)
-        // ============================================================
-        function createRoom() {
-            isHost = true;
-            myId = Math.random().toString(36).substring(2, 8).toUpperCase();
-            roomId = myId;
-            document.getElementById('roomInfo').innerHTML = '📡 کد اتاق: <strong>' + roomId +
-                '</strong> - منتظر بازیکنان...';
-            document.getElementById('networkStatus').textContent = '🟢 شما میزبان هستید (کد: ' + roomId + ')';
-            document.getElementById('networkStatus').className = 'status-text connected';
-            document.getElementById('createRoomBtn').disabled = true;
-            document.getElementById('joinRoomBtn').disabled = true;
-            document.getElementById('findPlayersBtn').disabled = true;
-            document.getElementById('disconnectBtn').disabled = false;
-
-            initGame();
-            addPlayer(username, userIcon, true, parseInt(document.getElementById('displayDice').textContent) || 40);
-
-            // اضافه کردن بازیکنان شبیه‌سازی شده (برای تست)
-            var users = getUsers();
-            var opponents = Object.keys(users).filter(function(u) { return u !== username; });
-            for (var i = 0; i < Math.min(opponents.length, 3); i++) {
-                var opp = users[opponents[i]];
-                addPlayer(opponents[i], ICONS[opp.icon] || '😊', false, opp.dice || 40);
-            }
-
-            updateBoard();
-            updatePlayersUI();
-            rollBtn.disabled = false;
-            statusMsg.textContent = '🎯 نوبت ' + players[currentPlayerIndex].name;
-            document.getElementById('roomInfo').innerHTML = '👥 بازیکنان: <span class="player-count">' + players.length +
-                '</span> / 6';
-            document.getElementById('roomCode').value = roomId;
-        }
-
-        // ============================================================
-        //  پیوستن به اتاق
-        // ============================================================
-        function joinRoom() {
-            var code = document.getElementById('roomCode').value.trim();
-            if (!code) { alert('کد اتاق را وارد کنید'); return; }
-            roomId = code;
-            isHost = false;
-            document.getElementById('roomInfo').innerHTML = '🔗 در حال اتصال به اتاق ' + code + '...';
-            document.getElementById('networkStatus').textContent = '🟡 در حال اتصال...';
-            document.getElementById('networkStatus').className = 'status-text';
-
-            setTimeout(function() {
-                document.getElementById('networkStatus').textContent = '🟢 به اتاق ' + code + ' متصل شدید!';
-                document.getElementById('networkStatus').className = 'status-text connected';
-                document.getElementById('createRoomBtn').disabled = true;
-                document.getElementById('joinRoomBtn').disabled = true;
-                document.getElementById('findPlayersBtn').disabled = true;
-                document.getElementById('disconnectBtn').disabled = false;
-
-                initGame();
-                addPlayer(username, userIcon, true, parseInt(document.getElementById('displayDice').textContent) ||
-                40);
-
-                // اضافه کردن بازیکنان شبیه‌سازی شده
-                var users = getUsers();
-                var opponents = Object.keys(users).filter(function(u) { return u !== username; });
-                for (var i = 0; i < Math.min(opponents.length, 4); i++) {
-                    var opp = users[opponents[i]];
-                    addPlayer(opponents[i], ICONS[opp.icon] || '😊', false, opp.dice || 40);
-                }
-
-                updateBoard();
-                updatePlayersUI();
-                rollBtn.disabled = false;
-                statusMsg.textContent = '🎯 نوبت ' + players[currentPlayerIndex].name;
-                document.getElementById('roomInfo').innerHTML = '👥 بازیکنان: <span class="player-count">' + players
-                    .length + '</span> / 6';
-            }, 1500);
-        }
-
-        // ============================================================
-        //  مدیریت بازی
-        // ============================================================
-        function initGame() {
-            players = [];
-            currentPlayerIndex = 0;
-            gameOver = false;
-            isRolling = false;
-            gameEndedOverlay.classList.remove('show');
-        }
-
-        function addPlayer(name, icon, isMe, dice) {
-            var index = players.length;
-            players.push({
-                name: name,
-                icon: icon || '😊',
-                position: 1,
-                color: COLORS[index % COLORS.length],
-                isMe: isMe || false,
-                online: true,
-                dice: dice || 40
-            });
-            updatePlayersUI();
-            updateBoard();
-        }
-
-        function disconnect() {
-            isHost = false;
-            roomId = null;
-            players = [];
-            currentPlayerIndex = 0;
-            gameOver = false;
-            document.getElementById('networkStatus').textContent = '🔴 قطع شد';
-            document.getElementById('networkStatus').className = 'status-text disconnected';
-            document.getElementById('createRoomBtn').disabled = false;
-            document.getElementById('joinRoomBtn').disabled = false;
-            document.getElementById('findPlayersBtn').disabled = false;
-            document.getElementById('disconnectBtn').disabled = true;
-            document.getElementById('roomInfo').innerHTML = '👥 بازیکنان: <span class="player-count">0</span> / 6';
-            rollBtn.disabled = true;
-            statusMsg.textContent = '🎲 قطع شد. دوباره متصل شوید.';
-            updatePlayersUI();
-            updateBoard();
-        }
-
-        // ============================================================
-        //  حرکت
-        // ============================================================
-        function checkDice() {
-            var p = players[currentPlayerIndex];
-            if (!p) return;
-            if (p.dice <= 0) {
-                rollBtn.disabled = true;
-                rollBtn.textContent = '❌ تاس ندارید!';
-                rollBtn.className = 'no-dice';
-                statusMsg.textContent = '⛔ ' + p.name + ' تاس ندارد!';
-                if (p.isMe) {
-                    statusMsg.textContent = '⛔ شما تاس ندارید! از فروشگاه بخرید.';
-                }
-                return;
-            }
-            rollBtn.disabled = false;
-            rollBtn.textContent = '🗲 بینداز';
-            rollBtn.className = '';
-        }
-
-        function rollDice() {
-            if (gameOver) return;
-            if (isRolling) return;
-
-            var p = players[currentPlayerIndex];
-            if (!p) return;
-            if (p.dice <= 0) { checkDice(); return; }
-
-            // مصرف تاس
-            p.dice -= 1;
-            if (p.isMe) {
-                var users = getUsers();
-                if (users[username]) {
-                    users[username].dice = p.dice;
-                    localStorage.setItem('starloom_users', JSON.stringify(users));
-                    document.getElementById('displayDice').textContent = p.dice;
-                }
-            }
-
-            isRolling = true;
-            rollBtn.disabled = true;
-
-            var val = Math.floor(Math.random() * 6) + 1;
-            var sym = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
-            diceEl.textContent = sym[val - 1];
-
-            setTimeout(function() {
-                movePlayer(val);
-                isRolling = false;
-                if (!gameOver) {
-                    currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
-                    updateBoard();
-                    updatePlayersUI();
-                    checkDice();
-                    statusMsg.textContent = '🎯 نوبت ' + players[currentPlayerIndex].name;
-                    rollBtn.disabled = false;
-                }
-            }, 500);
-        }
-
-        function movePlayer(steps) {
-            if (gameOver) return false;
-            var p = players[currentPlayerIndex];
-            var newPos = p.position + steps;
-
-            if (newPos > BOARD_SIZE) {
-                statusMsg.textContent = '⛔ تاس زیاد بود! در جای خود ماندی.';
-                return false;
-            }
-
-            for (var s = 0; s < snakes.length; s++) {
-                if (snakes[s].start === newPos) {
-                    newPos = snakes[s].end;
-                    statusMsg.textContent = '🐍 ' + p.name + ' به مار خورد! رفت به ' + newPos;
-                    break;
-                }
-            }
-            if (newPos === p.position + steps) {
-                for (var l = 0; l < ladders.length; l++) {
-                    if (ladders[l].start === newPos) {
-                        newPos = ladders[l].end;
-                        statusMsg.textContent = '🪜 ' + p.name + ' از نردبان رفت به ' + newPos;
-                        break;
-                    }
-                }
-                if (newPos === p.position + steps) {
-                    statusMsg.textContent = '🎲 ' + p.name + ' به ' + newPos + ' رفت';
-                }
-            }
-
-            p.position = newPos;
-            updateBoard();
-            updatePlayersUI();
-
-            if (p.position >= BOARD_SIZE) {
-                p.position = BOARD_SIZE;
-                endGame(currentPlayerIndex);
-                return true;
-            }
-            return true;
-        }
-
-        // ============================================================
-        //  پایان بازی
-        // ============================================================
-        function endGame(winnerIndex) {
-            gameOver = true;
-            rollBtn.disabled = true;
-
-            var winner = players[winnerIndex];
-            var reward = 800;
-            var penalty = 300;
-
-            if (winner.isMe) {
-                // بازیکن اصلی برنده شد
-                updateUserCoinsAndDice(reward, 0);
-                // جریمه بقیه
-                for (var i = 0; i < players.length; i++) {
-                    if (i !== winnerIndex) {
-                        updateOpponentCoins(players[i].name, -penalty);
-                    }
-                }
-                document.getElementById('endIcon').textContent = '🏆';
-                document.getElementById('endTitle').textContent = 'تبریک! برنده شدی!';
-                document.getElementById('endSub').textContent = 'به خانه 190 رسیدی';
-                document.getElementById('endReward').textContent = '🎁 +' + reward + ' سکه';
-                statusMsg.textContent = '🎉 شما برنده شدید! +' + reward + ' سکه';
-                statusMsg.className = 'status winner';
-
-                var users = getUsers();
-                if (users[username]) {
-                    var newLevel = Math.min((users[username].level || 0) + 1, 62);
-                    users[username].level = newLevel;
-                    users[username].snakeWins = (users[username].snakeWins || 0) + 1;
-                    localStorage.setItem('starloom_users', JSON.stringify(users));
-                    document.getElementById('displayLevel').textContent = newLevel;
-                    var current = JSON.parse(localStorage.getItem('starloom_current_user')) || {};
-                    current.level = newLevel;
-                    localStorage.setItem('starloom_current_user', JSON.stringify(current));
-                }
-            } else {
-                // بازیکن اصلی باخت
-                updateUserCoinsAndDice(-penalty, 0);
-                updateOpponentCoins(winner.name, reward);
-                document.getElementById('endIcon').textContent = '😢';
-                document.getElementById('endTitle').textContent = 'شما باختید!';
-                document.getElementById('endSub').textContent = winner.name + ' به خانه 190 رسید';
-                document.getElementById('endReward').textContent = '💔 -' + penalty + ' سکه';
-                document.getElementById('endReward').style.color = '#e74c3c';
-                statusMsg.textContent = '😢 شما باختید! -' + penalty + ' سکه';
-                statusMsg.className = 'status loser';
-            }
-
-            document.getElementById('gameEndedOverlay').classList.add('show');
-            updateBoard();
-            updatePlayersUI();
-        }
-
-        // ============================================================
-        //  دکمه‌ها
-        // ============================================================
-        document.getElementById('createRoomBtn').addEventListener('click', createRoom);
-        document.getElementById('joinRoomBtn').addEventListener('click', joinRoom);
-        document.getElementById('findPlayersBtn').addEventListener('click', findPlayers);
-        document.getElementById('disconnectBtn').addEventListener('click', disconnect);
-        document.getElementById('rollBtn').addEventListener('click', rollDice);
-
-        document.getElementById('copyCodeBtn').addEventListener('click', function() {
-            var code = document.getElementById('roomCode').value;
-            if (code) { navigator.clipboard.writeText(code).then(function() { alert('کد کپی شد: ' + code); }); }
-        });
-
-        // Enter key for room code
-        document.getElementById('roomCode').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') document.getElementById('joinRoomBtn').click();
-        });
-
-        // ============================================================
-        //  مقداردهی
-        // ============================================================
-        loadUser();
-        buildBoard();
-        document.getElementById('networkStatus').textContent = '🔴 برای شروع، اتاق بسازید یا به بازی بپیوندید';
-        document.getElementById('networkStatus').className = 'status-text disconnected';
-        document.getElementById('disconnectBtn').disabled = true;
-        statusMsg.textContent = '🎲 منتظر اتصال...';
-        updatePlayersUI();
-
-        console.log('🐍 Snake Game - 1 تا 6 نفر آنلاین!');
-        console.log('👥 حداکثر 6 بازیکن');
-        console.log('🎲 هر تاس 1 بار مصرف');
-        console.log('💰 برنده 800+ ، بازنده 300-');
-        console.log('🏆 لول نهایی: 62');
-    </script>
+<div class="main-container">
+<div class="header">
+<div class="logo">✦ StarLoom_Game <span>| مار و پله</span></div>
+<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+<div class="user-info-bar" id="userInfoBar">
+<span class="user-icon" id="userIcon">😊</span>
+<span>👤 <span id="displayName">کاربر</span></span>
+<span>💰 <span id="displayCoins">0</span></span>
+<span>🏆 لول <span id="displayLevel">0</span>/62</span>
+<span>🎲 <span id="displayDice">40</span></span>
+</div>
+<a href="index.html" class="back-home">← بازگشت</a>
+</div>
+</div>
+
+<div class="game-container">
+<div style="text-align:center;margin-bottom:10px;">
+<h3 style="color:#f5e9c4;">🐍 مار و پله</h3>
+<p style="color:#7a8bb0;font-size:.85rem;" id="gameModeText">🎯 حالت: تک‌نفره (با کامپیوتر)</p>
+</div>
+
+<!-- انتخاب حالت بازی -->
+<div class="mode-selector">
+<button class="active" data-mode="solo" id="soloModeBtn">🎮 تک‌نفره <span class="badge">با کامپیوتر</span></button>
+<button data-mode="online" id="onlineModeBtn">🌐 چندنفره <span class="badge">1-6 نفر</span></button>
+</div>
+
+<!-- بخش شبکه (فقط در حالت چندنفره) -->
+<div class="network-section" id="networkSection" style="display:none;">
+<h4>🌐 اتصال به بازی</h4>
+<div class="status-text" id="networkStatus">🔴 برای شروع، اتاق بسازید یا به بازی بپیوندید</div>
+<div class="btn-group">
+<button class="primary" id="createRoomBtn">📡 ایجاد اتاق</button>
+<button id="joinRoomBtn">🔗 پیوستن به اتاق</button>
+<button class="danger" id="disconnectBtn" disabled>❌ خروج</button>
+</div>
+<div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+<input type="text" id="roomCode" placeholder="کد اتاق" style="padding:8px 14px;border-radius:10px;border:1px solid #4a5575;background:rgba(0,0,0,0.3);color:#f0f4ff;flex:1;min-width:120px;">
+<button id="copyCodeBtn" style="background:#2d3852;border:none;padding:8px 16px;border-radius:10px;color:#f0f4ff;cursor:pointer;">📋 کپی</button>
+</div>
+<div id="roomInfo" style="color:#7a8bb0;font-size:.8rem;margin-top:5px;">
+👥 بازیکنان: <span class="player-count" id="playerCount">0</span> / 6
+</div>
+</div>
+
+<div class="players-section" id="playersSection"></div>
+
+<div class="board-wrapper">
+<div id="board"></div>
+<div class="game-ended-overlay" id="gameEndedOverlay">
+<div class="big-icon" id="endIcon">🏆</div>
+<div class="title" id="endTitle">تبریک! برنده شدی!</div>
+<div class="subtitle" id="endSub">به خانه 190 رسیدی</div>
+<div class="reward" id="endReward">🎁 +800 سکه</div>
+<a href="index.html" class="back-btn">← بازگشت به خانه</a>
+</div>
+</div>
+
+<div class="controls">
+<div class="dice-area">
+<span style="color:#b9c7e6;">تاس</span>
+<div id="dice">⚀</div>
+<button id="rollBtn">🗲 بینداز</button>
+</div>
+<div class="status" id="statusMessage">🎲 برای شروع تاس بینداز!</div>
+</div>
+</div>
+</div>
+
+<script>
+// ============================================================
+//  مار و پله - تک‌نفره + چندنفره (1 تا 6)
+// ============================================================
+
+var BOARD_SIZE=190,COLS=10,ROWS=19;
+var snakes=[
+{start:120,end:70},{start:105,end:45},{start:88,end:32},{start:65,end:28},
+{start:160,end:100},{start:145,end:55},{start:175,end:130},{start:185,end:140}
+];
+var ladders=[
+{start:10,end:50},{start:30,end:75},{start:48,end:95},{start:68,end:115},
+{start:85,end:135},{start:110,end:155},{start:138,end:170},{start:165,end:188}
+];
+var ICONS={'default':'😊','smile':'😄','heart':'❤️','star':'⭐','lion':'🦁','tiger':'🐯','eagle':'🦅','wolf':'🐺','dragon':'🐉','phoenix':'🔥','unicorn':'🦄','crown':'👑','diamond':'💎','king':'👸','gold':'🏆','robot':'🤖','gem':'💠','pizza':'🍕','burger':'🍔','cake':'🎂','donut':'🍩','ninja':'🥷','mage':'🧙','knight':'⚔️','angel':'👼','demon':'👿','skeleton':'💀','galaxy':'🌌','crystal':'🔮','cosmic':'🚀','legendary':'🌟','ultimate':'⚡','void':'🌑'};
+var COLORS=['#f1c40f','#00e5ff','#ff6b81','#2ecc71','#9b59b6','#e67e22'];
+
+var players=[];
+var currentPlayerIndex=0;
+var gameOver=false;
+var isRolling=false;
+var isBotTurn=false;
+var gameMode='solo'; // 'solo' یا 'online'
+var isHost=false;
+var roomId=null;
+var username='کاربر',userIcon='😊';
+var botDelay=800;
+
+// ============================================================
+//  کاربر
+// ============================================================
+function loadUser(){
+var saved=localStorage.getItem('starloom_current_user');
+if(saved){
+try{var data=JSON.parse(saved);username=data.username;userIcon=ICONS[data.icon]||'😊';
+document.getElementById('displayName').textContent=username;
+document.getElementById('displayCoins').textContent=data.coins||0;
+document.getElementById('displayLevel').textContent=data.level||0;
+document.getElementById('displayDice').textContent=data.dice||40;
+document.getElementById('userIcon').textContent=userIcon;}catch(e){}
+}
+}
+
+function getUsers(){try{return JSON.parse(localStorage.getItem('starloom_users'))||{}}catch(e){return {}}}
+function saveUsers(u){localStorage.setItem('starloom_users',JSON.stringify(u));}
+
+function updateUserCoinsAndDice(coins,dice){
+var users=getUsers();
+if(users[username]){
+users[username].coins=(users[username].coins||0)+coins;
+users[username].dice=Math.max(0,(users[username].dice||0)-dice);
+if(users[username].dice<0)users[username].dice=0;
+localStorage.setItem('starloom_users',JSON.stringify(users));
+var current=JSON.parse(localStorage.getItem('starloom_current_user'))||{};
+current.coins=users[username].coins;
+current.dice=users[username].dice;
+localStorage.setItem('starloom_current_user',JSON.stringify(current));
+document.getElementById('displayCoins').textContent=users[username].coins;
+document.getElementById('displayDice').textContent=users[username].dice;
+return users[username];}
+return null;
+}
+
+function updateOpponentCoins(name,coins){
+var users=getUsers();
+if(users[name]){
+users[name].coins=Math.max(0,(users[name].coins||0)+coins);
+localStorage.setItem('starloom_users',JSON.stringify(users));}
+}
+
+// ============================================================
+//  تخته
+// ============================================================
+var boardEl=document.getElementById('board'),diceEl=document.getElementById('dice');
+var rollBtn=document.getElementById('rollBtn'),statusMsg=document.getElementById('statusMessage');
+var gameEndedOverlay=document.getElementById('gameEndedOverlay');
+
+function getNumberFromRowCol(row,col){var c=col;if(row%2===1)c=COLS-1-col;return row*COLS+c+1;}
+
+function buildBoard(){
+boardEl.innerHTML='';
+for(var row=ROWS-1;row>=0;row--){
+for(var col=0;col<COLS;col++){
+var num=getNumberFromRowCol(row,col);
+var cell=document.createElement('div');
+cell.className='cell';cell.dataset.number=num;
+var numSpan=document.createElement('span');numSpan.className='number';numSpan.textContent=num;cell.appendChild(numSpan);
+for(var s=0;s<snakes.length;s++){if(snakes[s].start===num){cell.classList.add('has-snake');var m=document.createElement('span');m.textContent='🐍';m.style.cssText='font-size:.8rem;position:absolute;top:1px;left:2px;pointer-events:none';cell.appendChild(m);break;}}
+for(var l=0;l<ladders.length;l++){if(ladders[l].start===num){cell.classList.add('has-ladder');var m2=document.createElement('span');m2.textContent='🪜';m2.style.cssText='font-size:.8rem;position:absolute;top:1px;right:2px;pointer-events:none';cell.appendChild(m2);break;}}
+if(num===BOARD_SIZE)cell.classList.add('win-cell');
+boardEl.appendChild(cell);
+}}
+updateBoard();
+}
+
+function updateBoard(){
+document.querySelectorAll('.player-marker').forEach(function(el){el.remove();});
+for(var i=0;i<players.length;i++){
+var p=players[i];
+var pos=Math.min(p.position,BOARD_SIZE);
+var cell=boardEl.querySelector('.cell[data-number="'+pos+'"]');
+if(!cell)continue;
+var marker=document.createElement('div');
+marker.className='player-marker';
+if(p.isBot)marker.classList.add('bot');
+marker.textContent=p.icon||'😊';
+marker.style.borderColor=p.color;
+marker.style.color=p.color;
+if(p.isMe){marker.style.border='3px solid #f1c40f';marker.style.boxShadow='0 0 30px #f1c40f';}
+cell.appendChild(marker);
+}
+updatePlayersUI();
+}
+
+function updatePlayersUI(){
+var section=document.getElementById('playersSection');
+section.innerHTML='';
+for(var i=0;i<players.length;i++){
+var p=players[i];
+var box=document.createElement('div');
+box.className='player-box';
+if(i===currentPlayerIndex&&!gameOver)box.classList.add('active');
+var dotClass=p.isBot?'bot':(p.online!==false?'online':'offline');
+box.innerHTML='<div class="icon-display">'+p.icon+'</div><div class="name">'+p.name+(p.isMe?' (شما)':'')+(p.isBot?' 🤖':'')+'</div><div class="pos">🏠 '+p.position+'</div><div class="dice-count">🎲 '+(p.dice||0)+'</div><span class="status-dot '+dotClass+'"></span>';
+section.appendChild(box);}
+document.getElementById('playerCount').textContent=players.length;
+var boxes=section.querySelectorAll('.player-box');
+for(var j=0;j<boxes.length;j++){boxes[j].classList.toggle('active',j===currentPlayerIndex&&!gameOver);}
+}
+
+// ============================================================
+//  حالت تک‌نفره (با کامپیوتر)
+// ============================================================
+function startSoloMode(){
+gameMode='solo';
+document.getElementById('gameModeText').textContent='🎯 حالت: تک‌نفره (با کامپیوتر)';
+document.getElementById('networkSection').style.display='none';
+document.getElementById('soloModeBtn').classList.add('active');
+document.getElementById('onlineModeBtn').classList.remove('active');
+
+initGame();
+// بازیکن اصلی
+addPlayer(username,userIcon,true,parseInt(document.getElementById('displayDice').textContent)||40);
+// ربات (کامپیوتر)
+addPlayer('کامپیوتر','🤖',false,999,true);
+
+rollBtn.disabled=false;
+statusMsg.textContent='🎯 نوبت شماست! تاس بینداز!';
+updateBoard();
+updatePlayersUI();
+}
+
+// ============================================================
+//  حالت چندنفره
+// ============================================================
+function startOnlineMode(){
+gameMode='online';
+document.getElementById('gameModeText').textContent='🌐 حالت: چندنفره (1-6 نفر)';
+document.getElementById('networkSection').style.display='block';
+document.getElementById('onlineModeBtn').classList.add('active');
+document.getElementById('soloModeBtn').classList.remove('active');
+
+document.getElementById('networkStatus').textContent='🔴 برای شروع، اتاق بسازید یا به بازی بپیوندید';
+document.getElementById('networkStatus').className='status-text disconnected';
+document.getElementById('disconnectBtn').disabled=true;
+rollBtn.disabled=true;
+statusMsg.textContent='🎲 منتظر اتصال...';
+
+initGame();
+addPlayer(username,userIcon,true,parseInt(document.getElementById('displayDice').textContent)||40);
+updateBoard();
+updatePlayersUI();
+}
+
+// ============================================================
+//  مدیریت بازی
+// ============================================================
+function initGame(){
+players=[];
+currentPlayerIndex=0;
+gameOver=false;
+isRolling=false;
+isBotTurn=false;
+gameEndedOverlay.classList.remove('show');
+}
+
+function addPlayer(name,icon,isMe,dice,isBot){
+var index=players.length;
+players.push({
+name:name,
+icon:icon||'😊',
+position:1,
+color:COLORS[index%COLORS.length],
+isMe:isMe||false,
+isBot:isBot||false,
+online:!isBot,
+dice:dice||40
+});
+updatePlayersUI();
+updateBoard();
+}
+
+function checkDice(){
+var p=players[currentPlayerIndex];
+if(!p)return;
+if(p.dice<=0){
+rollBtn.disabled=true;
+rollBtn.textContent='❌ تاس ندارید!';
+rollBtn.className='no-dice';
+if(!p.isBot){
+statusMsg.textContent='⛔ شما تاس ندارید! از فروشگاه بخرید.';
+}
+return;
+}
+if(p.isBot){
+rollBtn.disabled=true;
+return;
+}
+rollBtn.disabled=false;
+rollBtn.textContent='🗲 بینداز';
+rollBtn.className='';
+}
+
+// ============================================================
+//  رول تاس و حرکت
+// ============================================================
+function rollDice(){
+if(gameOver)return;
+if(isRolling)return;
+var p=players[currentPlayerIndex];
+if(!p)return;
+if(p.dice<=0){checkDice();return;}
+
+// اگر نوبت ربات باشد
+if(p.isBot){
+isBotTurn=true;
+rollBtn.disabled=true;
+setTimeout(function(){
+doBotMove(p);
+},botDelay);
+return;
+}
+
+// نوبت بازیکن واقعی
+p.dice-=1;
+if(p.isMe){
+var users=getUsers();
+if(users[username]){users[username].dice=p.dice;localStorage.setItem('starloom_users',JSON.stringify(users));document.getElementById('displayDice').textContent=p.dice;}
+}
+doMove(p);
+}
+
+function doBotMove(p){
+p.dice-=1;
+doMove(p);
+isBotTurn=false;
+}
+
+function doMove(p){
+isRolling=true;
+rollBtn.disabled=true;
+var val=Math.floor(Math.random()*6)+1;
+var sym=['⚀','⚁','⚂','⚃','⚄','⚅'];
+diceEl.textContent=sym[val-1];
+
+setTimeout(function(){
+movePlayer(p,val);
+isRolling=false;
+if(!gameOver){
+nextTurn();
+}
+},500);
+}
+
+function movePlayer(p,steps){
+var newPos=p.position+steps;
+if(newPos>BOARD_SIZE){
+statusMsg.textContent='⛔ تاس زیاد بود! در جای خود ماندی.';
+return false;
+}
+for(var s=0;s<snakes.length;s++){
+if(snakes[s].start===newPos){
+newPos=snakes[s].end;
+statusMsg.textContent='🐍 '+p.name+' به مار خورد! رفت به '+newPos;
+break;
+}
+}
+if(newPos===p.position+steps){
+for(var l=0;l<ladders.length;l++){
+if(ladders[l].start===newPos){
+newPos=ladders[l].end;
+statusMsg.textContent='🪜 '+p.name+' از نردبان رفت به '+newPos;
+break;
+}
+}
+if(newPos===p.position+steps){
+statusMsg.textContent='🎲 '+p.name+' به '+newPos+' رفت';
+}
+}
+p.position=newPos;
+updateBoard();
+updatePlayersUI();
+
+if(p.position>=BOARD_SIZE){
+p.position=BOARD_SIZE;
+endGame(currentPlayerIndex);
+return true;
+}
+return true;
+}
+
+function nextTurn(){
+currentPlayerIndex=(currentPlayerIndex+1)%players.length;
+updateBoard();
+updatePlayersUI();
+checkDice();
+var p=players[currentPlayerIndex];
+if(p.isBot){
+statusMsg.textContent='🤖 نوبت '+p.name+'...';
+rollBtn.disabled=true;
+setTimeout(function(){
+rollDice();
+},500);
+} else {
+statusMsg.textContent='🎯 نوبت '+p.name;
+rollBtn.disabled=false;
+}
+}
+
+// ============================================================
+//  پایان بازی
+// ============================================================
+function endGame(winnerIndex){
+gameOver=true;
+rollBtn.disabled=true;
+var winner=players[winnerIndex];
+var reward=800;
+var penalty=300;
+
+if(winner.isMe){
+updateUserCoinsAndDice(reward,0);
+for(var i=0;i<players.length;i++){
+if(i!==winnerIndex && !players[i].isBot){
+updateOpponentCoins(players[i].name,-penalty);
+}
+}
+document.getElementById('endIcon').textContent='🏆';
+document.getElementById('endTitle').textContent='تبریک! برنده شدی!';
+document.getElementById('endSub').textContent='به خانه 190 رسیدی';
+document.getElementById('endReward').textContent='🎁 +'+reward+' سکه';
+statusMsg.textContent='🎉 شما برنده شدید! +'+reward+' سکه';
+statusMsg.className='status winner';
+
+var users=getUsers();
+if(users[username]){
+var newLevel=Math.min((users[username].level||0)+1,62);
+users[username].level=newLevel;
+users[username].snakeWins=(users[username].snakeWins||0)+1;
+localStorage.setItem('starloom_users',JSON.stringify(users));
+document.getElementById('displayLevel').textContent=newLevel;
+var current=JSON.parse(localStorage.getItem('starloom_current_user'))||{};
+current.level=newLevel;
+localStorage.setItem('starloom_current_user',JSON.stringify(current));}
+}else if(winner.isBot){
+updateUserCoinsAndDice(-penalty,0);
+document.getElementById('endIcon').textContent='😢';
+document.getElementById('endTitle').textContent='کامپیوتر برنده شد!';
+document.getElementById('endSub').textContent='کامپیوتر به خانه 190 رسید';
+document.getElementById('endReward').textContent='💔 -'+penalty+' سکه';
+document.getElementById('endReward').style.color='#e74c3c';
+statusMsg.textContent='😢 کامپیوتر برنده شد! -'+penalty+' سکه';
+statusMsg.className='status loser';
+}else{
+updateUserCoinsAndDice(-penalty,0);
+updateOpponentCoins(winner.name,reward);
+document.getElementById('endIcon').textContent='😢';
+document.getElementById('endTitle').textContent='شما باختید!';
+document.getElementById('endSub').textContent=winner.name+' به خانه 190 رسید';
+document.getElementById('endReward').textContent='💔 -'+penalty+' سکه';
+document.getElementById('endReward').style.color='#e74c3c';
+statusMsg.textContent='😢 شما باختید! -'+penalty+' سکه';
+statusMsg.className='status loser';}
+document.getElementById('gameEndedOverlay').classList.add('show');
+updateBoard();updatePlayersUI();
+}
+
+// ============================================================
+//  شبکه (چندنفره)
+// ============================================================
+function createRoom(){
+if(gameMode!=='online'){startOnlineMode();}
+isHost=true;
+var myId=Math.random().toString(36).substring(2,8).toUpperCase();
+roomId=myId;
+document.getElementById('roomInfo').innerHTML='📡 کد اتاق: <strong>'+roomId+'</strong> - کد را به دوستان بدهید';
+document.getElementById('networkStatus').textContent='🟢 شما میزبان هستید (کد: '+roomId+')';
+document.getElementById('networkStatus').className='status-text connected';
+document.getElementById('createRoomBtn').disabled=true;
+document.getElementById('joinRoomBtn').disabled=true;
+document.getElementById('disconnectBtn').disabled=false;
+// اضافه کردن بازیکنان شبیه‌سازی شده
+var users=getUsers();
+var opponents=Object.keys(users).filter(function(u){return u!==username;});
+for(var i=0;i<Math.min(opponents.length,4);i++){
+var opp=users[opponents[i]];
+addPlayer(opponents[i],ICONS[opp.icon]||'😊',false,opp.dice||40);}
+rollBtn.disabled=false;
+statusMsg.textContent='🎯 نوبت '+players[currentPlayerIndex].name;
+document.getElementById('roomInfo').innerHTML='👥 بازیکنان: <span class="player-count">'+players.length+'</span> / 6';
+document.getElementById('roomCode').value=roomId;
+updateBoard();updatePlayersUI();
+}
+
+function joinRoom(){
+if(gameMode!=='online'){startOnlineMode();}
+var code=document.getElementById('roomCode').value.trim();
+if(!code){alert('کد اتاق را وارد کنید');return;}
+roomId=code;isHost=false;
+document.getElementById('roomInfo').innerHTML='🔗 در حال اتصال به اتاق '+code+'...';
+document.getElementById('networkStatus').textContent='🟡 در حال اتصال...';
+document.getElementById('networkStatus').className='status-text';
+setTimeout(function(){
+document.getElementById('networkStatus').textContent='🟢 به اتاق '+code+' متصل شدید!';
+document.getElementById('networkStatus').className='status-text connected';
+document.getElementById('createRoomBtn').disabled=true;
+document.getElementById('joinRoomBtn').disabled=true;
+document.getElementById('disconnectBtn').disabled=false;
+var users=getUsers();
+var opponents=Object.keys(users).filter(function(u){return u!==username;});
+for(var i=0;i<Math.min(opponents.length,4);i++){
+var opp=users[opponents[i]];
+addPlayer(opponents[i],ICONS[opp.icon]||'😊',false,opp.dice||40);}
+rollBtn.disabled=false;
+statusMsg.textContent='🎯 نوبت '+players[currentPlayerIndex].name;
+document.getElementById('roomInfo').innerHTML='👥 بازیکنان: <span class="player-count">'+players.length+'</span> / 6';
+updateBoard();updatePlayersUI();
+},1500);
+}
+
+function disconnectOnline(){
+isHost=false;roomId=null;
+if(gameMode==='online'){
+initGame();
+addPlayer(username,userIcon,true,parseInt(document.getElementById('displayDice').textContent)||40);
+rollBtn.disabled=false;
+statusMsg.textContent='🎯 بازی تک‌نفره شروع شد!';
+updateBoard();updatePlayersUI();
+}
+document.getElementById('networkStatus').textContent='🔴 قطع شد';
+document.getElementById('networkStatus').className='status-text disconnected';
+document.getElementById('createRoomBtn').disabled=false;
+document.getElementById('joinRoomBtn').disabled=false;
+document.getElementById('disconnectBtn').disabled=true;
+document.getElementById('roomInfo').innerHTML='👥 بازیکنان: <span class="player-count">0</span> / 6';
+}
+
+// ============================================================
+//  دکمه‌ها
+// ============================================================
+document.getElementById('soloModeBtn').addEventListener('click',function(){
+if(gameMode==='solo')return;
+startSoloMode();
+});
+
+document.getElementById('onlineModeBtn').addEventListener('click',function(){
+if(gameMode==='online')return;
+startOnlineMode();
+});
+
+document.getElementById('createRoomBtn').addEventListener('click',createRoom);
+document.getElementById('joinRoomBtn').addEventListener('click',joinRoom);
+document.getElementById('disconnectBtn').addEventListener('click',disconnectOnline);
+document.getElementById('rollBtn').addEventListener('click',rollDice);
+
+document.getElementById('copyCodeBtn').addEventListener('click',function(){
+var code=document.getElementById('roomCode').value;
+if(code){navigator.clipboard.writeText(code).then(function(){alert('کد کپی شد: '+code);});}
+});
+
+document.getElementById('roomCode').addEventListener('keypress',function(e){
+if(e.key==='Enter')document.getElementById('joinRoomBtn').click();
+});
+
+// ============================================================
+//  مقداردهی
+// ============================================================
+loadUser();
+buildBoard();
+startSoloMode();
+
+console.log('🐍 Snake Game - تک‌نفره + چندنفره!');
+console.log('🎮 حالت تک‌نفره: با کامپیوتر');
+console.log('🌐 حالت چندنفره: 1 تا 6 نفر');
+console.log('🎲 هر تاس 1 بار مصرف');
+console.log('💰 برنده 800+ ، بازنده 300-');
+</script>
 </body>
 </html>
