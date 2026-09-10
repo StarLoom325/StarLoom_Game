@@ -57,8 +57,6 @@ body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#0b0e1a
 .game-ended-overlay .stats-summary{color:#7a8bb0;font-size:.9rem;margin:5px 0;text-align:center;line-height:1.8}
 .game-ended-overlay .back-btn{background:#f1c40f;border:none;padding:14px 50px;border-radius:50px;color:#1a1f30;font-weight:700;font-size:1.1rem;cursor:pointer;text-decoration:none;margin-top:20px;transition:all .2s}
 .game-ended-overlay .back-btn:hover{transform:scale(1.05)}
-.buy-btn{background:linear-gradient(135deg,#2ecc71,#27ae60);border:none;padding:10px 20px;border-radius:50px;color:#fff;font-weight:700;cursor:pointer;font-size:.9rem;margin-bottom:10px}
-.buy-btn:hover{transform:scale(1.03)}
 @media(max-width:768px){.mine-grid{grid-template-columns:repeat(10,1fr);gap:2px}.mine-block{font-size:.5rem;min-width:14px;min-height:14px}.stats-bar{flex-direction:column;align-items:stretch}.pickaxe-grid{justify-content:center}}
 @media(max-width:480px){.mine-grid{gap:1px}.mine-block{font-size:.35rem;min-width:10px;min-height:10px}.game-container{padding:15px}}
 </style>
@@ -93,7 +91,6 @@ body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#0b0e1a
 
 <div class="pickaxe-section">
 <h4>🔧 فروشگاه کلنگ</h4>
-<button class="buy-btn" id="buyStarterBtn">🛒 ثبت‌نام + کلنگ چوبی رایگان</button>
 <div class="pickaxe-grid" id="pickaxeShop"></div>
 </div>
 
@@ -116,7 +113,7 @@ body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#0b0e1a
 
 <script>
 // ============================================================
-//  بازی ماینکرفت - 1000 مکعب
+//  بازی ماینکرفت - 1000 مکعب - بدون ثبت‌نام
 // ============================================================
 
 var TOTAL_BLOCKS = 1000;
@@ -535,22 +532,6 @@ function handlePickaxeClick(pickaxeId) {
     renderGrid();
     document.getElementById('mineMsg').textContent = '🎉 ' + pickaxe.emoji + ' ' + pickaxe.name + ' خریداری و فعال شد!';
 }
-
-// 🛒 دکمه ثبت‌نام + کلنگ رایگان
-document.getElementById('buyStarterBtn').addEventListener('click', function() {
-    if (gameState.ownedPickaxes.indexOf('wooden') === -1) {
-        gameState.ownedPickaxes.push('wooden');
-    }
-    gameState.currentPickaxe = 'wooden';
-    gameState.pickaxeDurability = PICKAXES['wooden'].maxDurability;
-    gameState.pickaxeMaxDurability = PICKAXES['wooden'].maxDurability;
-    saveGameState();
-    updateUI();
-    renderPickaxeShop();
-    renderGrid();
-    document.getElementById('mineMsg').textContent = '🎉 کلنگ چوبی رایگان دریافت کردی! شروع کن!';
-    alert('🎉 ثبت‌نام انجام شد! کلنگ چوبی رایگان دریافت کردی.');
-});
 
 loadUser();
 initGame();
