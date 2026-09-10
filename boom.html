@@ -111,7 +111,7 @@ body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#0b0e1a
 </div>
 
 <div class="disable-msg">
-<p>⚠️ پس از اتمام بازی، خودکار از اول شروع می‌شود</p>
+<p>⚠️ پیشرفت شما خودکار ذخیره می‌شود</p>
 </div>
 </div>
 </div>
@@ -130,6 +130,42 @@ gameOver:false
 };
 
 var username='کاربر',userIcon='😊';
+
+// ============================================================
+//  ذخیره و بارگذاری وضعیت بازی
+// ============================================================
+function saveBoomState(){
+    try {
+        var stateToSave = {
+            grid: boomState.grid,
+            revealed: boomState.revealed,
+            keys: boomState.keys,
+            coins: boomState.coins,
+            revealedCount: boomState.revealedCount,
+            gameOver: boomState.gameOver
+        };
+        localStorage.setItem('starloom_boom_state', JSON.stringify(stateToSave));
+    } catch(e) {}
+}
+
+function loadBoomState(){
+    try {
+        var saved = localStorage.getItem('starloom_boom_state');
+        if(saved){
+            var data = JSON.parse(saved);
+            if(data.grid && data.grid.length === TOTAL_CELLS){
+                boomState.grid = data.grid;
+                boomState.revealed = data.revealed || new Array(TOTAL_CELLS).fill(false);
+                boomState.keys = data.keys !== undefined ? data.keys : 43;
+                boomState.coins = data.coins || 0;
+                boomState.revealedCount = data.revealedCount || 0;
+                boomState.gameOver = data.gameOver || false;
+                return true;
+            }
+        }
+    } catch(e) {}
+    return false;
+}
 
 function loadUser(){
 var saved=localStorage.getItem('starloom_current_user');
@@ -159,7 +195,10 @@ document.getElementById('displayCoins').textContent=users[username].coins;
 }
 }
 
-function initGame(){
+// ============================================================
+//  ساخت بازی جدید
+// ============================================================
+function newGame(){
 var items=[];
 for(var i=0;i<75;i++)items.push('coin');
 for(var i=0;i<25;i++)items.push('bomb');
@@ -182,12 +221,43 @@ boomState.coins=0;
 boomState.revealedCount=0;
 boomState.gameOver=false;
 
+saveBoomState();
 renderGrid();
 updateStats();
 document.getElementById('boomMsg').textContent='💡 روی مکعب‌ها کلیک کن!';
 document.getElementById('boomMsg').className='boom-msg';
 document.getElementById('gameEndedOverlay').classList.remove('show');
 document.getElementById('progressFill').className='fill';
+}
+
+// ============================================================
+//  بارگذاری یا ساخت بازی
+// ============================================================
+function initGame(){
+    var loaded = loadBoomState();
+    
+    if(!loaded || boomState.grid.length === 0){
+        newGame();
+        return;
+    }
+    
+    // اگر بازی قبلی تمام شده بود، بازی جدید بساز
+    if(boomState.gameOver){
+        newGame();
+        return;
+    }
+    
+    renderGrid();
+    updateStats();
+    document.getElementById('gameEndedOverlay').classList.remove('show');
+    
+    if(boomState.keys <= 0){
+        document.getElementById('boomMsg').textContent='❌ چکشت تمام شد! از فروشگاه بخر یا بازی جدید بزن.';
+    } else if(boomState.revealedCount > 0){
+        document.getElementById('boomMsg').textContent='💾 بازی قبلی بارگذاری شد! ادامه بده...';
+    } else {
+        document.getElementById('boomMsg').textContent='💡 روی مکعب‌ها کلیک کن!';
+    }
 }
 
 function renderGrid(){
@@ -273,6 +343,9 @@ msg='⬜ خالی!';
 
 document.getElementById('boomMsg').textContent=msg;
 
+// 💾 ذخیره خودکار بعد از هر حرکت
+saveBoomState();
+
 if(boomState.revealedCount>=TOTAL_CELLS){
 boomState.gameOver=true;
 document.getElementById('boomMsg').textContent='🎉 همه مکعب‌ها باز شدند! +۳۰۰۰ سکه';
@@ -282,9 +355,10 @@ saveUserCoins(3000);
 document.getElementById('displayCoins').textContent=(parseInt(document.getElementById('displayCoins').textContent)||0)+3000;
 document.getElementById('finalStats').innerHTML='💰 سکه: '+boomState.coins;
 document.getElementById('gameEndedOverlay').classList.add('show');
-// ✅ شروع خودکار از اول بعد از ۳ ثانیه
+// ✅ پاک کردن سیو و شروع خودکار از اول بعد ۳ ثانیه
 setTimeout(function(){
-initGame();
+localStorage.removeItem('starloom_boom_state');
+newGame();
 }, 3000);
 }
 
@@ -321,7 +395,8 @@ document.getElementById('progressFill').style.width=Math.min(progress,100)+'%';
 
 document.getElementById('resetBtn').addEventListener('click',function(){
 if(confirm('آیا مطمئنی؟ همه پیشرفت از دست می‌ره!')){
-initGame();
+localStorage.removeItem('starloom_boom_state');
+newGame();
 }
 });
 
@@ -345,6 +420,7 @@ current.coins=users[username].coins;
 localStorage.setItem('starloom_current_user',JSON.stringify(current));
 document.getElementById('displayCoins').textContent=users[username].coins;
 boomState.keys+=50;
+saveBoomState(); // 💾 ذخیره بعد از خرید
 updateStats();
 renderGrid();
 alert('🎉 ۵۰ چکشت اضافه شد!');
@@ -354,6 +430,7 @@ loadUser();
 initGame();
 
 console.log('💣 Boom Game Ready - 500 cells!');
+console.log('💾 ذخیره خودکار فعال است');
 console.log('🏆 جایزه برنده: 3000 سکه');
 </script>
 </body>
