@@ -1,0 +1,861 @@
+
+        /* ============================================ */
+        /* تم پیش‌فرض (تاریک) */
+        /* ============================================ */
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0b0e1a 0%, #1a1f30 100%);
+            --bg-card: rgba(255, 255, 255, 0.05);
+            --bg-card-hover: rgba(255, 255, 255, 0.08);
+            --bg-input: rgba(0, 0, 0, 0.3);
+            --text-primary: #f0f4ff;
+            --text-secondary: #a0b5d9;
+            --text-muted: #7a8bb0;
+            --accent: #f1c40f;
+            --accent-hover: #d4a800;
+            --border-color: #4a5575;
+            --border-accent: rgba(241, 196, 15, 0.3);
+        }
+
+        /* تم روشن */
+        body.theme-light {
+            --bg-gradient: linear-gradient(135deg, #e8ecf5 0%, #f5f7fc 100%);
+            --bg-card: rgba(255, 255, 255, 0.9);
+            --bg-card-hover: rgba(255, 255, 255, 1);
+            --bg-input: rgba(0, 0, 0, 0.05);
+            --text-primary: #1a1f30;
+            --text-secondary: #4a5575;
+            --text-muted: #7a8bb0;
+            --accent: #f39c12;
+            --accent-hover: #e67e22;
+            --border-color: #c5cde0;
+            --border-accent: rgba(243, 156, 18, 0.4);
+        }
+
+        /* تم طلایی */
+        body.theme-gold {
+            --bg-gradient: linear-gradient(135deg, #2a1f0a 0%, #1a1208 100%);
+            --bg-card: rgba(241, 196, 15, 0.08);
+            --bg-card-hover: rgba(241, 196, 15, 0.12);
+            --bg-input: rgba(0, 0, 0, 0.4);
+            --text-primary: #fef9e7;
+            --text-secondary: #d4b06a;
+            --text-muted: #8b7338;
+            --accent: #f9d976;
+            --accent-hover: #f1c40f;
+            --border-color: #6b5518;
+            --border-accent: rgba(249, 217, 118, 0.4);
+        }
+
+        /* تم بنفش */
+        body.theme-purple {
+            --bg-gradient: linear-gradient(135deg, #1a0b2e 0%, #2d1b4e 100%);
+            --bg-card: rgba(155, 89, 182, 0.1);
+            --bg-card-hover: rgba(155, 89, 182, 0.15);
+            --bg-input: rgba(0, 0, 0, 0.4);
+            --text-primary: #f5e9ff;
+            --text-secondary: #c8a8e0;
+            --text-muted: #8e6fb0;
+            --accent: #bb8fce;
+            --accent-hover: #9b59b6;
+            --border-color: #5b3f8e;
+            --border-accent: rgba(187, 143, 206, 0.4);
+        }
+
+        /* تم آبی */
+        body.theme-blue {
+            --bg-gradient: linear-gradient(135deg, #0a1628 0%, #1a2f4e 100%);
+            --bg-card: rgba(52, 152, 219, 0.1);
+            --bg-card-hover: rgba(52, 152, 219, 0.15);
+            --bg-input: rgba(0, 0, 0, 0.4);
+            --text-primary: #e6f2ff;
+            --text-secondary: #a8c8e8;
+            --text-muted: #6f8fb0;
+            --accent: #5dade2;
+            --accent-hover: #3498db;
+            --border-color: #2c5a8e;
+            --border-accent: rgba(93, 173, 226, 0.4);
+        }
+
+        /* تم سبز */
+        body.theme-green {
+            --bg-gradient: linear-gradient(135deg, #0a1f15 0%, #1a3a28 100%);
+            --bg-card: rgba(46, 204, 113, 0.1);
+            --bg-card-hover: rgba(46, 204, 113, 0.15);
+            --bg-input: rgba(0, 0, 0, 0.4);
+            --text-primary: #e8fff0;
+            --text-secondary: #a8e8c0;
+            --text-muted: #6fb08a;
+            --accent: #58d68d;
+            --accent-hover: #2ecc71;
+            --border-color: #2c8e5a;
+            --border-accent: rgba(88, 214, 141, 0.4);
+        }
+
+        /* ============================================ */
+        /* استایل‌های پایه */
+        /* ============================================ */
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{
+            font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+            background:var(--bg-gradient);
+            min-height:100vh;
+            color:var(--text-primary);
+            padding:15px;
+            transition:all 0.5s ease;
+        }
+        .main-container{max-width:1200px;margin:0 auto}
+
+        /* ============================================ */
+        /* هدر */
+        /* ============================================ */
+        .header{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            padding:15px 25px;
+            background:var(--bg-card);
+            border-radius:25px;
+            backdrop-filter:blur(10px);
+            border:1px solid var(--border-accent);
+            flex-wrap:wrap;
+            gap:10px;
+            transition:all 0.5s ease;
+        }
+        .logo{
+            font-size:1.8rem;
+            font-weight:800;
+            background:linear-gradient(135deg,var(--accent),var(--accent-hover));
+            -webkit-background-clip:text;
+            background-clip:text;
+            color:transparent;
+        }
+        .logo span{color:var(--text-secondary);background:none;font-weight:300}
+
+        /* انتخاب تم */
+        .theme-selector{
+            display:flex;
+            gap:8px;
+            align-items:center;
+            background:var(--bg-card);
+            padding:6px 12px;
+            border-radius:50px;
+            border:1px solid var(--border-color);
+        }
+        .theme-selector .theme-label{font-size:.8rem;color:var(--text-muted);margin-left:5px}
+        .theme-btn{
+            width:28px;
+            height:28px;
+            border-radius:50%;
+            border:2px solid transparent;
+            cursor:pointer;
+            transition:all 0.3s;
+            position:relative;
+        }
+        .theme-btn:hover{transform:scale(1.15)}
+        .theme-btn.active{
+            border-color:var(--accent);
+            box-shadow:0 0 15px var(--accent);
+        }
+        .theme-btn.dark{background:linear-gradient(135deg,#0b0e1a,#1a1f30)}
+        .theme-btn.light{background:linear-gradient(135deg,#e8ecf5,#ffffff)}
+        .theme-btn.gold{background:linear-gradient(135deg,#f9d976,#f39c12)}
+        .theme-btn.purple{background:linear-gradient(135deg,#bb8fce,#8e44ad)}
+        .theme-btn.blue{background:linear-gradient(135deg,#5dade2,#2980b9)}
+        .theme-btn.green{background:linear-gradient(135deg,#58d68d,#27ae60)}
+
+        /* پروفایل کاربر */
+        .user-profile{
+            display:flex;
+            align-items:center;
+            gap:15px;
+            background:var(--bg-input);
+            padding:8px 18px;
+            border-radius:50px;
+            border:1px solid var(--accent);
+        }
+        .user-profile .avatar{font-size:2rem}
+        .user-profile .info{display:flex;flex-direction:column}
+        .user-profile .info .name{font-weight:700;color:var(--text-primary);font-size:1rem}
+        .user-profile .info .stats{font-size:.8rem;color:var(--text-secondary)}
+        .user-profile .info .dice-count{font-size:.7rem;color:var(--accent)}
+        .user-profile .info .level-progress{font-size:.65rem;color:#2ecc71}
+        .logout-btn{
+            background:#e74c3c;
+            border:none;
+            padding:6px 16px;
+            border-radius:50px;
+            color:#fff;
+            font-weight:600;
+            cursor:pointer;
+            font-size:.85rem;
+        }
+        .logout-btn:hover{background:#c0392b}
+        .user-info{
+            background:var(--bg-input);
+            padding:10px 25px;
+            border-radius:50px;
+            border:1px solid var(--border-color);
+            font-size:.95rem;
+        }
+
+        /* ============================================ */
+        /* بخش احراز هویت */
+        /* ============================================ */
+        .auth-section{
+            max-width:440px;
+            margin:40px auto;
+            background:var(--bg-card);
+            border-radius:25px;
+            padding:30px;
+            border:1px solid var(--border-accent);
+        }
+        .auth-section h2{text-align:center;margin-bottom:20px;color:var(--text-primary);font-size:1.6rem}
+        .auth-tabs{display:flex;gap:10px;margin-bottom:20px}
+        .auth-tabs button{
+            flex:1;
+            padding:12px;
+            border:none;
+            border-radius:12px;
+            background:var(--bg-input);
+            color:var(--text-secondary);
+            font-weight:600;
+            cursor:pointer;
+            transition:all .3s;
+            font-size:1rem;
+        }
+        .auth-tabs button.active{background:var(--accent);color:#1a1f30}
+        .auth-form{display:flex;flex-direction:column;gap:14px}
+        .auth-form input{
+            padding:14px 18px;
+            border-radius:12px;
+            border:1px solid var(--border-color);
+            background:var(--bg-input);
+            color:var(--text-primary);
+            font-size:1rem;
+        }
+        .auth-form input:focus{outline:none;border-color:var(--accent)}
+        .auth-form input::placeholder{color:var(--text-muted)}
+        .auth-form button{
+            padding:14px;
+            border:none;
+            border-radius:12px;
+            background:linear-gradient(145deg,var(--accent),var(--accent-hover));
+            color:#1a1f30;
+            font-weight:700;
+            font-size:1.1rem;
+            cursor:pointer;
+            transition:all .3s;
+        }
+        .auth-form button:hover{transform:scale(1.02)}
+        .auth-error{
+            color:#e74c3c;
+            text-align:center;
+            font-size:.9rem;
+            min-height:22px;
+            background:rgba(231,76,60,0.1);
+            padding:6px 12px;
+            border-radius:8px;
+        }
+        .hidden{display:none!important}
+
+        /* ============================================ */
+        /* پیام خوش‌آمدگویی */
+        /* ============================================ */
+        .welcome-msg{
+            text-align:center;
+            padding:20px;
+            color:var(--text-secondary);
+            font-size:1.1rem;
+        }
+        .welcome-msg strong{color:var(--accent)}
+
+        /* ============================================ */
+        /* فروشگاه تاس */
+        /* ============================================ */
+        .dice-shop{
+            background:var(--bg-card);
+            border:1px solid var(--border-accent);
+            border-radius:20px;
+            padding:20px;
+            margin-top:20px;
+        }
+        .dice-shop h4{color:var(--text-primary);margin-bottom:12px;font-size:1.2rem}
+        .dice-shop .dice-options{display:flex;gap:15px;flex-wrap:wrap}
+        .dice-shop .dice-options button{
+            background:var(--bg-input);
+            border:1px solid var(--border-color);
+            padding:12px 22px;
+            border-radius:15px;
+            color:var(--text-primary);
+            cursor:pointer;
+            transition:all .3s;
+            text-align:center;
+            flex:1;
+            min-width:100px;
+        }
+        .dice-shop .dice-options button:hover{
+            background:var(--bg-card-hover);
+            border-color:var(--accent);
+        }
+        .dice-shop .dice-options button .price{color:var(--accent);font-size:.8rem}
+        .dice-shop .dice-options button .count{font-size:1.2rem;font-weight:700}
+
+        /* ============================================ */
+        /* گرید بازی‌ها */
+        /* ============================================ */
+        .games-grid{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+            gap:25px;
+            margin-top:30px;
+        }
+        .game-card{
+            background:var(--bg-card);
+            border-radius:25px;
+            padding:28px;
+            border:1px solid var(--border-color);
+            transition:all .4s ease;
+            text-decoration:none;
+            color:inherit;
+            display:block;
+            cursor:pointer;
+            position:relative;
+            overflow:hidden;
+        }
+        .game-card:hover{
+            transform:translateY(-8px);
+            border-color:var(--border-accent);
+            background:var(--bg-card-hover);
+        }
+        .game-card .badge-new{
+            position:absolute;
+            top:12px;
+            left:12px;
+            background:linear-gradient(135deg,#2ecc71,#27ae60);
+            color:#fff;
+            padding:2px 14px;
+            border-radius:20px;
+            font-size:.65rem;
+            font-weight:700;
+        }
+        .game-icon{font-size:3.2rem;margin-bottom:12px;display:block}
+        .game-title{font-size:1.6rem;font-weight:700;margin-bottom:8px;color:var(--text-primary)}
+        .game-desc{color:var(--text-secondary);line-height:1.6;font-size:.9rem;margin-bottom:12px}
+        .game-stats{
+            display:flex;
+            gap:15px;
+            font-size:.8rem;
+            color:var(--text-muted);
+            padding-top:12px;
+            border-top:1px solid var(--border-color);
+            flex-wrap:wrap;
+        }
+        .game-stats span{display:flex;align-items:center;gap:4px}
+        .play-btn{
+            background:linear-gradient(145deg,var(--accent),var(--accent-hover));
+            border:none;
+            padding:14px 25px;
+            border-radius:50px;
+            font-size:1rem;
+            font-weight:700;
+            color:#1a1f30;
+            cursor:pointer;
+            transition:all .3s ease;
+            margin-top:14px;
+            width:100%;
+        }
+        .play-btn:hover{transform:scale(1.02)}
+
+        /* ============================================ */
+        /* اتحاد (Guild) */
+        /* ============================================ */
+        .guild-section{
+            margin-top:30px;
+            background:var(--bg-card);
+            border-radius:20px;
+            padding:20px;
+            border:1px solid var(--border-accent);
+        }
+        .guild-section h3{
+            margin-bottom:15px;
+            color:var(--text-primary);
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            flex-wrap:wrap;
+            gap:10px;
+            font-size:1.3rem;
+        }
+        .guild-section h3 .member-count{
+            font-size:.85rem;
+            color:var(--accent);
+            background:var(--bg-input);
+            padding:4px 14px;
+            border-radius:20px;
+            border:1px solid var(--border-color);
+        }
+        .guild-online-players{
+            display:flex;
+            flex-wrap:wrap;
+            gap:8px;
+            padding:12px;
+            background:var(--bg-input);
+            border-radius:15px;
+            margin-bottom:15px;
+            min-height:50px;
+            align-items:center;
+        }
+        .guild-player{
+            display:flex;
+            align-items:center;
+            gap:6px;
+            padding:5px 14px;
+            background:var(--bg-card);
+            border-radius:50px;
+            font-size:.8rem;
+            border:1px solid var(--border-color);
+            transition:all 0.3s;
+        }
+        .guild-player:hover{border-color:var(--accent);transform:scale(1.05)}
+        .guild-player .status-dot{
+            width:7px;
+            height:7px;
+            border-radius:50%;
+            background:#2ecc71;
+            animation:pulse-dot 1.5s ease-in-out infinite;
+        }
+        @keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:0.3}}
+
+        /* چت */
+        .guild-chat{
+            background:var(--bg-input);
+            border-radius:15px;
+            padding:15px;
+            border:1px solid var(--border-color);
+            margin-top:15px;
+        }
+        .chat-messages{
+            max-height:300px;
+            overflow-y:auto;
+            padding:5px;
+            margin-bottom:12px;
+            display:flex;
+            flex-direction:column;
+            gap:8px;
+        }
+        .chat-messages::-webkit-scrollbar{width:6px}
+        .chat-messages::-webkit-scrollbar-track{background:var(--bg-card);border-radius:10px}
+        .chat-messages::-webkit-scrollbar-thumb{background:var(--accent);border-radius:10px}
+
+        .chat-message{
+            padding:8px 14px;
+            border-radius:15px;
+            background:var(--bg-card);
+            font-size:.9rem;
+            max-width:80%;
+            word-wrap:break-word;
+            animation:messageIn 0.3s ease;
+            border:1px solid var(--border-color);
+        }
+        @keyframes messageIn{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:translateY(0)}}
+        .chat-message.own{
+            align-self:flex-start;
+            background:linear-gradient(135deg,var(--accent),var(--accent-hover));
+            color:#1a1f30;
+            border-color:var(--accent);
+        }
+        .chat-message .sender{
+            font-weight:700;
+            color:var(--accent);
+            margin-left:8px;
+            font-size:.75rem;
+        }
+        .chat-message.own .sender{color:#1a1f30}
+        .chat-message .time{
+            color:var(--text-muted);
+            font-size:.65rem;
+            margin-right:5px;
+        }
+        .chat-message.own .time{color:#4a3a1a}
+        .chat-message .text{color:var(--text-primary);display:block;margin-top:3px}
+        .chat-message.own .text{color:#1a1f30}
+
+        .chat-empty{
+            text-align:center;
+            color:var(--text-muted);
+            font-size:.85rem;
+            padding:20px;
+        }
+
+        .chat-input-box{
+            display:flex;
+            gap:10px;
+            flex-wrap:wrap;
+        }
+        .chat-input-box input{
+            flex:1;
+            padding:12px 16px;
+            border-radius:50px;
+            border:1px solid var(--border-color);
+            background:var(--bg-card);
+            color:var(--text-primary);
+            font-size:.95rem;
+            min-width:150px;
+        }
+        .chat-input-box input:focus{outline:none;border-color:var(--accent)}
+        .chat-input-box input::placeholder{color:var(--text-muted)}
+        .chat-input-box button{
+            padding:12px 25px;
+            border-radius:50px;
+            border:none;
+            background:linear-gradient(145deg,var(--accent),var(--accent-hover));
+            color:#1a1f30;
+            font-weight:700;
+            cursor:pointer;
+            transition:all .3s;
+            font-size:.95rem;
+        }
+        .chat-input-box button:hover{transform:scale(1.05)}
+
+        /* ============================================ */
+        /* فوتر */
+        /* ============================================ */
+        .footer{
+            text-align:center;
+            margin-top:40px;
+            padding:20px;
+            color:var(--text-muted);
+            font-size:.8rem;
+            border-top:1px solid var(--border-color);
+        }
+
+        /* ============================================ */
+        /* واکنش‌گرا */
+        /* ============================================ */
+        @media(max-width:700px){
+            .games-grid{grid-template-columns:1fr}
+            .header{flex-direction:column;text-align:center}
+            .logo{font-size:1.4rem}
+            .theme-selector{order:3;width:100%;justify-content:center}
+        }
+        @media(max-width:480px){
+            .user-profile{padding:6px 12px;gap:8px}
+            .user-profile .avatar{font-size:1.5rem}
+            .game-card{padding:18px}
+            .game-title{font-size:1.3rem}
+            .game-icon{font-size:2.5rem}
+            .chat-message{max-width:90%}
+        }
+   
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-gradient(135deg,#0b0e1a 0%,#1a1f30 100%);min-height:100vh;display:flex;justify-content:center;align-items:center;overflow:hidden;color:#f0f4ff}
+
+        /* ===== شفق پس‌زمینه ===== */
+        .aurora{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;overflow:hidden;pointer-events:none}
+        .aurora::before,.aurora::after{content:'';position:absolute;width:200%;height:200%;top:-50%;left:-50%;background:radial-gradient(ellipse at 30% 50%,rgba(241,196,15,0.05) 0%,transparent 60%),radial-gradient(ellipse at 70% 80%,rgba(231,76,60,0.04) 0%,transparent 50%),radial-gradient(ellipse at 50% 20%,rgba(46,204,113,0.03) 0%,transparent 50%);animation:auroraFloat 20s ease-in-out infinite alternate}
+        .aurora::after{animation-delay:-10s;background:radial-gradient(ellipse at 60% 40%,rgba(52,152,219,0.04) 0%,transparent 50%),radial-gradient(ellipse at 20% 70%,rgba(155,89,182,0.03) 0%,transparent 50%)}
+        @keyframes auroraFloat{0%{transform:translate(0,0) scale(1)}33%{transform:translate(5%,-5%) scale(1.02)}66%{transform:translate(-5%,5%) scale(0.98)}100%{transform:translate(3%,-3%) scale(1.01)}}
+
+        /* ===== کانتینر اصلی ===== */
+        .loading-container{text-align:center;padding:20px;animation:fadeIn 1s ease;max-width:500px;width:90%}
+        @keyframes fadeIn{0%{opacity:0;transform:scale(.9)}100%{opacity:1;transform:scale(1)}}
+
+        /* ===== لوگو ===== */
+        .logo-wrapper{position:relative;margin-bottom:20px;display:inline-block}
+        .stars-orbit{position:absolute;top:50%;left:50%;width:200px;height:200px;transform:translate(-50%,-50%);pointer-events:none}
+        .stars-orbit span{position:absolute;font-size:1.2rem;animation:orbit 4s linear infinite}
+        .stars-orbit span:nth-child(1){top:0;left:50%;animation-delay:0s}
+        .stars-orbit span:nth-child(2){top:50%;left:100%;animation-delay:-1s}
+        .stars-orbit span:nth-child(3){top:100%;left:50%;animation-delay:-2s}
+        .stars-orbit span:nth-child(4){top:50%;left:0;animation-delay:-3s}
+        @keyframes orbit{0%{transform:rotate(0deg) translateX(0) scale(1);opacity:1}50%{transform:rotate(180deg) translateX(20px) scale(1.2);opacity:0.7}100%{transform:rotate(360deg) translateX(0) scale(1);opacity:1}}
+
+        .logo{font-size:3.5rem;font-weight:900;background:linear-gradient(135deg,#f9d976,#f39c12,#f1c40f);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 0 60px rgba(243,156,18,0.3);letter-spacing:2px;animation:logoPulse 2s ease-in-out infinite alternate}
+        @keyframes logoPulse{0%{filter:brightness(1) drop-shadow(0 0 20px rgba(243,156,18,0.2))}100%{filter:brightness(1.2) drop-shadow(0 0 40px rgba(243,156,18,0.4))}}
+        .logo span{color:#b9c7e6;background:none;-webkit-background-clip:unset;background-clip:unset;font-weight:300;font-size:2rem}
+
+        .logo-sub{color:#b9c7e6;font-size:1rem;font-weight:300;margin-bottom:40px;letter-spacing:6px;opacity:0.7;animation:fadeInOut 2s ease-in-out infinite alternate}
+        @keyframes fadeInOut{0%{opacity:0.4}100%{opacity:0.9}}
+
+        /* ===== نوار بارگذاری ===== */
+        .loader-wrapper{width:100%;max-width:400px;margin:0 auto}
+        .loader-track{width:100%;height:8px;background:rgba(255,255,255,0.05);border-radius:10px;overflow:hidden;border:1px solid rgba(255,215,0,0.1);box-shadow:inset 0 0 10px rgba(0,0,0,0.5)}
+        .loader-bar{height:100%;width:0%;background:linear-gradient(90deg,#f1c40f,#f39c12,#e67e22,#f1c40f);background-size:200% 100%;border-radius:10px;transition:width 0.3s ease;box-shadow:0 0 30px rgba(241,196,15,0.5);animation:barShine 2s linear infinite}
+        @keyframes barShine{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+
+        .loader-text{color:#7a8bb0;font-size:0.9rem;margin-top:18px;font-weight:300;letter-spacing:1px}
+        .loader-percent{color:#f1c40f;font-weight:700;font-size:1.3rem;display:inline-block;min-width:50px;text-align:center}
+
+        /* ===== نقاط متحرک ===== */
+        .dots{display:inline-block;margin-right:5px}
+        .dots span{display:inline-block;animation:dotBounce 1.4s ease-in-out infinite;font-size:1.5rem;color:#f1c40f;line-height:1}
+        .dots span:nth-child(2){animation-delay:0.2s}
+        .dots span:nth-child(3){animation-delay:0.4s}
+        @keyframes dotBounce{0%,80%,100%{transform:scale(0.5);opacity:0.3}40%{transform:scale(1.3);opacity:1}}
+
+        /* ===== وضعیت ===== */
+        .status-text{color:#7a8bb0;font-size:0.85rem;margin-top:10px;min-height:22px;transition:opacity 0.3s}
+        .status-icon{display:inline-block;margin-left:5px}
+
+        /* ===== کارت‌های در حال بارگذاری ===== */
+        .loading-cards{display:flex;justify-content:center;gap:15px;margin-top:40px;flex-wrap:wrap}
+        .loading-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,215,0,0.1);border-radius:15px;padding:12px 18px;display:flex;align-items:center;gap:8px;font-size:0.85rem;color:#a0b5d9;animation:cardFade 2s ease-in-out infinite;opacity:0.3}
+        .loading-card:nth-child(1){animation-delay:0s}
+        .loading-card:nth-child(2){animation-delay:0.3s}
+        .loading-card:nth-child(3){animation-delay:0.6s}
+        .loading-card:nth-child(4){animation-delay:0.9s}
+        .loading-card .card-icon{font-size:1.3rem}
+        @keyframes cardFade{0%,100%{opacity:0.3;transform:translateY(0)}50%{opacity:1;transform:translateY(-5px)}}
+
+        /* ===== نسخه ===== */
+        .version{position:fixed;bottom:20px;right:25px;color:#4a5575;font-size:0.7rem;letter-spacing:1px;opacity:0.5}
+
+        /* ===== واکنش‌گرا ===== */
+        @media(max-width:500px){
+            .logo{font-size:2.5rem}
+            .logo span{font-size:1.4rem}
+            .logo-sub{font-size:0.85rem;letter-spacing:4px}
+            .stars-orbit{width:140px;height:140px}
+            .loader-wrapper{max-width:280px}
+            .loading-card{font-size:0.75rem;padding:8px 12px}
+            .loading-card .card-icon{font-size:1rem}
+        }
+   /* ============================================ */
+/* دکمه ربات راهنما */
+/* ============================================ */
+.bot-btn-wrapper{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:4px;
+    text-decoration:none;
+    cursor:pointer;
+    transition:all 0.3s;
+    position:relative;
+}
+.bot-btn-wrapper:hover{
+    transform:translateY(-3px);
+}
+.bot-btn-icon{
+    background:linear-gradient(135deg,#2ecc71,#27ae60);
+    border:2px solid #2ecc71;
+    width:50px;
+    height:50px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.6rem;
+    box-shadow:0 0 20px rgba(46,204,113,0.3);
+    position:relative;
+    animation:botPulse 2s ease-in-out infinite;
+    transition:all 0.3s;
+}
+.bot-btn-wrapper:hover .bot-btn-icon{
+    transform:scale(1.1) rotate(10deg);
+    box-shadow:0 0 35px rgba(46,204,113,0.6);
+    border-color:#58d68d;
+}
+@keyframes botPulse{
+    0%,100%{box-shadow:0 0 15px rgba(46,204,113,0.3)}
+    50%{box-shadow:0 0 30px rgba(46,204,113,0.6)}
+}
+/* چراغ آنلاین روی آیکن */
+.bot-btn-icon::after{
+    content:'';
+    position:absolute;
+    top:2px;
+    right:2px;
+    width:12px;
+    height:12px;
+    background:#2ecc71;
+    border:2px solid #0b0e1a;
+    border-radius:50%;
+    animation:onlineDot 1.5s ease-in-out infinite;
+}
+@keyframes onlineDot{
+    0%,100%{opacity:1;transform:scale(1)}
+    50%{opacity:0.5;transform:scale(0.85)}
+}
+.bot-btn-text{
+    font-size:0.65rem;
+    color:#2ecc71;
+    font-weight:700;
+    white-space:nowrap;
+    text-shadow:0 0 10px rgba(46,204,113,0.5);
+    animation:textGlow 2s ease-in-out infinite;
+}
+@keyframes textGlow{
+    0%,100%{opacity:0.8}
+    50%{opacity:1}
+}
+
+/* در حالت موبایل کوچیک‌تر */
+@media(max-width:500px){
+    .bot-btn-icon{
+        width:42px;
+        height:42px;
+        font-size:1.3rem;
+    }
+    .bot-btn-text{
+        font-size:0.55rem;
+    }
+}
+/* ============================================ */
+/*  StarLoom_Game - style.css                    */
+/* ============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    /* ⚠️ این خط رو حذف کن اگه داری: */
+    /* overflow: hidden; */
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #0b0e1a 0%, #1a1f30 100%);
+    min-height: 100vh;
+    color: #f0f4ff;
+    padding: 15px;
+    
+    /* ⚠️ این‌ها باید حذف بشن اگه داری: */
+    /* overflow: hidden; */
+    /* height: 100vh; */
+    
+    /* ✅ این رو اضافه کن: */
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.main-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    /* ✅ ارتفاع آزاد برای اسکرول */
+    min-height: 100vh;
+}
+
+/* ============================================ */
+/* هدر */
+/* ============================================ */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 25px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 25px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 215, 0, 0.15);
+    flex-wrap: wrap;
+    gap: 10px;
+    
+    /* ⚠️ این رو حذف کن اگه داری: */
+    /* position: fixed; */
+    
+    /* ✅ این رو اضافه کن اگه می‌خوای هدر بمونه بالا: */
+    /* position: sticky; */
+    /* top: 15px; */
+    /* z-index: 100; */
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #f9d976, #f39c12);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.logo span {
+    color: #b9c7e6;
+    background: none;
+    font-weight: 300;
+}
+
+/* ============================================ */
+/* فروشگاه آیکون */
+/* ============================================ */
+.icon-shop {
+    margin-top: 30px;
+    margin-bottom: 40px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 20px;
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    /* ✅ ارتفاع آزاد */
+    height: auto;
+    max-height: none;
+}
+
+.icon-shop h3 {
+    margin-bottom: 15px;
+    color: #f5e9c4;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.icon-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
+    gap: 10px;
+    /* ✅ ارتفاع آزاد */
+    height: auto;
+}
+
+.icon-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 12px 6px;
+    border-radius: 14px;
+    border: 2px solid #2d3852;
+    cursor: pointer;
+    transition: all .3s;
+    position: relative;
+    /* ✅ ارتفاع آزاد */
+    height: auto;
+}
+
+/* ============================================ */
+/* فوتر */
+/* ============================================ */
+.footer {
+    text-align: center;
+    margin-top: 40px;
+    padding: 20px;
+    color: #4a5575;
+    font-size: .8rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    /* ✅ فاصله از پایین */
+    margin-bottom: 20px;
+}
+
+/* ============================================ */
+/* اسکرول‌بار */
+/* ============================================ */
+::-webkit-scrollbar {
+    width: 10px;
+}
+::-webkit-scrollbar-track {
+    background: #1a2235;
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #f1c40f, #d4a800);
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #f9d976, #f1c40f);
+}
