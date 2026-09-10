@@ -1,64 +1,66 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StarLoom_Game - بوم بوم</title>
-    <style>
-        *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#0b0e1a,#1a1f30);min-height:100vh;color:#f0f4ff;padding:15px}
-        .main-container{max-width:1200px;margin:0 auto}
-        .header{display:flex;justify-content:space-between;align-items:center;padding:15px 25px;background:rgba(255,255,255,0.05);border-radius:25px;border:1px solid rgba(255,215,0,0.15);flex-wrap:wrap;gap:10px;margin-bottom:20px}
-        .logo{font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,#f9d976,#f39c12);-webkit-background-clip:text;background-clip:text;color:transparent}
-        .logo span{color:#b9c7e6;background:none;font-weight:300}
-        .back-home{background:#2d3852;border:none;padding:10px 25px;border-radius:50px;color:#f0f4ff;font-weight:600;cursor:pointer;border:1px solid #5a6a8a;font-size:.95rem;text-decoration:none;display:inline-block}
-        .back-home:hover{background:#3f4d70;border-color:#f1c40f}
-        .user-info-bar{display:flex;gap:15px;background:rgba(0,0,0,0.3);padding:8px 18px;border-radius:50px;font-size:.85rem;align-items:center;flex-wrap:wrap}
-        .user-info-bar .user-icon{font-size:1.5rem}
-        .boom-container{background:#131a2a;border-radius:25px;padding:20px;position:relative}
-        .boom-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px;margin-bottom:20px}
-        .boom-title{font-size:1.3rem;font-weight:700}
-        .boom-stats{display:flex;gap:12px;font-size:.8rem;background:rgba(0,0,0,0.3);padding:6px 16px;border-radius:50px;flex-wrap:wrap}
-        .boom-stats span{display:flex;align-items:center;gap:4px}
-        .boom-stats .key-count{color:#f1c40f;font-weight:700}
-        .boom-grid{display:grid;grid-template-columns:repeat(20,1fr);gap:3px;max-width:100%;margin:0 auto}
-        .boom-cell{aspect-ratio:1/1;background:#222b41;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.7rem;cursor:pointer;transition:all .15s;border:1px solid #2d3852;user-select:none;min-width:18px;min-height:18px}
-        .boom-cell:hover:not(.revealed):not(.disabled){background:#2d3852;transform:scale(1.05);z-index:2}
-        .boom-cell.revealed{cursor:default;border-color:#4a5575}
-        .boom-cell.coin{background:#1e3a2a;border-color:#f1c40f}
-        .boom-cell.bomb{background:#3a1e2a;border-color:#e74c3c}
-        .boom-cell.snake{background:#2a1e3a;border-color:#9b59b6}
-        .boom-cell.key{background:#1a2a4a;border-color:#3498db;animation:keyGlow 1s ease-in-out infinite alternate}
-        .boom-cell.chest{background:#3a2a1a;border-color:#e67e22;animation:chestGlow 1.5s ease-in-out infinite alternate}
-        .boom-cell.empty{background:#1a2235;border-color:#2d3852}
-        .boom-cell.disabled{cursor:not-allowed;opacity:.5}
-        @keyframes keyGlow{0%{box-shadow:0 0 5px #3498db}100%{box-shadow:0 0 20px #3498db,0 0 40px #3498db33}}
-        @keyframes chestGlow{0%{box-shadow:0 0 5px #e67e22}100%{box-shadow:0 0 25px #e67e22,0 0 50px #e67e2233}}
-        .boom-msg{text-align:center;margin-top:15px;padding:12px;border-radius:15px;background:rgba(0,0,0,0.3);font-size:1rem;min-height:50px}
-        .boom-msg.winner{background:rgba(241,196,15,0.15);border:1px solid #f1c40f;color:#f1c40f}
-        .progress-bar{width:100%;height:8px;background:#1a2235;border-radius:10px;margin-top:15px;overflow:hidden}
-        .progress-bar .fill{height:100%;background:linear-gradient(90deg,#f1c40f,#f39c12);border-radius:10px;transition:width .3s;width:0%}
-        .progress-bar .fill.complete{background:linear-gradient(90deg,#f1c40f,#2ecc71);animation:progressComplete 1s ease-in-out infinite alternate}
-        @keyframes progressComplete{0%{opacity:1}100%{opacity:.6}}
-        .game-ended-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.85);border-radius:25px;display:none;flex-direction:column;align-items:center;justify-content:center;z-index:10;padding:30px}
-        .game-ended-overlay.show{display:flex}
-        .game-ended-overlay .big-icon{font-size:5rem;margin-bottom:10px}
-        .game-ended-overlay .title{font-size:2rem;font-weight:700;color:#f1c40f}
-        .game-ended-overlay .subtitle{color:#a0b5d9;font-size:1.1rem;margin:5px 0}
-        .game-ended-overlay .reward{color:#f1c40f;font-size:1.4rem;margin:10px 0}
-        .game-ended-overlay .stats-summary{color:#7a8bb0;font-size:.9rem;margin:5px 0;text-align:center;line-height:1.8}
-        .game-ended-overlay .back-btn{background:#f1c40f;border:none;padding:14px 50px;border-radius:50px;color:#1a1f30;font-weight:700;font-size:1.1rem;cursor:pointer;text-decoration:none;margin-top:20px;transition:all .2s}
-        .game-ended-overlay .back-btn:hover{transform:scale(1.05)}
-        .boom-controls{display:flex;gap:15px;margin-top:20px;justify-content:center;flex-wrap:wrap}
-        .boom-btn{background:#2d3852;border:none;padding:10px 25px;border-radius:50px;color:#f0f4ff;font-weight:600;cursor:pointer;border:1px solid #5a6a8a;font-size:.9rem;transition:all .2s}
-        .boom-btn:hover{background:#3f4d70;border-color:#f1c40f}
-        .boom-btn.primary{background:linear-gradient(145deg,#f1c40f,#d4a800);color:#1a1f30;border-color:#f1c40f}
-        .boom-btn.primary:hover{transform:scale(1.02)}
-        .disable-msg{text-align:center;margin-top:15px;padding:10px;background:rgba(255,0,0,0.05);border-radius:15px;border:1px solid rgba(255,0,0,0.1)}
-        .disable-msg p{color:#7a8bb0;font-size:.75rem}
-        @media(max-width:768px){.boom-grid{grid-template-columns:repeat(10,1fr);gap:2px}.boom-cell{font-size:.5rem;min-width:14px;min-height:14px}.boom-stats{font-size:.7rem;padding:4px 10px}}
-        @media(max-width:480px){.boom-grid{gap:1px}.boom-cell{font-size:.35rem;min-width:10px;min-height:10px}.boom-container{padding:10px}}
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StarLoom_Game - بوم بوم</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#0b0e1a,#1a1f30);min-height:100vh;color:#f0f4ff;padding:15px}
+.main-container{max-width:1200px;margin:0 auto}
+.header{display:flex;justify-content:space-between;align-items:center;padding:15px 25px;background:rgba(255,255,255,0.05);border-radius:25px;border:1px solid rgba(255,215,0,0.15);flex-wrap:wrap;gap:10px;margin-bottom:20px}
+.logo{font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,#f9d976,#f39c12);-webkit-background-clip:text;background-clip:text;color:transparent}
+.logo span{color:#b9c7e6;background:none;font-weight:300}
+.back-home{background:#2d3852;border:none;padding:10px 25px;border-radius:50px;color:#f0f4ff;font-weight:600;cursor:pointer;border:1px solid #5a6a8a;font-size:.95rem;text-decoration:none;display:inline-block}
+.back-home:hover{background:#3f4d70;border-color:#f1c40f}
+.user-info-bar{display:flex;gap:15px;background:rgba(0,0,0,0.3);padding:8px 18px;border-radius:50px;font-size:.85rem;align-items:center;flex-wrap:wrap}
+.user-info-bar .user-icon{font-size:1.5rem}
+.boom-container{background:#131a2a;border-radius:25px;padding:20px;position:relative}
+.boom-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px;margin-bottom:20px}
+.boom-title{font-size:1.3rem;font-weight:700}
+.boom-stats{display:flex;gap:12px;font-size:.8rem;background:rgba(0,0,0,0.3);padding:6px 16px;border-radius:50px;flex-wrap:wrap}
+.boom-stats span{display:flex;align-items:center;gap:4px}
+.boom-stats .key-count{color:#f1c40f;font-weight:700}
+.boom-grid{display:grid;grid-template-columns:repeat(20,1fr);gap:3px;max-width:100%;margin:0 auto}
+.boom-cell{aspect-ratio:1/1;background:#222b41;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.7rem;cursor:pointer;transition:all .15s;border:1px solid #2d3852;user-select:none;min-width:18px;min-height:18px}
+.boom-cell:hover:not(.revealed):not(.disabled){background:#2d3852;transform:scale(1.05);z-index:2}
+.boom-cell.revealed{cursor:default;border-color:#4a5575}
+.boom-cell.coin{background:#1e3a2a;border-color:#f1c40f}
+.boom-cell.bomb{background:#3a1e2a;border-color:#e74c3c}
+.boom-cell.snake{background:#2a1e3a;border-color:#9b59b6}
+.boom-cell.key{background:#1a2a4a;border-color:#3498db;animation:keyGlow 1s ease-in-out infinite alternate}
+.boom-cell.chest{background:#3a2a1a;border-color:#e67e22;animation:chestGlow 1.5s ease-in-out infinite alternate}
+.boom-cell.empty{background:#1a2235;border-color:#2d3852}
+.boom-cell.disabled{cursor:not-allowed;opacity:.5}
+@keyframes keyGlow{0%{box-shadow:0 0 5px #3498db}100%{box-shadow:0 0 20px #3498db,0 0 40px #3498db33}}
+@keyframes chestGlow{0%{box-shadow:0 0 5px #e67e22}100%{box-shadow:0 0 25px #e67e22,0 0 50px #e67e2233}}
+.boom-msg{text-align:center;margin-top:15px;padding:12px;border-radius:15px;background:rgba(0,0,0,0.3);font-size:1rem;min-height:50px}
+.boom-msg.winner{background:rgba(241,196,15,0.15);border:1px solid #f1c40f;color:#f1c40f}
+.progress-bar{width:100%;height:8px;background:#1a2235;border-radius:10px;margin-top:15px;overflow:hidden}
+.progress-bar .fill{height:100%;background:linear-gradient(90deg,#f1c40f,#f39c12);border-radius:10px;transition:width .3s;width:0%}
+.progress-bar .fill.complete{background:linear-gradient(90deg,#f1c40f,#2ecc71);animation:progressComplete 1s ease-in-out infinite alternate}
+@keyframes progressComplete{0%{opacity:1}100%{opacity:.6}}
+.game-ended-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.85);border-radius:25px;display:none;flex-direction:column;align-items:center;justify-content:center;z-index:10;padding:30px}
+.game-ended-overlay.show{display:flex}
+.game-ended-overlay .big-icon{font-size:5rem;margin-bottom:10px}
+.game-ended-overlay .title{font-size:2rem;font-weight:700;color:#f1c40f}
+.game-ended-overlay .subtitle{color:#a0b5d9;font-size:1.1rem;margin:5px 0}
+.game-ended-overlay .reward{color:#f1c40f;font-size:1.4rem;margin:10px 0}
+.game-ended-overlay .stats-summary{color:#7a8bb0;font-size:.9rem;margin:5px 0;text-align:center;line-height:1.8}
+.game-ended-overlay .back-btn{background:#f1c40f;border:none;padding:14px 50px;border-radius:50px;color:#1a1f30;font-weight:700;font-size:1.1rem;cursor:pointer;text-decoration:none;margin-top:20px;transition:all .2s}
+.game-ended-overlay .back-btn:hover{transform:scale(1.05)}
+.boom-controls{display:flex;gap:15px;margin-top:20px;justify-content:center;flex-wrap:wrap}
+.boom-btn{background:#2d3852;border:none;padding:10px 25px;border-radius:50px;color:#f0f4ff;font-weight:600;cursor:pointer;border:1px solid #5a6a8a;font-size:.9rem;transition:all .2s}
+.boom-btn:hover{background:#3f4d70;border-color:#f1c40f}
+.boom-btn.primary{background:linear-gradient(145deg,#f1c40f,#d4a800);color:#1a1f30;border-color:#f1c40f}
+.boom-btn.primary:hover{transform:scale(1.02)}
+.boom-btn.buy{background:linear-gradient(145deg,#2ecc71,#27ae60);color:#fff;border-color:#2ecc71}
+.boom-btn.buy:hover{transform:scale(1.02)}
+.disable-msg{text-align:center;margin-top:15px;padding:10px;background:rgba(255,0,0,0.05);border-radius:15px;border:1px solid rgba(255,0,0,0.1)}
+.disable-msg p{color:#7a8bb0;font-size:.75rem}
+@media(max-width:768px){.boom-grid{grid-template-columns:repeat(10,1fr);gap:2px}.boom-cell{font-size:.5rem;min-width:14px;min-height:14px}.boom-stats{font-size:.7rem;padding:4px 10px}}
+@media(max-width:480px){.boom-grid{gap:1px}.boom-cell{font-size:.35rem;min-width:10px;min-height:10px}.boom-container{padding:10px}}
+</style>
 </head>
 <body>
 <div class="main-container">
@@ -77,7 +79,7 @@
 <div class="boom-container">
 <div style="text-align:center;margin-bottom:15px;">
 <h3 style="color:#f5e9c4;">💣 بوم بوم</h3>
-<p style="color:#7a8bb0;font-size:.85rem;">1000 مکعب - برنده <strong style="color:#f1c40f;">۳۰۰۰</strong> سکه</p>
+<p style="color:#7a8bb0;font-size:.85rem;">500 مکعب - برنده <strong style="color:#f1c40f;">۳۰۰۰</strong> سکه</p>
 </div>
 
 <div class="boom-header">
@@ -85,7 +87,7 @@
 <div class="boom-stats">
 <span>🔑 <span class="key-count" id="boomKeys">43</span></span>
 <span>💰 <span id="boomCoins">0</span></span>
-<span>📦 <span id="boomRevealed">0</span>/1000</span>
+<span>📦 <span id="boomRevealed">0</span>/500</span>
 </div>
 </div>
 
@@ -94,6 +96,7 @@
 
 <div class="boom-controls">
 <button class="boom-btn primary" id="resetBtn">🔄 بازی جدید</button>
+<button class="boom-btn buy" id="buyKeysBtn">🛒 خرید چکشت (۵۰ عدد = ۲۰۰ سکه)</button>
 </div>
 
 <div class="boom-msg" id="boomMsg">💡 روی مکعب‌ها کلیک کن!</div>
@@ -104,17 +107,17 @@
 <div class="subtitle">شما برنده شدید!</div>
 <div class="reward">🎁 +۳۰۰۰ سکه</div>
 <div class="stats-summary" id="finalStats">💰 سکه: 0</div>
-<a href="index.html" class="back-btn">← بازگشت به خانه</a>
+<div style="color:#a0b5d9;font-size:.85rem;margin-top:15px;">⏳ بازی خودکار از اول شروع می‌شود...</div>
 </div>
 
 <div class="disable-msg">
-<p>⚠️ پس از اتمام بازی، برای بازی جدید از صفحه اصلی وارد شوید</p>
+<p>⚠️ پس از اتمام بازی، خودکار از اول شروع می‌شود</p>
 </div>
 </div>
 </div>
 
 <script>
-var TOTAL_CELLS=1000, COLS=20, ROWS=50;
+var TOTAL_CELLS=500, COLS=20, ROWS=25;
 var ICONS={'default':'😊','smile':'😄','heart':'❤️','star':'⭐','lion':'🦁','tiger':'🐯','eagle':'🦅','wolf':'🐺','dragon':'🐉','phoenix':'🔥','unicorn':'🦄','crown':'👑','diamond':'💎','king':'👸','gold':'🏆','robot':'🤖','gem':'💠','pizza':'🍕','burger':'🍔','cake':'🎂','donut':'🍩','ninja':'🥷','mage':'🧙','knight':'⚔️','angel':'👼','demon':'👿','skeleton':'💀','galaxy':'🌌','crystal':'🔮','cosmic':'🚀','legendary':'🌟','ultimate':'⚡','void':'🌑'};
 
 var boomState={
@@ -158,9 +161,9 @@ document.getElementById('displayCoins').textContent=users[username].coins;
 
 function initGame(){
 var items=[];
-for(var i=0;i<150;i++)items.push('coin');
-for(var i=0;i<50;i++)items.push('bomb');
-for(var i=0;i<30;i++)items.push('snake');
+for(var i=0;i<75;i++)items.push('coin');
+for(var i=0;i<25;i++)items.push('bomb');
+for(var i=0;i<15;i++)items.push('snake');
 for(var i=0;i<10;i++)items.push('key');
 for(var i=0;i<15;i++)items.push('chest');
 while(items.length<TOTAL_CELLS)items.push('empty');
@@ -222,7 +225,7 @@ gridEl.appendChild(cell);
 
 function revealCell(index){
 if(boomState.gameOver){
-document.getElementById('boomMsg').textContent='⛔ بازی تمام شده! به صفحه اصلی برو.';
+document.getElementById('boomMsg').textContent='⛔ بازی تمام شده!';
 return;
 }
 if(boomState.revealed[index])return;
@@ -279,6 +282,10 @@ saveUserCoins(3000);
 document.getElementById('displayCoins').textContent=(parseInt(document.getElementById('displayCoins').textContent)||0)+3000;
 document.getElementById('finalStats').innerHTML='💰 سکه: '+boomState.coins;
 document.getElementById('gameEndedOverlay').classList.add('show');
+// ✅ شروع خودکار از اول بعد از ۳ ثانیه
+setTimeout(function(){
+initGame();
+}, 3000);
 }
 
 updateStats();
@@ -318,10 +325,35 @@ initGame();
 }
 });
 
+// 🛒 خرید چکشت
+document.getElementById('buyKeysBtn').addEventListener('click',function(){
+var users=JSON.parse(localStorage.getItem('starloom_users'))||{};
+if(!users[username]){
+alert('ابتدا وارد شوید');
+return;
+}
+var price=200;
+if((users[username].coins||0)<price){
+alert('❌ سکه کافی نداری! نیاز به ۲۰۰ سکه');
+return;
+}
+if(!confirm('🛒 ۵۰ چکشت به قیمت ۲۰۰ سکه؟'))return;
+users[username].coins-=price;
+localStorage.setItem('starloom_users',JSON.stringify(users));
+var current=JSON.parse(localStorage.getItem('starloom_current_user'))||{};
+current.coins=users[username].coins;
+localStorage.setItem('starloom_current_user',JSON.stringify(current));
+document.getElementById('displayCoins').textContent=users[username].coins;
+boomState.keys+=50;
+updateStats();
+renderGrid();
+alert('🎉 ۵۰ چکشت اضافه شد!');
+});
+
 loadUser();
 initGame();
 
-console.log('💣 Boom Game Ready!');
+console.log('💣 Boom Game Ready - 500 cells!');
 console.log('🏆 جایزه برنده: 3000 سکه');
 </script>
 </body>
