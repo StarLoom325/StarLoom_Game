@@ -261,6 +261,16 @@
         if(el) el.textContent = '📊 پیشرفت لول: ' + Math.floor(progressPercent) + '%';
     }
 
+    // ✅ همگام‌سازی سکه‌ها
+    function refreshCoins(){
+        if(!currentUser) return;
+        var users = getUsers();
+        if(users[currentUser]){
+            userData = users[currentUser];
+            updateUserUI();
+        }
+    }
+
     function getUserIcons(){
         if(!userData) return ['default','smile','heart','star'];
         if(!userData.icons) userData.icons = ['default','smile','heart','star'];
@@ -615,6 +625,20 @@
             }
         }
     })();
+
+    // ✅ همگام‌سازی بین تب‌ها
+    window.addEventListener('storage', function(e){
+        if(e.key === 'starloom_users' || e.key === 'starloom_current_user'){
+            refreshCoins();
+        }
+    });
+
+    // ✅ هر ۲ ثانیه چک کن (برای وقتی که توی یه تب دیگه بازی می‌کنی)
+    setInterval(function(){
+        if(currentUser){
+            refreshCoins();
+        }
+    }, 2000);
 
     loadTheme();
     console.log('🌟 StarLoom_Game v2.1 - آماده!');
