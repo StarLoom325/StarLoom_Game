@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Loom Wars ⚔️</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
+html, body {
+  height: 100%; overflow: hidden;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background: #1a1a2e; color: #fff; touch-action: none;
+}
+#gameWrapper {
+  position: fixed; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: radial-gradient(circle at 50% 50%, #2a3050 0%, #0a0e20 100%);
+}
+#gameCanvas {
+  display: block; max-width: 100%; max-height: 100%;
+  box-shadow: 0 0 60px rgba(100, 150, 255, 0.4);
+  border-radius: 8px; image-rendering: pixelated;
+}
+</style>
+</head>
+<body>
+<div id="gameWrapper">
+  <canvas id="gameCanvas"></canvas>
+</div>
+
+<script>
+// ============================================================
+//  LOOM WARS ⚔️ - Smart AI + Fixed Towers
+// ============================================================
+
+const GAME_W = 400;
+const GAME_H = 700;
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+
+function resizeCanvas() {
+  const dpr = window.devicePixelRatio || 1;
+  let scale = Math.min(window.innerWidth / GAME_W, window.innerHeight / GAME_H);
+  if (scale > 1) scale = 1;
+  canvas.style.width = (GAME_W * scale) + 'px';
+  canvas.style.height = (GAME_H * scale) + 'px';
+  canvas.width = GAME_W * dpr;
+  canvas.height = GAME_H * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+// ============================================================
+//  نقشه
+// ============================================================
+const MAP = {
+  riverY: GAME_H / 2 - 20,
+  riverH: 40,
+  bridges: [
+    { x: 100, w: 60 },
+    { x: GAME_W - 100, w: 60 }
+  ],
+  towerPositions: {
+    enemyKing:      { x: GAME_W/2, y: 60 },
+    enemyPrincessL: { x: 100,      y: 150 },
+    enemyPrincessR: { x: GAME_W - 100, y: 150 },
+    playerKing:      { x: GAME_W/2, y: GAME_H - 60 },
+    playerPrincessL: { x: 100,      y: GAME_H - 150 },
+    playerPrincessR: { x: GAME_W - 100, y: GAME_H - 150 }
+  }
+};
+
+// ============================================================
+//  کارت‌ها
+// ============================================================
+const CARDS = [
+  { id: 'knight',   name: 'Knight',     faName: 'شوالیه',     icon: '⚔️', cost: 3, hp: 200, dmg: 25, speed: 50, range: 30, color: '#e67e22', size: 11 },
+  { id: 'archer',   name: 'Archer',     faName: 'کماندار',    icon: '🏹', cost: 3, hp: 80,  dmg: 18, speed: 45, range: 140, color: '#2ecc71', size: 9, ranged: true },
+  { id: 'hog',      name: 'Hog Rider',  faName: 'سواره',      icon: '🐴', cost: 4, hp: 300, dmg: 45, speed: 100, range: 35, color: '#9b59b6', size: 12 },
+  { id: 'bomber',   name: 'Bomber',     faName: 'بمب‌گذار',   icon: '💣', cost: 3, hp: 100, dmg: 60, speed: 50, range: 80, color: '#e74c3c', size: 10, ranged: true },
+  { id: 'giant',    name: 'Giant',      faName: 'غول',        icon: '🛡️', cost: 5, hp: 800, dmg: 70, speed: 25, range: 40, color: '#d35400', size: 16 },
+  { id: 'dragon',   name: 'Baby Dragon',faName: 'اژدهای کوچک',icon: '🐉', cost: 4, hp: 350, dmg: 40, speed: 55, range: 60, color: '#16a085', size: 13, ranged: true },
+  { id: 'wizard',   name: 'Wizard',     faName: 'جادوگر',     icon: '🧙', cost: 5, hp: 150, dmg: 55, speed: 50, range: 130, color: '#8e44ad', size: 11, ranged: true },
+  { id: 'pekka',    name: 'Mini P.E.K.K.A', faName: 'پکا',    icon: '⚡', cost: 4, hp: 500, dmg: 130, speed: 60, range: 30, color: '#34495e', size: 14 }
+];
+
+// ============================================================
+//  سختی AI (تدریجی)
+// ============================================================
+function getAIDifficulty(gamesPlayed) {
+  const level = Math.min(Math.floor(gamesPlayed / 3), 10);
+  
+  return {
+    level: level,
+    actionDelay: Math.max(1.2, 3.5 - level * 0.2),
+    elixirRegen: Math.max(1.8, 2.8 - level * 0.1),
+    smartness: Math.min(1.0, 0.3 + level * 0.07),
+    attackThreshold: Math.max(5, 10 - level * 0.5),
+    mistakeChance: Math.max(0, 0.4 - level * 0.04)
+  };
+}
+
+// ============================================================
+//  برج
+// ============================================================
+class Tower {
+  constructor(x, y, hp, maxHp, owner, type) {
+    this.x = x; this.y = y;
+    this.hp = hp; this.maxHp = maxHp;
+    this.owner = owner; this.type = type;
+    this.width = type === 'king' ? 60 : 50;
+    this.height = type === 'king' ? 60 : 50;
+    this.alive = true;
+    this.hitFlash = 0;
+    this.attackCooldown = 0;
+    
+    if (type === 'king') {
+      this.damage = 60;
+      this.range = 130;
+      this.attackSpeed = 1.0;
+    } else {
+      this.damage = 40;
+      this.range = 140;
+      this.attackSpeed = 0.8;
+    }
+    
+    this.projectiles = [];
+  }
+  
+  hit(damage) {
+    this.hp -= damage;
+    this.hitFlash = 0.2;
+    if (this.hp <= 0) { this.hp = 0; this.alive = false; }
+  }
+  
+  // ✅ آپدیت: فقط به سربازهای دشمن (نه تیم خودم) شلیک می‌کنه
+  update(dt, allUnits) {
+    if (this.hitFlash > 0) this.hitFlash -= dt;
+    if (this.attackCooldown > 0) this.attackCooldown -= dt;
+    
+    // آپدیت پرتابه‌ها
+    for (const p of this.projectiles) {
+      p.x += p.vx * dt;
+      p.y += p.vy * dt;
+      p.life -= dt;
+      if (p.life <= 0) p.dead = true;
+      
+      if (p.target && p.target.alive) {
+        const d = Math.hypot(p.x - p.target.x, p.y - p.target.y);
+        if (d < 15) {
+          p.target.hit(this.damage);
+          p.dead = true;
+        }
+      }
+    }
+    this.projectiles = this.projectiles.filter(p => !p.dead);
+    
+    if (!this.alive) return;
+    
+    if (this.attackCooldown <= 0) {
+      let closest = null, minDist = this.range;
+      for (const u of allUnits) {
+        if (!u.alive) continue;
+        // ✅ فقط سربازهای دشمن (نه تیم خودم!)
+        if (u.owner === this.owner) continue;
+        
+        const d = Math.hypot(u.x - this.x, u.y - this.y);
+        if (d < minDist) { minDist = d; closest = u; }
+      }
+      
+      if (closest) {
+        this.attackCooldown = this.attackSpeed;
+        const dx = closest.x - this.x;
+        const dy = closest.y - this.y;
+        const d = Math.hypot(dx, dy);
+        const speed = 400;
+        this.projectiles.push({
+          x: this.x, y: this.y,
+          vx: (dx / d) * speed,
+          vy: (dy / d) * speed,
+          target: closest,
+          life: 2.0,
+          dead: false
+        });
+      }
+    }
+  }
+  
+  draw() {
+    const x = this.x, y = this.y, w = this.width, h = this.height;
+    let mainColor, darkColor;
+    
+    if (this.owner === 'player') {
+      mainColor = this.type === 'king' ? '#3b82f6' : '#60a5fa';
+      darkColor = this.type === 'king' ? '#1e3a8a' : '#2563eb';
+    } else {
+      mainColor = this.type === 'king' ? '#ef4444' : '#f87171';
+      darkColor = this.type === 'king' ? '#7f1d1d' : '#dc2626';
+    }
+    if (!this.alive) { mainColor = '#555'; darkColor = '#333'; }
+    
+    ctx.fillStyle = 'rgba(0,0,0,0.4)';
+    ctx.beginPath();
+    ctx.ellipse(x, y + h/2 + 4, w/2 + 5, 8, 0, 0, Math.PI * 2);
+    ctx.fill();
+    
+    if (this.alive) {
+      ctx.shadowColor = mainColor;
+      ctx.shadowBlur = 15;
+    }
+    
+    ctx.fillStyle = darkColor;
+    ctx.fillRect(x - w/2, y - h/2, w, h);
+    
+    ctx.fillStyle = mainColor;
+    ctx.fillRect(x - w/2 + 3, y - h/2 + 3, w - 6, h - 6);
+    
+    ctx.strokeStyle = darkColor;
+    ctx.lineWidth = 1;
+    for (let i = 1; i < 4; i++) {
+      const ly = y - h/2 + (h/4) * i;
+      ctx.beginPath();
+      ctx.moveTo(x - w/2 + 3, ly);
+      ctx.lineTo(x + w/2 - 3, ly);
+      ctx.stroke();
+    }
+    
+    if (this.type === 'king') {
+      ctx.fillStyle = '#fbbf24';
+      for (let i = -1; i <= 1; i++) {
+        ctx.beginPath();
+        ctx.moveTo(x + i * 15 - 7, y - h/2 - 4);
+        ctx.lineTo(x + i * 15, y - h/2 - 20);
+        ctx.lineTo(x + i * 15 + 7, y - h/2 - 4);
+        ctx.closePath();
+        ctx.fill();
+      }
+      for (let i = -1; i <= 1; i++) {
+        ctx.beginPath();
+        ctx.arc(x + i * 15, y - h/2 - 20, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    } else {
+      ctx.fillStyle = this.owner === 'player' ? '#93c5fd' : '#fca5a5';
+      ctx.beginPath();
+      ctx.moveTo(x - w/2 - 4, y - h/2);
+      ctx.lineTo(x, y - h/2 - 18);
+      ctx.lineTo(x + w/2 + 4, y - h/2);
+      ctx.closePath();
+      ctx.fill();
+    }
+    
+    if (this.hitFlash > 0) {
+      ctx.fillStyle = `rgba(255,255,255,${this.hitFlash * 3})`;
+      ctx.fillRect(x - w/2, y - h/2, w, h);
+    }
+    
+    ctx.shadowBlur = 0;
+    
+    if (this.hp < this.maxHp && this.alive) {
+      const barW = w + 10;
+      const barH = 6;
+      const barY = y + h/2 + 12;
+      const barX = x - barW/2;
+      
+      ctx.fillStyle = 'rgba(0,0,0,0.7)';
+      ctx.fillRect(barX - 1, barY - 1, barW + 2, barH + 2);
+      
+      const ratio = this.hp / this.maxHp;
+      let color = this.owner === 'player' ? '#3b82f6' : '#ef4444';
+      ctx.fillStyle = color;
+      ctx.fillRect(barX, barY, barW * ratio, barH);
+      
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 9px Tahoma';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(Math.ceil(this.hp), x, barY + barH/2);
+    }
+    
+    if (!this.alive) {
+      ctx.fillStyle = 'rgba(0,0,0,0.6)';
+      ctx.fillRect(x - w/2, y - h/2, w, h);
+      ctx.fillStyle = '#ff4444';
+      ctx.font = 'bold 30px Arial';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('✖', x, y);
+    }
+    
+    for (const p of this.projectiles) {
+      ctx.fillStyle = '#fbbf24';
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+}
+
+// ============================================================
+//  سرباز
+// ============================================================
+class Unit {
+  constructor(x, y, card, owner) {
+    this.x = x; this.y = y;
+    this.card = card;
+    this.owner = owner;
+    
+    this.hp = card.hp;
+    this.maxHp = card.hp;
+    this.dmg = card.dmg;
+    this.speed = card.speed;
+    this.range = card.range;
+    this.size = card.size;
+    this.color = card.color;
+    this.icon = card.icon;
+    this.ranged = card.ranged || false;
+    
+    this.alive = true;
+    this.attackCooldown = 0;
+    this.hitFlash = 0;
+    this.walkTimer = Math.random() * 6.28;
+    this.direction = owner === 'player' ? -1 : 1;
+    this.projectiles = [];
+  }
+  
+  hit(damage) {
+    this.hp -= damage;
+    this.hitFlash = 0.15;
+    if (this.hp <= 0) { this.hp = 0; this.alive = false; }
+  }
+  
+  update(dt, allUnits, towers) {
+    if (!this.alive) return;
+    
+    this.walkTimer += dt * 10;
+    if (this.hitFlash > 0) this.hitFlash -= dt;
+    if (this.attackCooldown > 0) this.attackCooldown -= dt;
+    
+    // آپدیت پرتابه‌ها
+    for (const p of this.projectiles) {
+      p.x += p.vx * dt;
+      p.y += p.vy * dt;
+      p.life -= dt;
+      if (p.life <= 0) p.dead = true;
+      
+      if (p.target && p.target.alive) {
+        const d = Math.hypot(p.x - p.target.x, p.y - p.target.y);
+        if (d < 15) {
+          p.target.hit(this.dmg);
+          p.dead = true;
+        }
+      }
+    }
+    this.projectiles = this.projectiles.filter(p => !p.dead);
+    
+    // پیدا کردن دشمن نزدیک (سربازها)
+    let target = null, minDist = this.range;
+    for (const u of allUnits) {
+      if (!u.alive || u.owner === this.owner || u === this) continue;
+      const d = Math.hypot(u.x - this.x, u.y - this.y);
+      if (d < minDist) { minDist = d; target = u; }
+    }
+    
+    if (target) {
+      if (this.attackCooldown <= 0) {
+        this.attackCooldown = 1.0;
+        if (this.ranged) {
+          const dx = target.x - this.x;
+          const dy = target.y - this.y;
+          const d = Math.hypot(dx, dy);
+          const speed = 500;
+          this.projectiles.push({
+            x: this.x, y: this.y,
+            vx: (dx / d) * speed,
+            vy: (dy / d) * speed,
+            target: target, life: 1.5, dead: false
+          });
+        } else {
+          target.hit(this.dmg);
+        }
+      }
+      return;
+    }
+    
+    // پیدا کردن برج دشمن
+    let targetTower = null;
+    let minTowerDist = 999;
+    for (const t of towers) {
+      if (!t.alive || t.owner === this.owner) continue;
+      const d = Math.hypot(t.x - this.x, t.y - this.y);
+      const edgeDist = d - t.width/2;
+      if (edgeDist < this.range && edgeDist < minTowerDist) {
+        minTowerDist = edgeDist;
+        targetTower = t;
+      }
+    }
+    
+    if (targetTower) {
+      if (this.attackCooldown <= 0) {
+        this.attackCooldown = 1.0;
+        if (this.ranged) {
+          const dx = targetTower.x - this.x;
+          const dy = targetTower.y - this.y;
+          const d = Math.hypot(dx, dy);
+          const speed = 500;
+          this.projectiles.push({
+            x: this.x, y: this.y,
+            vx: (dx / d) * speed,
+            vy: (dy / d) * speed,
+            target: targetTower, life: 1.5, dead: false
+          });
+        } else {
+          targetTower.hit(this.dmg);
+        }
+      }
+      return;
+    }
+    
+    // حرکت
+    const bridgeLeft = MAP.bridges[0].x;
+    const bridgeRight = MAP.bridges[1].x;
+    const distLeft = Math.abs(this.x - bridgeLeft);
+    const distRight = Math.abs(this.x - bridgeRight);
+    const targetBridgeX = distLeft < distRight ? bridgeLeft : bridgeRight;
+    
+    const inRiverZone = this.y > MAP.riverY - 50 && this.y < MAP.riverY + MAP.riverH + 50;
+    
+    if (inRiverZone && Math.abs(this.x - targetBridgeX) > 5) {
+      this.x += Math.sign(targetBridgeX - this.x) * this.speed * dt;
+    } else {
+      this.y += this.direction * this.speed * dt;
+    }
+    
+    if (this.y < -30 || this.y > GAME_H + 30) this.alive = false;
+  }
+  
+  draw() {
+    if (!this.alive) return;
+    
+    const x = this.x, y = this.y, s = this.size;
+    
+    ctx.fillStyle = 'rgba(0,0,0,0.35)';
+    ctx.beginPath();
+    ctx.ellipse(x, y + s + 3, s * 0.9, 3, 0, 0, Math.PI * 2);
+    ctx.fill();
+    
+    const bob = Math.sin(this.walkTimer) * 1.5;
+    const drawY = y + bob;
+    
+    ctx.shadowColor = this.color;
+    ctx.shadowBlur = 10;
+    
+    ctx.fillStyle = this.color;
+    ctx.beginPath();
+    ctx.arc(x, drawY, s, 0, Math.PI * 2);
+    ctx.fill();
+    
+    ctx.strokeStyle = this.owner === 'player' ? '#3b82f6' : '#ef4444';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.arc(x, drawY, s, 0, Math.PI * 2);
+    ctx.stroke();
+    
+    if (this.hitFlash > 0) {
+      ctx.fillStyle = `rgba(255,255,255,${this.hitFlash * 5})`;
+      ctx.beginPath();
+      ctx.arc(x, drawY, s, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    
+    ctx.shadowBlur = 0;
+    
+    ctx.font = `${s * 1.1}px Arial`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(this.icon, x, drawY);
+    
+    if (this.hp < this.maxHp) {
+      const barW = s * 2;
+      const barH = 3.5;
+      const barX = x - barW / 2;
+      const barY = y - s - 8;
+      
+      ctx.fillStyle = 'rgba(0,0,0,0.7)';
+      ctx.fillRect(barX - 1, barY - 1, barW + 2, barH + 2);
+      
+      const ratio = this.hp / this.maxHp;
+      ctx.fillStyle = this.owner === 'player' ? '#3b82f6' : '#ef4444';
+      ctx.fillRect(barX, barY, barW * ratio, barH);
+    }
+    
+    for (const p of this.projectiles) {
+      ctx.fillStyle = '#fbbf24';
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+}
+
+// ============================================================
+//  زمین
+// ============================================================
+class Arena {
+  constructor() {
+    this.towers = [];
+    this.units = [];
+    this.setupTowers();
+    this.time = 0;
+  }
+  
+  setupTowers() {
+    // دشمن (بالا)
+    this.towers.push(new Tower(MAP.towerPositions.enemyKing.x, MAP.towerPositions.enemyKing.y, 2400, 2400, 'enemy', 'king'));
+    this.towers.push(new Tower(MAP.towerPositions.enemyPrincessL.x, MAP.towerPositions.enemyPrincessL.y, 1400, 1400, 'enemy', 'princess'));
+    this.towers.push(new Tower(MAP.towerPositions.enemyPrincessR.x, MAP.towerPositions.enemyPrincessR.y, 1400, 1400, 'enemy', 'princess'));
+    
+    // بازیکن (پایین)
+    this.towers.push(new Tower(MAP.towerPositions.playerKing.x, MAP.towerPositions.playerKing.y, 2400, 2400, 'player', 'king'));
+    this.towers.push(new Tower(MAP.towerPositions.playerPrincessL.x, MAP.towerPositions.playerPrincessL.y, 1400, 1400, 'player', 'princess'));
+    this.towers.push(new Tower(MAP.towerPositions.playerPrincessR.x, MAP.towerPositions.playerPrincessR.y, 1400, 1400, 'player', 'princess'));
+  }
+  
+  spawnUnit(cardId, owner, x, y) {
+    const card = CARDS.find(c => c.id === cardId);
+    if (!card) return;
+    this.units.push(new Unit(x, y, card, owner));
+  }
+  
+  update(dt) {
+    this.time += dt;
+    
+    // ✅ برج‌ها: به همه سربازها نگاه می‌کنن، ولی خودشون فیلتر می‌کنن
+    for (const t of this.towers) t.update(dt, this.units);
+    
+    // سربازها
+    for (const u of this.units) {
+      u.update(dt, this.units, this.towers);
+    }
+    
+    this.units = this.units.filter(u => u.alive);
+  }
+  
+  draw() {
+    // نیمه دشمن (بالا) - خاکی
+    const enemyGrad = ctx.createLinearGradient(0, 0, 0, MAP.riverY);
+    enemyGrad.addColorStop(0, '#5a3520');
+    enemyGrad.addColorStop(1, '#7a4a30');
+    ctx.fillStyle = enemyGrad;
+    ctx.fillRect(0, 0, GAME_W, MAP.riverY);
+    
+    ctx.fillStyle = 'rgba(120, 80, 50, 0.3)';
+    for (let i = 0; i < 100; i++) {
+      const x = (i * 67.3) % GAME_W;
+      const y = (i * 31.7) % MAP.riverY;
+      ctx.fillRect(x, y, 3, 2);
+    }
+    
+    // نیمه خودی (پایین) - سبز
+    const playerGrad = ctx.createLinearGradient(0, MAP.riverY + MAP.riverH, 0, GAME_H);
+    playerGrad.addColorStop(0, '#3a7a28');
+    playerGrad.addColorStop(1, '#2d5a1e');
+    ctx.fillStyle = playerGrad;
+    ctx.fillRect(0, MAP.riverY + MAP.riverH, GAME_W, GAME_H - MAP.riverY - MAP.riverH);
+    
+    ctx.fillStyle = 'rgba(80, 150, 60, 0.4)';
+    for (let i = 0; i < 100; i++) {
+      const x = (i * 53.7) % GAME_W;
+      const y = MAP.riverY + MAP.riverH + (i * 41.3) % (GAME_H - MAP.riverY - MAP.riverH);
+      ctx.fillRect(x, y, 2, 2);
+    }
+    
+    // رودخانه
+    const riverGrad = ctx.createLinearGradient(0, MAP.riverY, 0, MAP.riverY + MAP.riverH);
+    riverGrad.addColorStop(0, '#1e4d7a');
+    riverGrad.addColorStop(0.5, '#4a9ad8');
+    riverGrad.addColorStop(1, '#1e4d7a');
+    ctx.fillStyle = riverGrad;
+    ctx.fillRect(0, MAP.riverY, GAME_W, MAP.riverH);
+    
+    ctx.strokeStyle = 'rgba(200, 230, 255, 0.6)';
+    ctx.lineWidth = 2;
+    const wt = this.time * 2;
+    for (let x = 0; x < GAME_W; x += 15) {
+      const wy = MAP.riverY + MAP.riverH/2 + Math.sin(x * 0.15 + wt) * 6;
+      ctx.beginPath();
+      ctx.moveTo(x, wy);
+      ctx.lineTo(x + 8, wy);
+      ctx.stroke();
+    }
+    
+    // پل‌ها
+    for (const b of MAP.bridges) {
+      this.drawBridge(b.x, b.w, MAP.riverY - 5, MAP.riverH + 10);
+    }
+    
+    // خط قلمرو
+    ctx.strokeStyle = 'rgba(255, 200, 100, 0.4)';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([8, 8]);
+    ctx.beginPath();
+    ctx.moveTo(0, MAP.riverY - 3);
+    ctx.lineTo(GAME_W, MAP.riverY - 3);
+    ctx.moveTo(0, MAP.riverY + MAP.riverH + 3);
+    ctx.lineTo(GAME_W, MAP.riverY + MAP.riverH + 3);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    
+    // برچسب
+    ctx.fillStyle = 'rgba(200, 50, 50, 0.3)';
+    ctx.fillRect(0, 0, GAME_W, 25);
+    ctx.fillStyle = '#ffaaaa';
+    ctx.font = 'bold 13px Tahoma';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('👹 Enemy', GAME_W/2, 13);
+    
+    ctx.fillStyle = 'rgba(50, 100, 200, 0.3)';
+    ctx.fillRect(0, GAME_H - 25, GAME_W, 25);
+    ctx.fillStyle = '#aaccff';
+    ctx.fillText('🛡️ You', GAME_W/2, GAME_H - 13);
+    
+    // برج‌ها
+    for (const t of this.towers) t.draw();
+    
+    // سربازها
+    for (const u of this.units) u.draw();
+  }
+  
+  drawBridge(cx, w, y, h) {
+    ctx.fillStyle = 'rgba(0,0,0,0.4)';
+    ctx.fillRect(cx - w/2 + 3, y + 3, w, h);
+    ctx.fillStyle = '#8a5a30';
+    ctx.fillRect(cx - w/2, y, w, h);
+    ctx.strokeStyle = '#5a3a1a';
+    ctx.lineWidth = 2;
+    for (let i = 0; i < h; i += 7) {
+      ctx.beginPath();
+      ctx.moveTo(cx - w/2, y + i);
+      ctx.lineTo(cx + w/2, y + i);
+      ctx.stroke();
+    }
+    ctx.strokeStyle = '#b07040';
+    ctx.lineWidth = 3;
+    ctx.strokeRect(cx - w/2, y, w, h);
+  }
+}
+
+// ============================================================
+//  الیکسیر
+// ============================================================
+class Elixir {
+  constructor(regenTime) {
+    this.max = 10;
+    this.current = 5;
+    this.regenTime = regenTime;
+    this.timer = 0;
+  }
+  update(dt) {
+    if (this.current < this.max) {
+      this.timer += dt;
+      if (this.timer >= this.regenTime) {
+        this.timer = 0;
+        this.current = Math.min(this.max, this.current + 1);
+      }
+    }
+  }
+  canSpend(cost) { return this.current >= cost; }
+  spend(cost) {
+    if (this.canSpend(cost)) { this.current -= cost; return true; }
+    return false;
+  }
+}
+
+// ============================================================
+//  AI هوشمند
+// ============================================================
+class AI {
+  constructor(difficulty) {
+    this.diff = difficulty;
+    this.actionTimer = 0;
+    this.elixir = new Elixir(difficulty.elixirRegen);
+  }
+  
+  update(dt, units, towers) {
+    this.elixir.update(dt);
+    this.actionTimer += dt;
+    
+    if (this.actionTimer < this.diff.actionDelay) return;
+    this.actionTimer = 0;
+    
+    const decision = this.decide(units, towers);
+    if (decision) {
+      if (this.elixir.spend(decision.card.cost)) {
+        this.spawn(decision.card, decision.x, decision.y);
+      }
+    }
+  }
+  
+  decide(units, towers) {
+    const playerUnits = units.filter(u => u.owner === 'player' && u.y < MAP.riverY + MAP.riverH + 50);
+    const enemyUnits = units.filter(u => u.owner === 'enemy' && u.y > MAP.riverY - 50);
+    
+    if (Math.random() < this.diff.mistakeChance) {
+      return null;
+    }
+    
+    // ۱. دفاع
+    if (playerUnits.length > 0 && Math.random() < this.diff.smartness) {
+      const threat = playerUnits[0];
+      const defenseCards = CARDS.filter(c => 
+        c.cost <= this.elixir.current && 
+        (c.hp >= 100 || c.ranged)
+      );
+      if (defenseCards.length > 0) {
+        const card = defenseCards[Math.floor(Math.random() * defenseCards.length)];
+        const x = Math.max(30, Math.min(GAME_W - 30, threat.x + (Math.random() - 0.5) * 60));
+        const y = Math.max(50, Math.min(MAP.riverY - 30, threat.y - 80));
+        return { card, x, y };
+      }
+    }
+    
+    // ۲. حمله
+    if (this.elixir.current >= this.diff.attackThreshold) {
+      const attackCards = CARDS.filter(c => c.cost <= this.elixir.current && c.id !== 'archer');
+      if (attackCards.length > 0) {
+        const card = attackCards[Math.floor(Math.random() * attackCards.length)];
+        const x = 100 + Math.random() * (GAME_W - 200);
+        const y = 80 + Math.random() * 80;
+        return { card, x, y };
+      }
+    }
+    
+    // ۳. پشتیبانی
+    if (enemyUnits.length > 0 && this.elixir.current >= 3) {
+      const supportCards = CARDS.filter(c => c.cost <= this.elixir.current);
+      if (supportCards.length > 0) {
+        const card = supportCards[Math.floor(Math.random() * supportCards.length)];
+        const lead = enemyUnits[0];
+        const x = Math.max(30, Math.min(GAME_W - 30, lead.x + (Math.random() - 0.5) * 40));
+        const y = Math.max(50, lead.y - 50);
+        return { card, x, y };
+      }
+    }
+    
+    return null;
+  }
+  
+  spawn(card, x, y) {
+    if (window.game && window.game.arena) {
+      window.game.arena.spawnUnit(card.id, 'enemy', x, y);
+    }
+  }
+}
+
+// ============================================================
+//  UI کارت‌ها
+// ============================================================
+class CardUI {
+  constructor() {
+    this.cardW = 42;
+    this.cardH = 55;
+    this.gap = 3;
+    this.y = GAME_H - 70;
+    this.cards = CARDS.slice();
+    this.totalW = this.cards.length * this.cardW + (this.cards.length - 1) * this.gap;
+    this.startX = (GAME_W - this.totalW) / 2;
+    this.dragging = null;
+    this.dragX = 0;
+    this.dragY = 0;
+  }
+  
+  getCardRect(i) {
+    return {
+      x: this.startX + i * (this.cardW + this.gap),
+      y: this.y,
+      w: this.cardW,
+      h: this.cardH
+    };
+  }
+  
+  hitTest(x, y) {
+    for (let i = 0; i < this.cards.length; i++) {
+      const r = this.getCardRect(i);
+      if (x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h) return i;
+    }
+    return -1;
+  }
+  
+  draw(elixir) {
+    for (let i = 0; i < this.cards.length; i++) {
+      const card = this.cards[i];
+      const r = this.getCardRect(i);
+      const canAfford = elixir.current >= card.cost;
+      const isDragging = this.dragging === i;
+      
+      ctx.fillStyle = 'rgba(0,0,0,0.4)';
+      ctx.beginPath();
+      ctx.roundRect(r.x + 2, r.y + 2, r.w, r.h, 6);
+      ctx.fill();
+      
+      ctx.fillStyle = canAfford ? '#2a3a5a' : '#1a1a25';
+      ctx.beginPath();
+      ctx.roundRect(r.x, r.y, r.w, r.h, 6);
+      ctx.fill();
+      
+      ctx.strokeStyle = canAfford ? card.color : '#333';
+      ctx.lineWidth = isDragging ? 3 : 2;
+      ctx.beginPath();
+      ctx.roundRect(r.x, r.y, r.w, r.h, 6);
+      ctx.stroke();
+      
+      if (!isDragging) {
+        ctx.font = '22px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.globalAlpha = canAfford ? 1 : 0.4;
+        ctx.fillText(card.icon, r.x + r.w/2, r.y + 20);
+        ctx.globalAlpha = 1;
+        
+        ctx.fillStyle = '#d946ef';
+        ctx.beginPath();
+        ctx.arc(r.x + r.w/2, r.y + r.h - 12, 9, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.arc(r.x + r.w/2, r.y + r.h - 12, 9, 0, Math.PI * 2);
+        ctx.stroke();
+        
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 11px Tahoma';
+        ctx.fillText(card.cost, r.x + r.w/2, r.y + r.h - 11);
+      }
+    }
+    
+    if (this.dragging !== null) {
+      const card = this.cards[this.dragging];
+      const x = this.dragX - this.cardW/2;
+      const y = this.dragY - this.cardH/2;
+      
+      ctx.globalAlpha = 0.9;
+      ctx.shadowColor = card.color;
+      ctx.shadowBlur = 20;
+      
+      ctx.fillStyle = '#2a3a5a';
+      ctx.beginPath();
+      ctx.roundRect(x, y, this.cardW, this.cardH, 6);
+      ctx.fill();
+      
+      ctx.shadowBlur = 0;
+      
+      ctx.strokeStyle = card.color;
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.roundRect(x, y, this.cardW, this.cardH, 6);
+      ctx.stroke();
+      
+      ctx.font = '26px Arial';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(card.icon, x + this.cardW/2, y + this.cardH/2 - 5);
+      
+      ctx.fillStyle = '#d946ef';
+      ctx.beginPath();
+      ctx.arc(x + this.cardW/2, y + this.cardH - 12, 9, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#fff';
+      ctx.beginPath();
+      ctx.arc(x + this.cardW/2, y + this.cardH - 12, 9, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 11px Tahoma';
+      ctx.fillText(card.cost, x + this.cardW/2, y + this.cardH - 11);
+      
+      ctx.globalAlpha = 1;
+    }
+  }
+}
+
+// ============================================================
+//  بازی
+// ============================================================
+class Game {
+  constructor() {
+    this.stats = this.loadStats();
+    
+    this.arena = new Arena();
+    this.elixir = new Elixir(2.8);
+    this.cardUI = new CardUI();
+    this.lastTime = 0;
+    this.state = 'playing';
+    this.gameTime = 180;
+    this.rewardGiven = false;
+    
+    const difficulty = getAIDifficulty(this.stats.gamesPlayed);
+    this.ai = new AI(difficulty);
+    this.difficulty = difficulty;
+  }
+  
+  loadStats() {
+    try {
+      const raw = localStorage.getItem('loomwars_stats');
+      if (raw) return JSON.parse(raw);
+    } catch(e) {}
+    return { gamesPlayed: 0, wins: 0, losses: 0 };
+  }
+  
+  saveStats() {
+    try {
+      localStorage.setItem('loomwars_stats', JSON.stringify(this.stats));
+    } catch(e) {}
+  }
+  
+  screenToGame(clientX, clientY) {
+    const rect = canvas.getBoundingClientRect();
+    return {
+      x: (clientX - rect.left) / rect.width * GAME_W,
+      y: (clientY - rect.top) / rect.height * GAME_H
+    };
+  }
+  
+  onPointerDown(clientX, clientY) {
+    const { x, y } = this.screenToGame(clientX, clientY);
+    if (this.state !== 'playing') return;
+    
+    const i = this.cardUI.hitTest(x, y);
+    if (i >= 0) {
+      const card = this.cardUI.cards[i];
+      if (this.elixir.canSpend(card.cost)) {
+        this.cardUI.dragging = i;
+        this.cardUI.dragX = x;
+        this.cardUI.dragY = y;
+      }
+    }
+  }
+  
+  onPointerMove(clientX, clientY) {
+    const { x, y } = this.screenToGame(clientX, clientY);
+    if (this.cardUI.dragging !== null) {
+      this.cardUI.dragX = x;
+      this.cardUI.dragY = y;
+    }
+  }
+  
+  onPointerUp(clientX, clientY) {
+    if (this.cardUI.dragging !== null && this.state === 'playing') {
+      const i = this.cardUI.dragging;
+      const card = this.cardUI.cards[i];
+      const { x, y } = this.screenToGame(clientX, clientY);
+      
+      if (y > MAP.riverY + MAP.riverH + 20 && y < GAME_H - 80) {
+        if (this.elixir.spend(card.cost)) {
+          this.arena.spawnUnit(card.id, 'player', x, y);
+        }
+      }
+    }
+    this.cardUI.dragging = null;
+  }
+  
+  update(dt) {
+    this.arena.update(dt);
+    this.elixir.update(dt);
+    this.ai.update(dt, this.arena.units, this.arena.towers);
+    
+    if (this.state === 'playing') {
+      this.gameTime -= dt;
+      if (this.gameTime <= 0) {
+        this.gameTime = 0;
+        this.checkWin();
+      }
+      
+      let playerKing = false, enemyKing = false;
+      for (const t of this.arena.towers) {
+        if (t.alive && t.type === 'king') {
+          if (t.owner === 'player') playerKing = true;
+          else enemyKing = true;
+        }
+      }
+      
+      if (!playerKing) {
+        this.endGame('lose');
+      } else if (!enemyKing) {
+        this.endGame('win');
+      }
+    }
+  }
+  
+  endGame(result) {
+    if (this.state !== 'playing') return;
+    
+    this.state = result;
+    this.stats.gamesPlayed++;
+    if (result === 'win') {
+      this.stats.wins++;
+      if (!this.rewardGiven) {
+        this.rewardGiven = true;
+        this.giveReward(600);
+      }
+    } else {
+      this.stats.losses++;
+    }
+    this.saveStats();
+  }
+  
+  giveReward(coins) {
+    try {
+      var users = JSON.parse(localStorage.getItem('starloom_users')) || {};
+      var current = JSON.parse(localStorage.getItem('starloom_current_user')) || {};
+      if (!current.username) return;
+      var username = current.username;
+      if (users[username]) {
+        users[username].coins = (users[username].coins || 0) + coins;
+        users[username].totalGames = (users[username].totalGames || 0) + 1;
+        localStorage.setItem('starloom_users', JSON.stringify(users));
+        current.coins = users[username].coins;
+        localStorage.setItem('starloom_current_user', JSON.stringify(current));
+      }
+    } catch(e) {}
+  }
+  
+  checkWin() {
+    let playerTowers = 0, enemyTowers = 0;
+    let playerKing = false, enemyKing = false;
+    
+    for (const t of this.arena.towers) {
+      if (t.alive) {
+        if (t.owner === 'player') {
+          playerTowers++;
+          if (t.type === 'king') playerKing = true;
+        } else {
+          enemyTowers++;
+          if (t.type === 'king') enemyKing = true;
+        }
+      }
+    }
+    
+    if (!enemyKing) {
+      this.endGame('win');
+    } else if (!playerKing) {
+      this.endGame('lose');
+    } else if (playerTowers > enemyTowers) {
+      this.endGame('win');
+    } else if (enemyTowers > playerTowers) {
+      this.endGame('lose');
+    } else {
+      this.state = 'draw';
+      this.stats.gamesPlayed++;
+      this.saveStats();
+    }
+  }
+  
+  draw() {
+    this.arena.draw();
+    this.drawHUD();
+    this.cardUI.draw(this.elixir);
+    this.drawElixirBar();
+    if (this.state !== 'playing') this.drawEndScreen();
+  }
+  
+  drawHUD() {
+    const min = Math.floor(this.gameTime / 60);
+    const sec = Math.floor(this.gameTime % 60);
+    const timeStr = `${min}:${sec.toString().padStart(2, '0')}`;
+    
+    ctx.fillStyle = 'rgba(0,0,0,0.75)';
+    ctx.beginPath();
+    ctx.roundRect(GAME_W/2 - 45, 32, 90, 32, 8);
+    ctx.fill();
+    ctx.strokeStyle = '#f1c40f';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.roundRect(GAME_W/2 - 45, 32, 90, 32, 8);
+    ctx.stroke();
+    
+    ctx.fillStyle = '#f1c40f';
+    ctx.font = 'bold 20px Tahoma';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(timeStr, GAME_W/2, 48);
+    
+    // سطح AI
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(8, 32, 100, 32, 6);
+    ctx.fill();
+    ctx.fillStyle = this.difficulty.level >= 7 ? '#ef4444' : 
+                    this.difficulty.level >= 4 ? '#f1c40f' : '#2ecc71';
+    ctx.font = 'bold 12px Tahoma';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('AI Lv.' + this.difficulty.level, 15, 48);
+    
+    // الیکسیر AI
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.beginPath();
+    ctx.roundRect(GAME_W - 108, 32, 100, 32, 6);
+    ctx.fill();
+    
+    const aiElixirRatio = this.ai.elixir.current / this.ai.elixir.max;
+    ctx.fillStyle = '#2a0a3a';
+    ctx.beginPath();
+    ctx.roundRect(GAME_W - 103, 40, 90, 16, 4);
+    ctx.fill();
+    
+    ctx.fillStyle = '#a21caf';
+    ctx.beginPath();
+    ctx.roundRect(GAME_W - 103, 40, 90 * aiElixirRatio, 16, 4);
+    ctx.fill();
+    
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 10px Tahoma';
+    ctx.textAlign = 'center';
+    ctx.fillText('AI ⚗️ ' + this.ai.elixir.current, GAME_W - 58, 48);
+  }
+  
+  drawElixirBar() {
+    const x = 15, y = GAME_H - 130, w = GAME_W - 30, h = 22;
+    
+    ctx.fillStyle = 'rgba(0,0,0,0.8)';
+    ctx.beginPath();
+    ctx.roundRect(x - 3, y - 3, w + 6, h + 6, 10);
+    ctx.fill();
+    ctx.strokeStyle = '#d946ef';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.roundRect(x - 3, y - 3, w + 6, h + 6, 10);
+    ctx.stroke();
+    
+    ctx.fillStyle = '#2a0a3a';
+    ctx.beginPath();
+    ctx.roundRect(x, y, w, h, 8);
+    ctx.fill();
+    
+    const ratio = this.elixir.current / this.elixir.max;
+    const grad = ctx.createLinearGradient(x, 0, x + w, 0);
+    grad.addColorStop(0, '#a21caf');
+    grad.addColorStop(0.5, '#d946ef');
+    grad.addColorStop(1, '#f0abfc');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.roundRect(x, y, w * ratio, h, 8);
+    ctx.fill();
+    
+    ctx.strokeStyle = 'rgba(0,0,0,0.6)';
+    ctx.lineWidth = 2;
+    for (let i = 1; i < 10; i++) {
+      const lx = x + (w / 10) * i;
+      ctx.beginPath();
+      ctx.moveTo(lx, y + 3);
+      ctx.lineTo(lx, y + h - 3);
+      ctx.stroke();
+    }
+    
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 15px Tahoma';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('⚗️ ' + this.elixir.current + ' / ' + this.elixir.max, x + w/2, y + h/2);
+  }
+  
+  drawEndScreen() {
+    ctx.fillStyle = 'rgba(0,0,0,0.85)';
+    ctx.fillRect(0, 0, GAME_W, GAME_H);
+    
+    let title, color;
+    if (this.state === 'win') { title = '🎉 VICTORY'; color = '#2ecc71'; }
+    else if (this.state === 'lose') { title = '💀 DEFEAT'; color = '#e74c3c'; }
+    else { title = '🤝 DRAW'; color = '#f1c40f'; }
+    
+    ctx.fillStyle = color;
+    ctx.font = 'bold 48px Tahoma';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(title, GAME_W/2, GAME_H/2 - 110);
+    
+    if (this.state === 'win') {
+      ctx.fillStyle = '#f1c40f';
+      ctx.font = 'bold 24px Tahoma';
+      ctx.fillText('🎁 +600 🪙', GAME_W/2, GAME_H/2 - 40);
+    }
+    
+    ctx.fillStyle = '#a0b5d9';
+    ctx.font = 'bold 16px Tahoma';
+    ctx.fillText('بازی‌ها: ' + this.stats.gamesPlayed, GAME_W/2, GAME_H/2 + 10);
+    ctx.fillText('برد: ' + this.stats.wins + '  |  باخت: ' + this.stats.losses, GAME_W/2, GAME_H/2 + 40);
+    
+    const nextDifficulty = getAIDifficulty(this.stats.gamesPlayed);
+    ctx.fillStyle = '#f1c40f';
+    ctx.font = 'bold 14px Tahoma';
+    ctx.fillText('سطح AI بعدی: Lv.' + nextDifficulty.level, GAME_W/2, GAME_H/2 + 75);
+    
+    ctx.fillStyle = '#40a0e0';
+    ctx.beginPath();
+    ctx.roundRect(GAME_W/2 - 80, GAME_H/2 + 110, 160, 55, 12);
+    ctx.fill();
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.roundRect(GAME_W/2 - 80, GAME_H/2 + 110, 160, 55, 12);
+    ctx.stroke();
+    
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 20px Tahoma';
+    ctx.fillText('🔄 REMATCH', GAME_W/2, GAME_H/2 + 138);
+  }
+  
+  restart() {
+    this.arena = new Arena();
+    this.elixir = new Elixir(2.8);
+    this.gameTime = 180;
+    this.state = 'playing';
+    this.rewardGiven = false;
+    
+    const difficulty = getAIDifficulty(this.stats.gamesPlayed);
+    this.ai = new AI(difficulty);
+    this.difficulty = difficulty;
+  }
+  
+  isRestartBtn(x, y) {
+    return x >= GAME_W/2 - 80 && x <= GAME_W/2 + 80 &&
+           y >= GAME_H/2 + 110 && y <= GAME_H/2 + 165;
+  }
+}
+
+const game = new Game();
+window.game = game;
+
+// Input Events
+canvas.addEventListener('mousedown', e => {
+  const { x, y } = game.screenToGame(e.clientX, e.clientY);
+  if (game.state !== 'playing') {
+    if (game.isRestartBtn(x, y)) { game.restart(); return; }
+  }
+  game.onPointerDown(e.clientX, e.clientY);
+});
+canvas.addEventListener('mousemove', e => game.onPointerMove(e.clientX, e.clientY));
+canvas.addEventListener('mouseup', e => game.onPointerUp(e.clientX, e.clientY));
+
+canvas.addEventListener('touchstart', e => {
+  e.preventDefault();
+  const t = e.touches[0];
+  const { x, y } = game.screenToGame(t.clientX, t.clientY);
+  if (game.state !== 'playing') {
+    if (game.isRestartBtn(x, y)) { game.restart(); return; }
+  }
+  game.onPointerDown(t.clientX, t.clientY);
+}, { passive: false });
+
+canvas.addEventListener('touchmove', e => {
+  e.preventDefault();
+  const t = e.touches[0];
+  game.onPointerMove(t.clientX, t.clientY);
+}, { passive: false });
+
+canvas.addEventListener('touchend', e => {
+  e.preventDefault();
+  const t = e.changedTouches[0];
+  game.onPointerUp(t.clientX, t.clientY);
+}, { passive: false });
+
+function loop(timestamp) {
+  const dt = Math.min((timestamp - game.lastTime) / 1000, 0.1);
+  game.lastTime = timestamp;
+  game.update(dt);
+  game.draw();
+  requestAnimationFrame(loop);
+}
+
+requestAnimationFrame((t) => {
+  game.lastTime = t;
+  loop(t);
+});
+
+if (!CanvasRenderingContext2D.prototype.roundRect) {
+  CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, r) {
+    if (w < 2*r) r = w/2;
+    if (h < 2*r) r = h/2;
+    this.beginPath();
+    this.moveTo(x + r, y);
+    this.arcTo(x + w, y, x + w, y + h, r);
+    this.arcTo(x + w, y + h, x, y + h, r);
+    this.arcTo(x, y + h, x, y, r);
+    this.arcTo(x, y, x + w, y, r);
+    this.closePath();
+    return this;
+  };
+}
+
+console.log('⚔️ Loom Wars - Fixed Towers + Smart AI Ready!');
+</script>
+
+</body>
+</html>
