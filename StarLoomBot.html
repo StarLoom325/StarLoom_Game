@@ -383,6 +383,7 @@
                                                             { icon: '⛏️', text: '⛏️ شروع ماینکرفت', action: 'minecraft' },
                                                             { icon: '💣', text: '💣 شروع بوم بوم', action: 'boom' },
                                                             { icon: '🏎️', text: '🏎️ شروع مسابقه سرعت', action: 'race' },
+                                                            { icon: '⚔️', text: '⚔️ Loom Wars', action: 'loomwars' },
                                                             { icon: '🔙', text: '🔙 برگرد', action: 'start' }
                                                         ]);
                                                     }, 1500);
@@ -402,6 +403,7 @@
                         { icon: '⛏️', text: '⛏️ ماینکرفت', action: 'minecraft' },
                         { icon: '💣', text: '💣 بوم بوم', action: 'boom' },
                         { icon: '🏎️', text: '🏎️ مسابقه سرعت', action: 'race' },
+                        { icon: '⚔️', text: '⚔️ Loom Wars', action: 'loomwars' },
                         { icon: '🔙', text: '🔙 برگرد', action: 'start' }
                     ]);
                 }, 700);
@@ -465,6 +467,13 @@
                                 }, 1000);
                             }, 700);
                             break;
+                            case 'loomwars':
+                        botSay('⚔️ عالیه! در حال رفتن به <strong>Loom Wars</strong>...', function(){
+                        setTimeout(function(){
+                        window.location.href = 'loomwars.html';
+                        }, 1000);
+                        }, 700);
+                        break;
                         default:
                             scenarioStart();
                     }
