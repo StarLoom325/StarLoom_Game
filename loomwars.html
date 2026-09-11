@@ -1005,21 +1005,37 @@ class Game {
     this.saveStats();
   }
   
-  giveReward(coins) {
-    try {
-      var users = JSON.parse(localStorage.getItem('starloom_users')) || {};
-      var current = JSON.parse(localStorage.getItem('starloom_current_user')) || {};
-      if (!current.username) return;
-      var username = current.username;
-      if (users[username]) {
-        users[username].coins = (users[username].coins || 0) + coins;
-        users[username].totalGames = (users[username].totalGames || 0) + 1;
-        localStorage.setItem('starloom_users', JSON.stringify(users));
-        current.coins = users[username].coins;
-        localStorage.setItem('starloom_current_user', JSON.stringify(current));
-      }
-    } catch(e) {}
+giveReward(coins) {
+  try {
+    var users = JSON.parse(localStorage.getItem('starloom_users')) || {};
+    var current = JSON.parse(localStorage.getItem('starloom_current_user')) || {};
+    
+    if (!current.username) {
+      console.log('⚠️ کاربر لاگین نیست!');
+      return;
+    }
+    
+    var username = current.username;
+    
+    if (users[username]) {
+      users[username].coins = (users[username].coins || 0) + coins;
+      users[username].totalGames = (users[username].totalGames || 0) + 1;
+      
+      // ذخیره کاربران
+      localStorage.setItem('starloom_users', JSON.stringify(users));
+      
+      // ذخیره کاربر فعلی
+      current.coins = users[username].coins;
+      localStorage.setItem('starloom_current_user', JSON.stringify(current));
+      
+      console.log('🎁 +' + coins + ' سکه! موجودی: ' + users[username].coins);
+    } else {
+      console.log('⚠️ کاربر پیدا نشد: ' + username);
+    }
+  } catch(e) {
+    console.log('خطا:', e);
   }
+}
   
   checkWin() {
     let playerTowers = 0, enemyTowers = 0;
