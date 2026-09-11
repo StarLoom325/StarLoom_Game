@@ -1,120 +1,448 @@
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StarLoom_Game - در حال بارگذاری...</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+```html
+<!-- ================= STARLOOM LOADING ================= -->
 
-    <!-- شفق پس‌زمینه -->
-    <div class="aurora"></div>
+<style>
+#starloom-loader {
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+        radial-gradient(circle at 50% 45%, rgba(100,80,255,.12), transparent 35%),
+        radial-gradient(circle at 20% 20%, rgba(0,220,255,.08), transparent 30%),
+        #050611;
+    font-family: "Segoe UI", Tahoma, sans-serif;
+    color: white;
+}
 
-    <!-- کانتینر لودینگ -->
-    <div class="loading-container">
-        <!-- لوگو با ستاره‌های چرخان -->
-        <div class="logo-wrapper">
-            <div class="stars-orbit">
-                <span>✦</span>
-                <span>✧</span>
-                <span>✦</span>
-                <span>✧</span>
-            </div>
-            <div class="logo">StarLoom<span>_Game</span></div>
+/* ستاره‌های پس‌زمینه */
+.sl-stars {
+    position: absolute;
+    inset: 0;
+    background-image:
+        radial-gradient(circle, rgba(255,255,255,.8) 1px, transparent 1px),
+        radial-gradient(circle, rgba(120,210,255,.5) 1px, transparent 1px);
+    background-size: 85px 85px, 135px 135px;
+    animation: starMove 18s linear infinite;
+    opacity: .45;
+}
+
+@keyframes starMove {
+    from { transform: translateY(0); }
+    to   { transform: translateY(85px); }
+}
+
+/* نور مرکزی */
+.sl-glow {
+    position: absolute;
+    width: 430px;
+    height: 430px;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle,
+        rgba(100,80,255,.20),
+        rgba(0,200,255,.06) 40%,
+        transparent 70%
+    );
+    filter: blur(10px);
+    animation: glowPulse 3s ease-in-out infinite alternate;
+}
+
+@keyframes glowPulse {
+    from { transform: scale(.9); opacity: .6; }
+    to   { transform: scale(1.15); opacity: 1; }
+}
+
+/* محتوای اصلی */
+.sl-content {
+    position: relative;
+    z-index: 5;
+    width: min(90%, 520px);
+    text-align: center;
+}
+
+/* لوگو */
+.sl-logo {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 10px;
+}
+
+.sl-logo h1 {
+    margin: 0;
+    font-size: clamp(38px, 8vw, 68px);
+    font-weight: 900;
+    letter-spacing: 3px;
+    background: linear-gradient(
+        90deg,
+        #ffffff,
+        #9be7ff,
+        #9c7cff,
+        #ffffff
+    );
+    background-size: 250% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: logoShine 3s linear infinite;
+    filter: drop-shadow(0 0 22px rgba(100,150,255,.35));
+}
+
+@keyframes logoShine {
+    to { background-position: 250% center; }
+}
+
+.sl-sub {
+    margin-top: 5px;
+    color: #8e9abf;
+    font-size: 12px;
+    letter-spacing: 6px;
+}
+
+/* مدار */
+.sl-orbit {
+    position: relative;
+    width: 180px;
+    height: 180px;
+    margin: 38px auto 32px;
+}
+
+.sl-orbit::before,
+.sl-orbit::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 1px solid rgba(120,150,255,.28);
+}
+
+.sl-orbit::after {
+    inset: 20px;
+    border-color: rgba(0,220,255,.25);
+}
+
+/* چرخش مدار */
+.sl-ring {
+    position: absolute;
+    inset: -12px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    border-top-color: #7b6cff;
+    border-right-color: #20dfff;
+    animation: orbitSpin 2.2s linear infinite;
+}
+
+.sl-ring:nth-child(2) {
+    inset: 12px;
+    border-top-color: #20dfff;
+    border-right-color: #7b6cff;
+    animation-duration: 1.6s;
+    animation-direction: reverse;
+}
+
+.sl-ring:nth-child(3) {
+    inset: 34px;
+    border-bottom-color: #a56cff;
+    border-left-color: #20dfff;
+    animation-duration: 1s;
+}
+
+@keyframes orbitSpin {
+    to { transform: rotate(360deg); }
+}
+
+/* ستاره وسط */
+.sl-star {
+    position: absolute;
+    inset: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 48px;
+    color: white;
+    text-shadow:
+        0 0 10px #fff,
+        0 0 25px #7b6cff,
+        0 0 50px #20dfff;
+    animation: starPulse 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes starPulse {
+    from {
+        transform: translate(-50%, -50%) scale(.85) rotate(0deg);
+    }
+    to {
+        transform: translate(-50%, -50%) scale(1.12) rotate(12deg);
+    }
+}
+
+/* نخ‌های StarLoom */
+.sl-thread {
+    position: absolute;
+    width: 320px;
+    height: 1px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(0,220,255,.7),
+        rgba(140,100,255,.8),
+        transparent
+    );
+    left: 50%;
+    top: 50%;
+    transform-origin: center;
+    opacity: .35;
+}
+
+.sl-thread:nth-child(1) {
+    transform: translate(-50%, -50%) rotate(25deg);
+}
+
+.sl-thread:nth-child(2) {
+    transform: translate(-50%, -50%) rotate(-25deg);
+}
+
+.sl-thread:nth-child(3) {
+    transform: translate(-50%, -50%) rotate(90deg);
+}
+
+/* درصد */
+.sl-percent {
+    font-size: 25px;
+    font-weight: 800;
+    margin-bottom: 13px;
+    color: #eaf7ff;
+    text-shadow: 0 0 15px rgba(0,220,255,.5);
+}
+
+/* نوار */
+.sl-progress {
+    position: relative;
+    width: 100%;
+    height: 7px;
+    background: rgba(255,255,255,.07);
+    border: 1px solid rgba(120,150,255,.2);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow:
+        inset 0 0 10px rgba(0,0,0,.8),
+        0 0 20px rgba(80,100,255,.08);
+}
+
+.sl-progress-fill {
+    width: 0%;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(
+        90deg,
+        #20dfff,
+        #6878ff,
+        #a56cff,
+        #20dfff
+    );
+    background-size: 250% 100%;
+    animation: progressGlow 2s linear infinite;
+    transition: width .25s ease;
+    box-shadow:
+        0 0 12px #20dfff,
+        0 0 25px rgba(120,100,255,.6);
+}
+
+@keyframes progressGlow {
+    to { background-position: 250% 0; }
+}
+
+/* وضعیت */
+.sl-status {
+    margin-top: 17px;
+    min-height: 25px;
+    color: #8996bb;
+    font-size: 13px;
+}
+
+.sl-status span {
+    display: inline-block;
+    animation: statusFade .35s ease;
+}
+
+@keyframes statusFade {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* پایین صفحه */
+.sl-footer {
+    position: fixed;
+    bottom: 22px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #465071;
+    font-size: 10px;
+    letter-spacing: 3px;
+}
+
+/* موبایل */
+@media(max-width:600px) {
+
+    .sl-logo h1 {
+        font-size: 39px;
+    }
+
+    .sl-sub {
+        font-size: 9px;
+        letter-spacing: 4px;
+    }
+
+    .sl-orbit {
+        width: 145px;
+        height: 145px;
+    }
+
+    .sl-star {
+        font-size: 38px;
+    }
+
+    .sl-thread {
+        width: 240px;
+    }
+}
+</style>
+
+
+<div id="starloom-loader">
+
+    <div class="sl-stars"></div>
+
+    <div class="sl-glow"></div>
+
+    <div class="sl-content">
+
+        <div class="sl-logo">
+            <h1>StarLoom</h1>
+            <div class="sl-sub">GAME • SOFTWARE • ENGINE</div>
         </div>
 
-        <div class="logo-sub">✦ در حال بارگذاری ✦</div>
+        <div class="sl-orbit">
 
-        <!-- نوار بارگذاری -->
-        <div class="loader-wrapper">
-            <div class="loader-track">
-                <div class="loader-bar" id="loaderBar"></div>
-            </div>
-            <div class="loader-text">
-                <span class="loader-percent" id="loaderPercent">0</span>%
-                <span class="dots">
-                    <span>.</span><span>.</span><span>.</span>
-                </span>
-                <div class="status-text" id="statusText">
-                    <span class="status-icon">⚙️</span>
-                    آماده‌سازی...
-                </div>
+            <div class="sl-thread"></div>
+            <div class="sl-thread"></div>
+            <div class="sl-thread"></div>
+
+            <div class="sl-ring"></div>
+            <div class="sl-ring"></div>
+            <div class="sl-ring"></div>
+
+            <div class="sl-star">✦</div>
+
+        </div>
+
+        <div class="sl-percent" id="slPercent">
+            0%
+        </div>
+
+        <div class="sl-progress">
+            <div
+                class="sl-progress-fill"
+                id="slProgress">
             </div>
         </div>
 
-        <!-- کارت‌های در حال بارگذاری -->
-        <div class="loading-cards">
-            <div class="loading-card">
-                <span class="card-icon">🐍</span>
-                <span>مار و پله</span>
-            </div>
-            <div class="loading-card">
-                <span class="card-icon">🏎️</span>
-                <span>مسابقه سرعت</span>
-            </div>
-            <div class="loading-card">
-                <span class="card-icon">💣</span>
-                <span>بوم بوم</span>
-            </div>
-            <div class="loading-card">
-                <span class="card-icon">⛏️</span>
-                <span>ماینکرفت</span>
-            </div>
+        <div class="sl-status">
+            <span id="slStatus">
+                اتصال به جهان StarLoom...
+            </span>
         </div>
+
     </div>
 
-    <div class="version">v2.0</div>
+    <div class="sl-footer">
+        STARLOOM_GAME
+    </div>
 
-    <script>
-        (function(){
-            var progress = 0;
-            var bar = document.getElementById('loaderBar');
-            var percent = document.getElementById('loaderPercent');
-            var statusText = document.getElementById('statusText');
+</div>
 
-            var messages = [
-                { icon: '⚙️', text: 'آماده‌سازی سیستم...' },
-                { icon: '🎨', text: 'بارگذاری آیکون‌ها...' },
-                { icon: '🎮', text: 'آماده‌سازی بازی‌ها...' },
-                { icon: '🐍', text: 'بارگذاری مار و پله...' },
-                { icon: '🏎️', text: 'بارگذاری مسابقه سرعت...' },
-                { icon: '💣', text: 'بارگذاری بوم بوم...' },
-                { icon: '⛏️', text: 'بارگذاری ماینکرفت...' },
-                { icon: '💰', text: 'به‌روزرسانی سکه‌ها...' },
-                { icon: '🏆', text: 'آماده‌سازی فروشگاه...' },
-                { icon: '✨', text: 'به زودی شروع می‌شود...' },
-                { icon: '🚀', text: 'ورود به بازی...' }
-            ];
 
-            function updateLoader() {
-                if (progress < 100) {
-                    var step = Math.floor(Math.random() * 5) + 2;
-                    progress = Math.min(progress + step, 100);
+<script>
+(function () {
 
-                    bar.style.width = progress + '%';
-                    percent.textContent = progress;
+    const loader = document.getElementById("starloom-loader");
+    const progressBar = document.getElementById("slProgress");
+    const percent = document.getElementById("slPercent");
+    const status = document.getElementById("slStatus");
 
-                    var msgIndex = Math.min(Math.floor(progress / 10), messages.length - 1);
-                    var msg = messages[msgIndex];
-                    statusText.innerHTML = '<span class="status-icon">' + msg.icon + '</span>' + msg.text;
+    const messages = [
+        "اتصال به جهان StarLoom...",
+        "روشن کردن ستاره‌ها...",
+        "باز کردن دروازه StarLoom...",
+        "بارگذاری بازی‌ها...",
+        "آماده‌سازی جهان بازی...",
+        "فعال‌سازی موتور StarLoom...",
+        "هماهنگ‌سازی سیستم...",
+        "تقریباً آماده است...",
+        "خوش آمدید به StarLoom_Game ✦"
+    ];
 
-                    var delay = Math.floor(Math.random() * 100) + 80;
-                    setTimeout(updateLoader, delay);
-                } else {
-                    statusText.innerHTML = '<span class="status-icon">✅</span> آماده! ورود به بازی...';
-                    bar.style.width = '100%';
-                    percent.textContent = '100';
+    let value = 0;
 
-                    setTimeout(function() {
-                        window.location.href = 'home.html';
-                    }, 1000);
-                }
+    function load() {
+
+        if (value < 100) {
+
+            value += Math.floor(Math.random() * 5) + 2;
+
+            if (value > 100) {
+                value = 100;
             }
 
-            setTimeout(updateLoader, 300);
-        })();
-    </script>
+            progressBar.style.width = value + "%";
+            percent.textContent = value + "%";
 
-</body>
-</html>
+            const messageIndex =
+                Math.min(
+                    Math.floor(value / 12),
+                    messages.length - 1
+                );
+
+            status.innerHTML =
+                messages[messageIndex];
+
+            setTimeout(load, 80 + Math.random() * 130);
+
+        } else {
+
+            progressBar.style.width = "100%";
+            percent.textContent = "100%";
+
+            status.innerHTML =
+                "✦ ورود به StarLoom_Game...";
+
+            setTimeout(function () {
+
+                loader.style.transition =
+                    "opacity .8s ease, transform .8s ease";
+
+                loader.style.opacity = "0";
+                loader.style.transform = "scale(1.04)";
+
+                setTimeout(function () {
+                    window.location.href = "home.html";
+                }, 800);
+
+            }, 600);
+        }
+    }
+
+    setTimeout(load, 400);
+
+})();
+</script>
+
+<!-- ================= END STARLOOM LOADING ================= -->
+```
