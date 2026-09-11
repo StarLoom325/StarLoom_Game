@@ -1,330 +1,1871 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StarLoom_Game - مار و پله</title>
-    <style>
-        *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#0b0e1a,#1a1f30);min-height:100vh;color:#f0f4ff;padding:15px}
-        .main-container{max-width:800px;margin:0 auto}
-        .header{display:flex;justify-content:space-between;align-items:center;padding:15px 25px;background:rgba(255,255,255,0.05);border-radius:25px;border:1px solid rgba(255,215,0,0.15);flex-wrap:wrap;gap:10px;margin-bottom:20px}
-        .logo{font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,#f9d976,#f39c12);-webkit-background-clip:text;background-clip:text;color:transparent}
-        .logo span{color:#b9c7e6;background:none;font-weight:300}
-        .back-home{background:#2d3852;border:none;padding:10px 25px;border-radius:50px;color:#f0f4ff;font-weight:600;cursor:pointer;border:1px solid #5a6a8a;font-size:.95rem;text-decoration:none;display:inline-block}
-        .back-home:hover{background:#3f4d70;border-color:#f1c40f}
-        .user-info-bar{display:flex;gap:15px;background:rgba(0,0,0,0.3);padding:8px 18px;border-radius:50px;font-size:.85rem;align-items:center;flex-wrap:wrap}
-        .user-info-bar .user-icon{font-size:1.5rem}
-        .game-container{background:rgba(255,255,255,0.06);border-radius:40px;padding:20px;border:1px solid rgba(255,215,0,0.15)}
-        .board-wrapper{background:#1e2538;border-radius:30px;padding:12px;margin-bottom:15px;position:relative}
-        #board{display:grid;grid-template-columns:repeat(10,1fr);gap:3px;aspect-ratio:1/1;background:#131a2a;border-radius:25px;padding:5px}
-        .cell{background:#222b41;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:.35rem;font-weight:600;color:#a0b5d9;position:relative;aspect-ratio:1/1;box-shadow:0 0 0 1px #2d3852}
-        .cell .number{font-size:.4rem;opacity:.7;pointer-events:none}
-        .cell .player-marker{position:absolute;width:26%;height:26%;border-radius:50%;border:3px solid #f1c40f;box-shadow:0 0 30px #f1c40f;pointer-events:none;bottom:5%;right:5%;display:flex;align-items:center;justify-content:center;font-size:1rem;background:rgba(0,0,0,0.5);transition:all .4s cubic-bezier(.34,1.56,.64,1);z-index:5}
-        .cell .player-marker.moving{animation:bounceMove .4s ease}
-        @keyframes bounceMove{0%{transform:scale(.5) rotate(-20deg)}50%{transform:scale(1.4) rotate(10deg)}100%{transform:scale(1) rotate(0)}}
-        .cell.has-snake{background:#3a1e2a;box-shadow:0 0 0 2px #e74c3c}
-        .cell.has-ladder{background:#1e3a2a;box-shadow:0 0 0 2px #2ecc71}
-        .cell.win-cell{background:#f1c40f;box-shadow:0 0 30px #f1c40f;color:#1a1f30;animation:winPulse 1s ease-in-out infinite alternate}
-        .cell.win-cell .number{color:#1a1f30;opacity:1;font-weight:800}
-        @keyframes winPulse{0%{box-shadow:0 0 20px #f1c40f}100%{box-shadow:0 0 50px #f1c40f,0 0 80px #f1c40f44}}
-        .controls{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;padding-top:10px}
-        .dice-area{display:flex;align-items:center;gap:15px;background:rgba(0,0,0,0.3);padding:5px 18px;border-radius:60px;border:1px solid #4a5575}
-        #dice{font-size:2rem;background:#0b0f1a;padding:4px 16px;border-radius:30px;color:#f5e9c4;min-width:60px;text-align:center;font-weight:700}
-        #rollBtn{background:linear-gradient(145deg,#f1c40f,#d4a800);border:none;padding:10px 25px;border-radius:50px;font-size:1rem;font-weight:700;color:#1a1f30;cursor:pointer;box-shadow:0 6px 0 #8b6d00;transition:all .1s}
-        #rollBtn:active:not(:disabled){transform:translateY(4px);box-shadow:0 2px 0 #8b6d00}
-        #rollBtn:disabled{opacity:.4;transform:translateY(4px);pointer-events:none;box-shadow:0 2px 0 #6b5500}
-        #rollBtn.no-dice{background:#e74c3c;color:#fff;box-shadow:0 6px 0 #922b21}
-        .status{background:#131b2b;padding:8px 20px;border-radius:60px;color:#cfdef5;font-size:.9rem;border-left:2px solid #f1c40f;border-right:2px solid #f1c40f;min-width:120px;text-align:center}
-        .status.winner{border-color:#f1c40f;background:#1a2a1a;color:#f1c40f}
-        .game-ended-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.85);border-radius:25px;display:none;flex-direction:column;align-items:center;justify-content:center;z-index:10;padding:20px}
-        .game-ended-overlay.show{display:flex}
-        .game-ended-overlay .big-icon{font-size:4rem;margin-bottom:10px}
-        .game-ended-overlay .title{font-size:1.8rem;font-weight:700;color:#f1c40f}
-        .game-ended-overlay .subtitle{color:#a0b5d9;font-size:1rem;margin:5px 0}
-        .game-ended-overlay .reward{color:#f1c40f;font-size:1.2rem;margin:10px 0}
-        .game-ended-overlay .back-btn{background:#f1c40f;border:none;padding:12px 40px;border-radius:50px;color:#1a1f30;font-weight:700;font-size:1rem;cursor:pointer;text-decoration:none;margin-top:15px;transition:all .2s}
-        .game-ended-overlay .back-btn:hover{transform:scale(1.05)}
-        .disable-msg{text-align:center;margin-top:15px;padding:10px;background:rgba(255,0,0,0.05);border-radius:15px;border:1px solid rgba(255,0,0,0.1)}
-        .disable-msg p{color:#7a8bb0;font-size:.75rem}
-        @media(max-width:500px){.cell .number{font-size:.3rem}#dice{font-size:1.5rem;min-width:45px}.user-info-bar{font-size:.7rem;padding:4px 10px}.game-ended-overlay .big-icon{font-size:3rem}.game-ended-overlay .title{font-size:1.3rem}.cell .player-marker{font-size:.7rem;width:22%;height:22%}}
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+<title>StarLoom_Game - مار و پله</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:"Segoe UI",Tahoma,sans-serif;
+    min-height:100vh;
+    color:#f4f7ff;
+    padding:12px;
+    background:
+        radial-gradient(circle at 20% 10%,#26365e 0%,transparent 30%),
+        radial-gradient(circle at 80% 90%,#33204f 0%,transparent 30%),
+        linear-gradient(135deg,#070b16,#111a2e 50%,#080c18);
+}
+
+.main-container{
+    width:min(950px,100%);
+    margin:auto;
+}
+
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    padding:14px 20px;
+    margin-bottom:14px;
+    border:1px solid rgba(255,215,80,.18);
+    border-radius:24px;
+    background:rgba(12,18,35,.82);
+    box-shadow:0 15px 40px rgba(0,0,0,.35);
+    backdrop-filter:blur(15px);
+}
+
+.logo{
+    font-size:1.45rem;
+    font-weight:900;
+    background:linear-gradient(135deg,#ffe58a,#ffc400,#ff8a00);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+}
+
+.logo span{
+    color:#8fa2c9;
+    font-weight:400;
+}
+
+.header-right{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+}
+
+.user-info-bar{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+    padding:7px 13px;
+    border-radius:30px;
+    background:rgba(0,0,0,.35);
+    border:1px solid rgba(255,255,255,.08);
+    color:#d9e3f8;
+    font-size:.82rem;
+}
+
+.user-icon{
+    font-size:1.35rem;
+}
+
+.back-home{
+    text-decoration:none;
+    color:white;
+    background:linear-gradient(145deg,#344363,#202b44);
+    border:1px solid #566889;
+    padding:9px 18px;
+    border-radius:30px;
+    transition:.2s;
+}
+
+.back-home:hover{
+    transform:translateY(-2px);
+    border-color:#ffd43b;
+}
+
+.game-container{
+    position:relative;
+    padding:18px;
+    border-radius:32px;
+    background:rgba(12,18,35,.82);
+    border:1px solid rgba(255,215,80,.15);
+    box-shadow:0 20px 60px rgba(0,0,0,.4);
+}
+
+.game-title{
+    text-align:center;
+    margin-bottom:14px;
+}
+
+.game-title h2{
+    color:#ffe28a;
+    font-size:1.5rem;
+    text-shadow:0 0 20px rgba(255,205,50,.25);
+}
+
+.game-title p{
+    margin-top:5px;
+    color:#8294b7;
+    font-size:.82rem;
+}
+
+.board-wrapper{
+    position:relative;
+    width:min(780px,100%);
+    margin:auto;
+    padding:11px;
+    border-radius:28px;
+    background:
+        linear-gradient(145deg,#27385c,#10182b);
+    border:2px solid #394b70;
+    box-shadow:
+        inset 0 0 30px rgba(0,0,0,.45),
+        0 20px 50px rgba(0,0,0,.45);
+}
+
+#board{
+    display:grid;
+    grid-template-columns:repeat(10,1fr);
+    gap:3px;
+    width:100%;
+    aspect-ratio:10/22;
+    padding:5px;
+    border-radius:20px;
+    background:#080e1b;
+    overflow:hidden;
+}
+
+.cell{
+    position:relative;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    aspect-ratio:1/1;
+    border-radius:7px;
+    overflow:hidden;
+
+    background:
+        linear-gradient(145deg,rgba(65,86,126,.8),rgba(27,39,65,.95));
+
+    border:1px solid rgba(255,255,255,.07);
+
+    color:#9eafd0;
+    font-weight:700;
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.06),
+        0 2px 3px rgba(0,0,0,.2);
+
+    transition:.2s;
+}
+
+.cell:nth-child(odd){
+    background:
+        linear-gradient(145deg,rgba(52,72,109,.85),rgba(24,35,59,.95));
+}
+
+.cell:hover{
+    filter:brightness(1.2);
+}
+
+.number{
+    position:absolute;
+    top:3px;
+    right:4px;
+    font-size:.52rem;
+    color:#91a4c8;
+    opacity:.85;
+    z-index:2;
+}
+
+.cell.has-snake{
+    background:
+        radial-gradient(circle at 30% 30%,rgba(255,65,90,.35),transparent 45%),
+        linear-gradient(145deg,#472334,#251526);
+    border-color:#d64d68;
+}
+
+.cell.has-ladder{
+    background:
+        radial-gradient(circle at 70% 30%,rgba(60,230,140,.3),transparent 45%),
+        linear-gradient(145deg,#1f4939,#172d29);
+    border-color:#42c982;
+}
+
+.cell.win-cell{
+    background:
+        radial-gradient(circle,#ffe47a,#d99400 70%);
+    color:#302100;
+    border-color:#fff0a3;
+    box-shadow:
+        0 0 15px #ffc400,
+        inset 0 0 15px rgba(255,255,255,.5);
+    animation:winPulse 1.3s infinite alternate;
+}
+
+@keyframes winPulse{
+    from{
+        box-shadow:0 0 12px #ffc400;
+    }
+    to{
+        box-shadow:0 0 30px #ffd43b,0 0 55px rgba(255,190,0,.35);
+    }
+}
+
+.snake-icon,
+.ladder-icon{
+    position:absolute;
+    font-size:clamp(.65rem,2vw,1.15rem);
+    filter:drop-shadow(0 2px 3px #000);
+    z-index:3;
+}
+
+.snake-icon{
+    left:3px;
+    top:2px;
+}
+
+.ladder-icon{
+    right:3px;
+    bottom:2px;
+}
+
+.player-marker{
+    position:absolute;
+    right:8%;
+    bottom:7%;
+    width:48%;
+    height:48%;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    border-radius:50%;
+    border:2px solid #ffe15c;
+
+    background:
+        radial-gradient(circle at 35% 25%,#ffffff44,transparent 30%),
+        rgba(10,15,25,.9);
+
+    box-shadow:
+        0 0 10px #ffd21c,
+        0 0 25px rgba(255,200,0,.7);
+
+    font-size:clamp(.7rem,2.2vw,1.4rem);
+    z-index:8;
+
+    transition:transform .2s;
+}
+
+.player-marker.moving{
+    animation:playerMove .45s cubic-bezier(.2,.8,.3,1);
+}
+
+@keyframes playerMove{
+    0%{
+        transform:scale(.4) rotate(-20deg);
+    }
+    45%{
+        transform:scale(1.35) rotate(10deg);
+    }
+    75%{
+        transform:scale(.85) rotate(-5deg);
+    }
+    100%{
+        transform:scale(1) rotate(0);
+    }
+}
+
+.controls{
+    width:min(780px,100%);
+    margin:15px auto 0;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+.dice-area{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:8px 12px;
+    border-radius:50px;
+    background:rgba(0,0,0,.3);
+    border:1px solid #394b6c;
+}
+
+.dice-label{
+    color:#aab9d4;
+}
+
+#dice{
+    width:58px;
+    height:50px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:14px;
+    background:
+        linear-gradient(145deg,#fffdf3,#d9d4c0);
+
+    color:#171b26;
+    font-size:2rem;
+
+    box-shadow:
+        0 5px 0 #8e8875,
+        0 8px 20px rgba(0,0,0,.35);
+
+    transition:.2s;
+}
+
+#dice.rolling{
+    animation:diceRoll .55s ease-in-out;
+}
+
+@keyframes diceRoll{
+    0%{transform:rotate(0) scale(1)}
+    25%{transform:rotate(18deg) scale(1.15)}
+    50%{transform:rotate(-18deg) scale(.9)}
+    75%{transform:rotate(14deg) scale(1.1)}
+    100%{transform:rotate(0) scale(1)}
+}
+
+#rollBtn{
+    border:0;
+    padding:11px 22px;
+    border-radius:40px;
+
+    color:#251b00;
+    font-size:.95rem;
+    font-weight:900;
+
+    cursor:pointer;
+
+    background:
+        linear-gradient(145deg,#ffe875,#ffc400,#e49d00);
+
+    box-shadow:
+        0 5px 0 #906900,
+        0 8px 20px rgba(255,190,0,.18);
+
+    transition:.12s;
+}
+
+#rollBtn:hover:not(:disabled){
+    transform:translateY(-2px);
+    filter:brightness(1.08);
+}
+
+#rollBtn:active:not(:disabled){
+    transform:translateY(4px);
+    box-shadow:0 1px 0 #906900;
+}
+
+#rollBtn:disabled{
+    opacity:.45;
+    cursor:not-allowed;
+}
+
+#rollBtn.no-dice{
+    background:linear-gradient(145deg,#ff6969,#c52f3a);
+    color:white;
+    box-shadow:0 5px 0 #762029;
+}
+
+.status{
+    flex:1;
+    min-width:190px;
+    text-align:center;
+
+    padding:12px 16px;
+    border-radius:40px;
+
+    color:#cbd7ee;
+    background:#111a2c;
+    border:1px solid #354666;
+
+    box-shadow:inset 0 0 20px rgba(0,0,0,.2);
+}
+
+.status.winner{
+    color:#ffe05a;
+    border-color:#d8a900;
+    background:#222615;
+    box-shadow:0 0 25px rgba(255,205,50,.15);
+}
+
+.progress-box{
+    width:min(780px,100%);
+    margin:13px auto 0;
+}
+
+.progress-info{
+    display:flex;
+    justify-content:space-between;
+    color:#7789aa;
+    font-size:.72rem;
+    margin-bottom:5px;
+}
+
+.progress{
+    height:7px;
+    overflow:hidden;
+    border-radius:10px;
+    background:#0b111e;
+}
+
+.progress div{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg,#ffd42e,#ff8b00);
+    border-radius:10px;
+    transition:width .4s;
+}
+
+.game-ended-overlay{
+    position:absolute;
+    inset:11px;
+
+    display:none;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+
+    padding:20px;
+    text-align:center;
+
+    border-radius:20px;
+    background:
+        radial-gradient(circle at center,rgba(43,55,35,.92),rgba(5,9,16,.97));
+
+    backdrop-filter:blur(8px);
+    z-index:20;
+}
+
+.game-ended-overlay.show{
+    display:flex;
+    animation:overlayIn .35s ease;
+}
+
+@keyframes overlayIn{
+    from{opacity:0;transform:scale(.95)}
+    to{opacity:1;transform:scale(1)}
+}
+
+.big-icon{
+    font-size:5rem;
+    animation:trophyFloat 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes trophyFloat{
+    to{transform:translateY(-8px) rotate(3deg)}
+}
+
+.overlay-title{
+    margin-top:5px;
+    font-size:2rem;
+    font-weight:900;
+    color:#ffe05a;
+    text-shadow:0 0 25px #ffc400;
+}
+
+.overlay-subtitle{
+    color:#aebbd1;
+    margin-top:6px;
+}
+
+.reward{
+    margin-top:15px;
+    padding:10px 20px;
+    border-radius:30px;
+    color:#ffd84d;
+    background:rgba(255,196,0,.08);
+    border:1px solid rgba(255,196,0,.2);
+}
+
+.back-btn{
+    margin-top:18px;
+    padding:12px 35px;
+    border-radius:40px;
+
+    color:#241a00;
+    text-decoration:none;
+    font-weight:900;
+
+    background:linear-gradient(145deg,#ffe678,#f0b900);
+    transition:.2s;
+}
+
+.back-btn:hover{
+    transform:scale(1.05);
+}
+
+.help{
+    text-align:center;
+    margin-top:12px;
+    color:#617394;
+    font-size:.72rem;
+}
+
+@media(max-width:600px){
+
+    body{
+        padding:7px;
+    }
+
+    .header{
+        padding:10px;
+        border-radius:18px;
+    }
+
+    .logo{
+        font-size:1.05rem;
+    }
+
+    .logo span{
+        display:none;
+    }
+
+    .user-info-bar{
+        font-size:.68rem;
+        gap:5px;
+        padding:5px 8px;
+    }
+
+    .back-home{
+        padding:7px 12px;
+        font-size:.75rem;
+    }
+
+    .game-container{
+        padding:10px;
+        border-radius:22px;
+    }
+
+    .game-title h2{
+        font-size:1.2rem;
+    }
+
+    .game-title p{
+        font-size:.7rem;
+    }
+
+    .board-wrapper{
+        padding:6px;
+        border-radius:20px;
+    }
+
+    #board{
+        gap:2px;
+        padding:3px;
+    }
+
+    .number{
+        font-size:.38rem;
+        top:2px;
+        right:2px;
+    }
+
+    .controls{
+        justify-content:center;
+    }
+
+    .dice-area{
+        width:100%;
+        justify-content:center;
+    }
+
+    .status{
+        width:100%;
+    }
+
+    .overlay-title{
+        font-size:1.45rem;
+    }
+
+    .big-icon{
+        font-size:3.5rem;
+    }
+}
+</style>
 </head>
+
 <body>
+
 <div class="main-container">
-<div class="header">
-<div class="logo">✦ StarLoom_Game <span>| مار و پله</span></div>
-<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-<div class="user-info-bar" id="userInfoBar">
-<span class="user-icon" id="userIcon">😊</span>
-<span>👤 <span id="displayName">کاربر</span></span>
-<span>💰 <span id="displayCoins">0</span></span>
-<span>🏆 لول <span id="displayLevel">0</span>/62</span>
-<span>🎲 <span id="displayDice">40</span></span>
-</div>
-<a href="index.html" class="back-home">← بازگشت</a>
-</div>
-</div>
+
+<header class="header">
+
+    <div class="logo">
+        ✦ StarLoom_Game <span>| مار و پله</span>
+    </div>
+
+    <div class="header-right">
+
+        <div class="user-info-bar">
+
+            <span class="user-icon" id="userIcon">😊</span>
+
+            <span>
+                👤 <span id="displayName">کاربر</span>
+            </span>
+
+            <span>
+                💰 <span id="displayCoins">0</span>
+            </span>
+
+            <span>
+                🏆 لول <span id="displayLevel">0</span>/62
+            </span>
+
+            <span>
+                🎲 <span id="displayDice">40</span>
+            </span>
+
+        </div>
+
+        <a href="index.html" class="back-home">
+            ← بازگشت
+        </a>
+
+    </div>
+
+</header>
+
 
 <div class="game-container">
-<div style="text-align:center;margin-bottom:10px;">
-<h3 style="color:#f5e9c4;">🐍 مار و پله</h3>
-<p style="color:#7a8bb0;font-size:.85rem;">🎯 تک‌نفره - ۲۲۰ خانه - برنده <strong style="color:#f1c40f;">+۱ لول</strong> و ۸۰۰ سکه</p>
+
+    <div class="game-title">
+
+        <h2>🐍 مار و پله</h2>
+
+        <p>
+            🎯 ۲۲۰ خانه • رسیدن به خانه آخر =
+            <strong style="color:#ffd43b">+۱ لول و ۸۰۰ سکه</strong>
+        </p>
+
+    </div>
+
+
+    <div class="board-wrapper">
+
+        <div id="board"></div>
+
+
+        <div class="game-ended-overlay" id="gameEndedOverlay">
+
+            <div class="big-icon">🏆</div>
+
+            <div class="overlay-title">
+                تبریک! برنده شدی!
+            </div>
+
+            <div class="overlay-subtitle">
+                با موفقیت به خانه ۲۲۰ رسیدی 🎉
+            </div>
+
+            <div class="reward">
+                🎁 +۸۰۰ سکه &nbsp; | &nbsp; 🏆 +۱ لول
+            </div>
+
+            <a href="index.html" class="back-btn">
+                ← بازگشت به خانه
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="controls">
+
+        <div class="dice-area">
+
+            <span class="dice-label">
+                🎲 تاس
+            </span>
+
+            <div id="dice">⚀</div>
+
+            <button id="rollBtn">
+                🎲 بینداز
+            </button>
+
+        </div>
+
+        <div class="status" id="statusMessage">
+            🎲 برای شروع تاس بینداز!
+        </div>
+
+    </div>
+
+
+    <div class="progress-box">
+
+        <div class="progress-info">
+
+            <span>
+                پیشرفت بازی
+            </span>
+
+            <span id="progressText">
+                1 / 220
+            </span>
+
+        </div>
+
+        <div class="progress">
+            <div id="progressBar"></div>
+        </div>
+
+    </div>
+
+
+    <div class="help">
+        🐍 مراقب مارها باش! &nbsp; • &nbsp;
+        🪜 از نردبان‌ها بالا برو! &nbsp; • &nbsp;
+        🏆 به خانه ۲۲۰ برس!
+    </div>
+
 </div>
 
-<div class="board-wrapper">
-<div id="board"></div>
-<div class="game-ended-overlay" id="gameEndedOverlay">
-<div class="big-icon">🏆</div>
-<div class="title">تبریک! برنده شدی!</div>
-<div class="subtitle">به خانه ۲۲۰ رسیدی</div>
-<div class="reward">🎁 +۸۰۰ سکه و <strong style="color:#f1c40f;">+۱ لول</strong></div>
-<a href="index.html" class="back-btn">← بازگشت به خانه</a>
-</div>
 </div>
 
-<div class="controls">
-<div class="dice-area">
-<span style="color:#b9c7e6;">تاس</span>
-<div id="dice">⚀</div>
-<button id="rollBtn">🗲 بینداز</button>
-</div>
-<div class="status" id="statusMessage">🎲 برای شروع تاس بینداز!</div>
-</div>
-
-<div class="disable-msg">
-<p>⚠️ پس از اتمام بازی، برای بازی جدید از صفحه اصلی وارد شوید</p>
-</div>
-</div>
-</div>
 
 <script>
-var BOARD_SIZE=220, COLS=10, ROWS=22;
 
-var snakes=[
-{start:210,end:150},{start:195,end:110},{start:180,end:75},{start:160,end:45},
-{start:140,end:88},{start:115,end:55},{start:98,end:32},{start:72,end:18},
-{start:48,end:12},{start:200,end:130}
+"use strict";
+
+
+/* =========================
+   تنظیمات اصلی
+========================= */
+
+var BOARD_SIZE = 220;
+
+var COLS = 10;
+
+var ROWS = 22;
+
+
+/* =========================
+   مارها
+========================= */
+
+var snakes = [
+
+    {start:210,end:150},
+    {start:195,end:110},
+    {start:180,end:75},
+    {start:160,end:45},
+    {start:140,end:88},
+    {start:115,end:55},
+    {start:98,end:32},
+    {start:72,end:18},
+    {start:48,end:12},
+    {start:200,end:130}
+
 ];
 
-var ladders=[
-{start:5,end:52},{start:15,end:70},{start:30,end:90},{start:42,end:120},
-{start:60,end:145},{start:80,end:165},{start:95,end:185},{start:125,end:205},
-{start:155,end:215},{start:175,end:218}
+
+/* =========================
+   نردبان‌ها
+========================= */
+
+var ladders = [
+
+    {start:5,end:52},
+    {start:15,end:70},
+    {start:30,end:90},
+    {start:42,end:120},
+    {start:60,end:145},
+    {start:80,end:165},
+    {start:95,end:185},
+    {start:125,end:205},
+    {start:155,end:215},
+    {start:175,end:218}
+
 ];
 
-var ICONS={'default':'😊','smile':'😄','heart':'❤️','star':'⭐','lion':'🦁','tiger':'🐯','eagle':'🦅','wolf':'🐺','dragon':'🐉','phoenix':'🔥','unicorn':'🦄','crown':'👑','diamond':'💎','king':'👸','gold':'🏆','robot':'🤖','gem':'💠','pizza':'🍕','burger':'🍔','cake':'🎂','donut':'🍩','ninja':'🥷','mage':'🧙','knight':'⚔️','angel':'👼','demon':'👿','skeleton':'💀','galaxy':'🌌','crystal':'🔮','cosmic':'🚀','legendary':'🌟','ultimate':'⚡','void':'🌑'};
 
-var playerPosition=1;
-var gameOver=false;
-var isRolling=false;
-var username='کاربر',userIcon='😊';
+/* =========================
+   آیکون‌های کاربر
+========================= */
+
+var ICONS = {
+
+    "default":"😊",
+    "smile":"😄",
+    "heart":"❤️",
+    "star":"⭐",
+    "lion":"🦁",
+    "tiger":"🐯",
+    "eagle":"🦅",
+    "wolf":"🐺",
+    "dragon":"🐉",
+    "phoenix":"🔥",
+    "unicorn":"🦄",
+    "crown":"👑",
+    "diamond":"💎",
+    "king":"👸",
+    "gold":"🏆",
+    "robot":"🤖",
+    "gem":"💠",
+    "pizza":"🍕",
+    "burger":"🍔",
+    "cake":"🎂",
+    "donut":"🍩",
+    "ninja":"🥷",
+    "mage":"🧙",
+    "knight":"⚔️",
+    "angel":"👼",
+    "demon":"👿",
+    "skeleton":"💀",
+    "galaxy":"🌌",
+    "crystal":"🔮",
+    "cosmic":"🚀",
+    "legendary":"🌟",
+    "ultimate":"⚡",
+    "void":"🌑"
+
+};
+
+
+/* =========================
+   وضعیت بازی
+========================= */
+
+var playerPosition = 1;
+
+var gameOver = false;
+
+var isRolling = false;
+
+var username = "کاربر";
+
+var userIcon = "😊";
+
+
+/* =========================
+   عناصر صفحه
+========================= */
+
+var boardEl =
+    document.getElementById("board");
+
+var diceEl =
+    document.getElementById("dice");
+
+var rollBtn =
+    document.getElementById("rollBtn");
+
+var statusMsg =
+    document.getElementById("statusMessage");
+
+var gameEndedOverlay =
+    document.getElementById("gameEndedOverlay");
+
+var progressBar =
+    document.getElementById("progressBar");
+
+var progressText =
+    document.getElementById("progressText");
+
+
+/* =========================
+   بارگذاری کاربر
+========================= */
 
 function loadUser(){
-var saved=localStorage.getItem('starloom_current_user');
-if(saved){
-try{
-var data=JSON.parse(saved);
-username=data.username;
-userIcon=ICONS[data.icon]||'😊';
-document.getElementById('displayName').textContent=username;
-document.getElementById('displayCoins').textContent=data.coins||0;
-document.getElementById('displayLevel').textContent=data.level||0;
-document.getElementById('displayDice').textContent=data.dice||40;
-document.getElementById('userIcon').textContent=userIcon;
-}catch(e){}
+
+    var saved =
+        localStorage.getItem(
+            "starloom_current_user"
+        );
+
+    if(!saved){
+        updateProgress();
+        return;
+    }
+
+    try{
+
+        var data =
+            JSON.parse(saved);
+
+        username =
+            data.username || "کاربر";
+
+        userIcon =
+            ICONS[data.icon] || "😊";
+
+
+        document.getElementById(
+            "displayName"
+        ).textContent =
+            username;
+
+
+        document.getElementById(
+            "displayCoins"
+        ).textContent =
+            data.coins || 0;
+
+
+        document.getElementById(
+            "displayLevel"
+        ).textContent =
+            data.level || 0;
+
+
+        document.getElementById(
+            "displayDice"
+        ).textContent =
+            data.dice == null ? 40 : data.dice;
+
+
+        document.getElementById(
+            "userIcon"
+        ).textContent =
+            userIcon;
+
+    }
+
+    catch(error){
+
+        console.warn(
+            "خطا در بارگذاری کاربر:",
+            error
+        );
+
+    }
+
 }
-}
+
+
+/* =========================
+   ذخیره جایزه
+========================= */
 
 function saveUserCoins(coins,level){
-var users=JSON.parse(localStorage.getItem('starloom_users'))||{};
-if(users[username]){
-users[username].coins=(users[username].coins||0)+coins;
-// مار و پله = 1 لول کامل
-var newLevel = (users[username].level||0) + level;
-users[username].level = Math.min(newLevel, 62);
-users[username].levelProgress = 0; // ریست پیشرفت لول
-users[username].snakeWins=(users[username].snakeWins||0)+1;
-users[username].totalGames=(users[username].totalGames||0)+1;
-localStorage.setItem('starloom_users',JSON.stringify(users));
-var current=JSON.parse(localStorage.getItem('starloom_current_user'))||{};
-current.coins=users[username].coins;
-current.level=users[username].level;
-current.levelProgress=0;
-localStorage.setItem('starloom_current_user',JSON.stringify(current));
-document.getElementById('displayCoins').textContent=users[username].coins;
-document.getElementById('displayLevel').textContent=users[username].level;
-}
+
+    var users;
+
+    try{
+
+        users =
+            JSON.parse(
+                localStorage.getItem(
+                    "starloom_users"
+                )
+            ) || {};
+
+    }
+
+    catch(error){
+
+        users = {};
+
+    }
+
+
+    if(!users[username]){
+
+        return;
+
+    }
+
+
+    users[username].coins =
+        (users[username].coins || 0)
+        + coins;
+
+
+    users[username].level =
+        Math.min(
+            (users[username].level || 0)
+            + level,
+            62
+        );
+
+
+    users[username].levelProgress = 0;
+
+
+    users[username].snakeWins =
+        (users[username].snakeWins || 0)
+        + 1;
+
+
+    users[username].totalGames =
+        (users[username].totalGames || 0)
+        + 1;
+
+
+    localStorage.setItem(
+        "starloom_users",
+        JSON.stringify(users)
+    );
+
+
+    var current;
+
+    try{
+
+        current =
+            JSON.parse(
+                localStorage.getItem(
+                    "starloom_current_user"
+                )
+            ) || {};
+
+    }
+
+    catch(error){
+
+        current = {};
+
+    }
+
+
+    current.coins =
+        users[username].coins;
+
+    current.level =
+        users[username].level;
+
+    current.levelProgress = 0;
+
+
+    localStorage.setItem(
+        "starloom_current_user",
+        JSON.stringify(current)
+    );
+
+
+    document.getElementById(
+        "displayCoins"
+    ).textContent =
+        users[username].coins;
+
+
+    document.getElementById(
+        "displayLevel"
+    ).textContent =
+        users[username].level;
+
 }
 
-var boardEl=document.getElementById('board'),diceEl=document.getElementById('dice');
-var rollBtn=document.getElementById('rollBtn'),statusMsg=document.getElementById('statusMessage');
-var gameEndedOverlay=document.getElementById('gameEndedOverlay');
+
+/* =========================
+   تبدیل ردیف و ستون
+========================= */
 
 function getNumberFromRowCol(row,col){
-var c=col;
-if(row%2===1)c=COLS-1-col;
-return row*COLS+c+1;
+
+    var c = col;
+
+    if(row % 2 === 1){
+
+        c =
+            COLS - 1 - col;
+
+    }
+
+    return row * COLS + c + 1;
+
 }
+
+
+/* =========================
+   ساخت صفحه
+========================= */
 
 function buildBoard(){
-boardEl.innerHTML='';
-for(var row=ROWS-1;row>=0;row--){
-for(var col=0;col<COLS;col++){
-var num=getNumberFromRowCol(row,col);
-var cell=document.createElement('div');
-cell.className='cell';
-cell.dataset.number=num;
-var numSpan=document.createElement('span');
-numSpan.className='number';
-numSpan.textContent=num;
-cell.appendChild(numSpan);
 
-for(var s=0;s<snakes.length;s++){
-if(snakes[s].start===num){
-cell.classList.add('has-snake');
-var m=document.createElement('span');
-m.textContent='🐍';
-m.style.cssText='font-size:.7rem;position:absolute;top:1px;left:2px;pointer-events:none';
-cell.appendChild(m);
-break;
+    boardEl.innerHTML = "";
+
+
+    for(
+        var row = ROWS - 1;
+        row >= 0;
+        row--
+    ){
+
+        for(
+            var col = 0;
+            col < COLS;
+            col++
+        ){
+
+            var num =
+                getNumberFromRowCol(
+                    row,
+                    col
+                );
+
+
+            var cell =
+                document.createElement("div");
+
+            cell.className = "cell";
+
+            cell.dataset.number = num;
+
+
+            var number =
+                document.createElement("span");
+
+            number.className = "number";
+
+            number.textContent = num;
+
+            cell.appendChild(number);
+
+
+            /* مار */
+
+            for(
+                var s = 0;
+                s < snakes.length;
+                s++
+            ){
+
+                if(
+                    snakes[s].start === num
+                ){
+
+                    cell.classList.add(
+                        "has-snake"
+                    );
+
+
+                    var snake =
+                        document.createElement("span");
+
+                    snake.className =
+                        "snake-icon";
+
+                    snake.textContent =
+                        "🐍";
+
+                    cell.appendChild(
+                        snake
+                    );
+
+                    break;
+
+                }
+
+            }
+
+
+            /* نردبان */
+
+            for(
+                var l = 0;
+                l < ladders.length;
+                l++
+            ){
+
+                if(
+                    ladders[l].start === num
+                ){
+
+                    cell.classList.add(
+                        "has-ladder"
+                    );
+
+
+                    var ladder =
+                        document.createElement("span");
+
+                    ladder.className =
+                        "ladder-icon";
+
+                    ladder.textContent =
+                        "🪜";
+
+                    cell.appendChild(
+                        ladder
+                    );
+
+                    break;
+
+                }
+
+            }
+
+
+            /* خانه آخر */
+
+            if(num === BOARD_SIZE){
+
+                cell.classList.add(
+                    "win-cell"
+                );
+
+            }
+
+
+            boardEl.appendChild(
+                cell
+            );
+
+        }
+
+    }
+
+
+    updatePlayer(false);
+
+    updateProgress();
+
 }
-}
-for(var l=0;l<ladders.length;l++){
-if(ladders[l].start===num){
-cell.classList.add('has-ladder');
-var m2=document.createElement('span');
-m2.textContent='🪜';
-m2.style.cssText='font-size:.7rem;position:absolute;top:1px;right:2px;pointer-events:none';
-cell.appendChild(m2);
-break;
-}
-}
-if(num===BOARD_SIZE)cell.classList.add('win-cell');
-boardEl.appendChild(cell);
-}
-}
-updatePlayer();
-}
+
+
+/* =========================
+   نمایش بازیکن
+========================= */
 
 function updatePlayer(animate){
-document.querySelectorAll('.player-marker').forEach(function(el){el.remove();});
-var cell=boardEl.querySelector('.cell[data-number="'+playerPosition+'"]');
-if(!cell)return;
-var marker=document.createElement('div');
-marker.className='player-marker';
-if(animate)marker.classList.add('moving');
-marker.textContent=userIcon;
-cell.appendChild(marker);
-if(animate){
-setTimeout(function(){
-var m=document.querySelector('.player-marker');
-if(m)m.classList.remove('moving');
-},400);
+
+    var markers =
+        document.querySelectorAll(
+            ".player-marker"
+        );
+
+
+    markers.forEach(
+        function(marker){
+
+            marker.remove();
+
+        }
+    );
+
+
+    var cell =
+        boardEl.querySelector(
+            '.cell[data-number="' +
+            playerPosition +
+            '"]'
+        );
+
+
+    if(!cell){
+
+        return;
+
+    }
+
+
+    var marker =
+        document.createElement("div");
+
+
+    marker.className =
+        "player-marker";
+
+
+    if(animate){
+
+        marker.classList.add(
+            "moving"
+        );
+
+    }
+
+
+    marker.textContent =
+        userIcon;
+
+
+    cell.appendChild(
+        marker
+    );
+
+
+    if(animate){
+
+        setTimeout(
+            function(){
+
+                var m =
+                    document.querySelector(
+                        ".player-marker"
+                    );
+
+                if(m){
+
+                    m.classList.remove(
+                        "moving"
+                    );
+
+                }
+
+            },
+            500
+        );
+
+    }
+
 }
+
+
+/* =========================
+   نوار پیشرفت
+========================= */
+
+function updateProgress(){
+
+    var percent =
+        Math.max(
+            0,
+            Math.min(
+                100,
+                ((playerPosition - 1) /
+                    (BOARD_SIZE - 1))
+                * 100
+            )
+        );
+
+
+    progressBar.style.width =
+        percent + "%";
+
+
+    progressText.textContent =
+        playerPosition +
+        " / " +
+        BOARD_SIZE;
+
 }
+
+
+/* =========================
+   افکت پیام
+========================= */
+
+function setStatus(text){
+
+    statusMsg.textContent =
+        text;
+
+}
+
+
+/* =========================
+   حرکت بازیکن
+========================= */
 
 function movePlayer(steps){
-if(gameOver)return false;
-var newPos=playerPosition+steps;
-if(newPos>BOARD_SIZE){
-statusMsg.textContent='⛔ تاس زیاد بود! در جای خود ماندی.';
-return false;
+
+    if(gameOver){
+
+        return false;
+
+    }
+
+
+    var target =
+        playerPosition + steps;
+
+
+    /* بیشتر از خانه آخر */
+
+    if(target > BOARD_SIZE){
+
+        setStatus(
+            "⛔ عدد تاس زیاد بود! در جای خود ماندی."
+        );
+
+        return false;
+
+    }
+
+
+    playerPosition =
+        target;
+
+
+    setStatus(
+        "🎲 به خانه " +
+        playerPosition +
+        " رسیدی!"
+    );
+
+
+    updatePlayer(true);
+
+    updateProgress();
+
+
+    /* مار */
+
+    for(
+        var s = 0;
+        s < snakes.length;
+        s++
+    ){
+
+        if(
+            snakes[s].start ===
+            playerPosition
+        ){
+
+            var snakeEnd =
+                snakes[s].end;
+
+
+            setTimeout(
+                function(){
+
+                    playerPosition =
+                        snakeEnd;
+
+
+                    setStatus(
+                        "🐍 مار! به خانه " +
+                        playerPosition +
+                        " افتادی!"
+                    );
+
+
+                    updatePlayer(true);
+
+                    updateProgress();
+
+                },
+                450
+            );
+
+
+            break;
+
+        }
+
+    }
+
+
+    /* نردبان */
+
+    setTimeout(
+        function(){
+
+            if(gameOver){
+
+                return;
+
+            }
+
+
+            for(
+                var l = 0;
+                l < ladders.length;
+                l++
+            ){
+
+                if(
+                    ladders[l].start ===
+                    playerPosition
+                ){
+
+                    playerPosition =
+                        ladders[l].end;
+
+
+                    setStatus(
+                        "🪜 نردبان! به خانه " +
+                        playerPosition +
+                        " رفتی!"
+                    );
+
+
+                    updatePlayer(true);
+
+                    updateProgress();
+
+                    break;
+
+                }
+
+            }
+
+
+            checkWin();
+
+        },
+        500
+    );
+
+
+    return true;
+
 }
-for(var s=0;s<snakes.length;s++){
-if(snakes[s].start===newPos){
-newPos=snakes[s].end;
-statusMsg.textContent='🐍 مار! به خانه '+newPos+' افتادی!';
-break;
+
+
+/* =========================
+   بررسی برد
+========================= */
+
+function checkWin(){
+
+    if(
+        playerPosition <
+        BOARD_SIZE
+    ){
+
+        return;
+
+    }
+
+
+    playerPosition =
+        BOARD_SIZE;
+
+
+    gameOver = true;
+
+
+    updatePlayer(true);
+
+    updateProgress();
+
+
+    setStatus(
+        "🎉 برنده شدی! +۸۰۰ سکه و +۱ لول"
+    );
+
+
+    statusMsg.className =
+        "status winner";
+
+
+    rollBtn.disabled = true;
+
+
+    saveUserCoins(
+        800,
+        1
+    );
+
+
+    gameEndedOverlay.classList.add(
+        "show"
+    );
+
 }
-}
-if(newPos===playerPosition+steps){
-for(var l=0;l<ladders.length;l++){
-if(ladders[l].start===newPos){
-newPos=ladders[l].end;
-statusMsg.textContent='🪜 نردبان! به خانه '+newPos+' رفتی!';
-break;
-}
-}
-if(newPos===playerPosition+steps){
-statusMsg.textContent='🎲 به خانه '+newPos+' رفتی';
-}
-}
-playerPosition=newPos;
-updatePlayer(true);
-if(playerPosition>=BOARD_SIZE){
-playerPosition=BOARD_SIZE;
-gameOver=true;
-statusMsg.textContent='🎉 برنده شدی! +۸۰۰ سکه و +۱ لول';
-statusMsg.className='status winner';
-rollBtn.disabled=true;
-saveUserCoins(800,1);
-document.getElementById('displayCoins').textContent=(parseInt(document.getElementById('displayCoins').textContent)||0)+800;
-document.getElementById('displayLevel').textContent=Math.min((parseInt(document.getElementById('displayLevel').textContent)||0)+1,62);
-gameEndedOverlay.classList.add('show');
-updatePlayer(false);
-return true;
-}
-return true;
-}
+
+
+/* =========================
+   پرتاب تاس
+========================= */
 
 function rollDice(){
-if(gameOver){
-statusMsg.textContent='⛔ بازی تمام شد! به صفحه اصلی برو.';
-return;
-}
-if(isRolling)return;
 
-var diceCount=parseInt(document.getElementById('displayDice').textContent)||0;
-if(diceCount<=0){
-statusMsg.textContent='❌ تاس ندارید! از فروشگاه بخرید.';
-rollBtn.disabled=true;
-rollBtn.className='no-dice';
-return;
+    if(gameOver){
+
+        setStatus(
+            "⛔ بازی تمام شده است."
+        );
+
+        return;
+
+    }
+
+
+    if(isRolling){
+
+        return;
+
+    }
+
+
+    var diceCount =
+        parseInt(
+            document.getElementById(
+                "displayDice"
+            ).textContent
+        ) || 0;
+
+
+    if(diceCount <= 0){
+
+        setStatus(
+            "❌ تاس ندارید! از فروشگاه بخرید."
+        );
+
+
+        rollBtn.disabled = true;
+
+        rollBtn.className =
+            "no-dice";
+
+        return;
+
+    }
+
+
+    /* کم کردن یک تاس */
+
+    var users;
+
+    try{
+
+        users =
+            JSON.parse(
+                localStorage.getItem(
+                    "starloom_users"
+                )
+            ) || {};
+
+    }
+
+    catch(error){
+
+        users = {};
+
+    }
+
+
+    if(users[username]){
+
+        users[username].dice =
+            Math.max(
+                0,
+                (users[username].dice || 0) - 1
+            );
+
+
+        localStorage.setItem(
+            "starloom_users",
+            JSON.stringify(users)
+        );
+
+
+        var current;
+
+        try{
+
+            current =
+                JSON.parse(
+                    localStorage.getItem(
+                        "starloom_current_user"
+                    )
+                ) || {};
+
+        }
+
+        catch(error){
+
+            current = {};
+
+        }
+
+
+        current.dice =
+            users[username].dice;
+
+
+        localStorage.setItem(
+            "starloom_current_user",
+            JSON.stringify(current)
+        );
+
+
+        document.getElementById(
+            "displayDice"
+        ).textContent =
+            users[username].dice;
+
+    }
+
+
+    isRolling = true;
+
+    rollBtn.disabled = true;
+
+
+    diceEl.classList.add(
+        "rolling"
+    );
+
+
+    var value =
+        Math.floor(
+            Math.random() * 6
+        ) + 1;
+
+
+    var symbols = [
+        "⚀",
+        "⚁",
+        "⚂",
+        "⚃",
+        "⚄",
+        "⚅"
+    ];
+
+
+    /* انیمیشن تاس */
+
+    var animationCount = 0;
+
+
+    var diceAnimation =
+        setInterval(
+            function(){
+
+                var randomValue =
+                    Math.floor(
+                        Math.random() * 6
+                    );
+
+
+                diceEl.textContent =
+                    symbols[randomValue];
+
+
+                animationCount++;
+
+
+                if(animationCount >= 7){
+
+                    clearInterval(
+                        diceAnimation
+                    );
+
+
+                    diceEl.textContent =
+                        symbols[value - 1];
+
+                }
+
+            },
+            70
+        );
+
+
+    setTimeout(
+        function(){
+
+            diceEl.classList.remove(
+                "rolling"
+            );
+
+
+            movePlayer(
+                value
+            );
+
+
+            isRolling = false;
+
+
+            if(!gameOver){
+
+                setTimeout(
+                    function(){
+
+                        rollBtn.disabled =
+                            false;
+
+                        rollBtn.className =
+                            "";
+
+                    },
+                    600
+                );
+
+            }
+
+        },
+        600
+    );
+
 }
 
-var users=JSON.parse(localStorage.getItem('starloom_users'))||{};
-if(users[username]){
-users[username].dice=Math.max(0,(users[username].dice||0)-1);
-localStorage.setItem('starloom_users',JSON.stringify(users));
-var current=JSON.parse(localStorage.getItem('starloom_current_user'))||{};
-current.dice=users[username].dice;
-localStorage.setItem('starloom_current_user',JSON.stringify(current));
-document.getElementById('displayDice').textContent=users[username].dice;
-}
 
-isRolling=true;
-rollBtn.disabled=true;
-var val=Math.floor(Math.random()*6)+1;
-var sym=['⚀','⚁','⚂','⚃','⚄','⚅'];
-diceEl.textContent=sym[val-1];
-setTimeout(function(){
-movePlayer(val);
-isRolling=false;
-if(!gameOver){
-rollBtn.disabled=false;
-rollBtn.className='';
-}
-},400);
-}
+/* =========================
+   بررسی تعداد تاس
+========================= */
 
 function checkDice(){
-var diceCount=parseInt(document.getElementById('displayDice').textContent)||0;
-if(diceCount<=0 && !gameOver){
-rollBtn.disabled=true;
-rollBtn.className='no-dice';
-rollBtn.textContent='❌ تاس ندارید!';
-statusMsg.textContent='❌ تاس ندارید! از فروشگاه بخرید.';
+
+    var count =
+        parseInt(
+            document.getElementById(
+                "displayDice"
+            ).textContent
+        ) || 0;
+
+
+    if(
+        count <= 0 &&
+        !gameOver
+    ){
+
+        rollBtn.disabled = true;
+
+        rollBtn.className =
+            "no-dice";
+
+        rollBtn.textContent =
+            "❌ تاس ندارید";
+
+        setStatus(
+            "❌ تاس ندارید! از فروشگاه بخرید."
+        );
+
+    }
+
 }
-}
+
+
+/* =========================
+   شروع بازی
+========================= */
 
 loadUser();
+
 buildBoard();
-rollBtn.addEventListener('click',rollDice);
+
+rollBtn.addEventListener(
+    "click",
+    rollDice
+);
+
 checkDice();
 
-console.log('🐍 Snake Game - ۲۲۰ خانه!');
-console.log('🏆 جایزه: 800 سکه + 1 لول کامل');
+
+console.log(
+    "🐍 StarLoom Snake & Ladder"
+);
+
+console.log(
+    "🏆 220 خانه | +800 سکه | +1 لول"
+);
+
 </script>
+
 </body>
 </html>
