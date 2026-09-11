@@ -6,7 +6,6 @@
 <title>StarLoom_Game - خانه</title>
 <link rel="stylesheet" href="style.css">
 <style>
-/* استایل فروشگاه آیکون */
 .icon-shop{margin-top:30px;margin-bottom:40px;background:rgba(255,255,255,0.03);border-radius:20px;padding:20px;border:1px solid rgba(255,215,0,0.15)}
 .icon-shop h3{margin-bottom:15px;color:#f5e9c4;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
 .icon-shop h3 .owned-count{font-size:.85rem;color:#f1c40f;background:rgba(0,0,0,0.3);padding:4px 14px;border-radius:20px;border:1px solid #4a5575}
@@ -141,6 +140,16 @@
 <div class="game-stats"><span>👤 ۱ نفره</span><span>⛏️ ماجراجویی</span><span>🏆 ۱۳,۰۰۰ سکه</span></div>
 <button class="play-btn">▶ بازی کن</button>
 </a>
+
+<!-- ⚔️ بازی جدید: Loom Wars -->
+<a href="loomwars.html" class="game-card">
+<span class="badge-new">⚔️ جدید</span>
+<span class="game-icon">🏰</span>
+<div class="game-title">Loom Wars</div>
+<div class="game-desc">⚔️ نبرد قلعه‌ها! برنده <strong style="color:var(--accent);">۶۰۰</strong> سکه</div>
+<div class="game-stats"><span>👤 ۱ نفره</span><span>🎮 استراتژیک</span><span>🏆 ۶۰۰ سکه</span></div>
+<button class="play-btn">▶ بازی کن</button>
+</a>
 </div>
 
 </div>
@@ -186,9 +195,6 @@
         });
     });
 
-    // ============================================
-    //  آیکون‌ها (شکلک‌ها) با قیمت سکه
-    // ============================================
     var ICONS = {
         'default':{name:'پیش‌فرض',emoji:'😊',price:0},
         'smile':{name:'خندان',emoji:'😄',price:0},
@@ -255,9 +261,6 @@
         if(el) el.textContent = '📊 پیشرفت لول: ' + Math.floor(progressPercent) + '%';
     }
 
-    // ============================================
-    //  فروشگاه آیکون
-    // ============================================
     function getUserIcons(){
         if(!userData) return ['default','smile','heart','star'];
         if(!userData.icons) userData.icons = ['default','smile','heart','star'];
@@ -322,7 +325,6 @@
         var icon = ICONS[iconId];
         var owned = getUserIcons();
         
-        // اگر مالک است → فعالش کن
         if(owned.indexOf(iconId) !== -1){
             userData.icon = iconId;
             var users = getUsers();
@@ -342,7 +344,6 @@
             return;
         }
         
-        // اگر مالک نیست → بخر
         if((userData.coins || 0) < icon.price){
             alert('❌ سکه کافی نداری! نیاز به ' + icon.price.toLocaleString('fa-IR') + ' سکه داری.');
             return;
@@ -355,7 +356,7 @@
         userData.coins -= icon.price;
         if(!userData.icons) userData.icons = ['default','smile','heart','star'];
         userData.icons.push(iconId);
-        userData.icon = iconId; // خودکار فعالش کن
+        userData.icon = iconId;
         
         var users = getUsers();
         users[currentUser] = userData;
@@ -374,9 +375,6 @@
         alert('🎉 آیکون ' + icon.emoji + ' ' + icon.name + ' خریداری و فعال شد!');
     }
 
-    // ============================================
-    //  خرید تاس
-    // ============================================
     window.buyDice = function(count, price){
         if(!userData){
             alert('لطفاً وارد شوید');
@@ -407,9 +405,6 @@
         alert('🎉 ' + count + ' تا تاس خریداری شد!');
     };
 
-    // ============================================
-    //  ورود
-    // ============================================
     function loginUser(username){
         var users = getUsers();
         var user = users[username];
