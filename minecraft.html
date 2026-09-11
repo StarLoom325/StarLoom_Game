@@ -2,542 +2,1965 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>StarLoom_Game - ماینکرفت</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+<title>StarLoom_Game - StarLoom Craft</title>
+
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#0b0e1a,#1a1f30);min-height:100vh;color:#f0f4ff;padding:15px}
-.main-container{max-width:1200px;margin:0 auto}
-.header{display:flex;justify-content:space-between;align-items:center;padding:15px 25px;background:rgba(255,255,255,0.05);border-radius:25px;border:1px solid rgba(255,215,0,0.15);flex-wrap:wrap;gap:10px;margin-bottom:20px}
-.logo{font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,#f9d976,#f39c12);-webkit-background-clip:text;background-clip:text;color:transparent}
-.logo span{color:#b9c7e6;background:none;font-weight:300}
-.back-home{background:#2d3852;border:none;padding:10px 25px;border-radius:50px;color:#f0f4ff;font-weight:600;cursor:pointer;border:1px solid #5a6a8a;font-size:.95rem;text-decoration:none;display:inline-block}
-.back-home:hover{background:#3f4d70;border-color:#f1c40f}
-.user-info-bar{display:flex;gap:15px;background:rgba(0,0,0,0.3);padding:8px 18px;border-radius:50px;font-size:.85rem;align-items:center;flex-wrap:wrap}
-.user-info-bar .user-icon{font-size:1.5rem}
-.game-container{background:rgba(255,255,255,0.06);border-radius:40px;padding:25px;border:1px solid rgba(255,215,0,0.15)}
-.mine-title{text-align:center;margin-bottom:15px}
-.mine-title h3{color:#f5e9c4;font-size:1.8rem}
-.mine-title p{color:#7a8bb0;font-size:.9rem;margin-top:5px}
-.stats-bar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px;background:rgba(0,0,0,0.2);padding:15px 20px;border-radius:15px;margin-bottom:15px}
-.stats-bar .stat{display:flex;align-items:center;gap:6px;font-size:.9rem}
-.stats-bar .stat .value{color:#f1c40f;font-weight:700;font-size:1.1rem}
-.pickaxe-section{background:rgba(255,255,255,0.03);border-radius:15px;padding:15px;margin-bottom:15px;border:1px solid rgba(255,215,0,0.1)}
-.pickaxe-section h4{color:#f5e9c4;margin-bottom:10px}
-.pickaxe-grid{display:flex;gap:12px;flex-wrap:wrap}
-.pickaxe-item{background:rgba(0,0,0,0.3);padding:12px 18px;border-radius:12px;border:2px solid #2d3852;cursor:pointer;transition:all .3s;text-align:center;flex:1;min-width:100px;max-width:150px}
-.pickaxe-item:hover{border-color:#f1c40f;transform:scale(1.03)}
-.pickaxe-item.active{border-color:#f1c40f;box-shadow:0 0 25px rgba(241,196,15,0.2)}
-.pickaxe-item.owned{border-color:#2ecc71}
-.pickaxe-item.broken{opacity:0.4;border-color:#e74c3c;background:rgba(231,76,60,0.1)}
-.pickaxe-item .emoji{font-size:2rem}
-.pickaxe-item .name{font-size:.7rem;color:#a0b5d9}
-.pickaxe-item .info{font-size:.6rem;color:#7a8bb0}
-.pickaxe-item .price{color:#f1c40f;font-size:.65rem}
-.pickaxe-item .durability{color:#2ecc71;font-size:.6rem}
-.pickaxe-item .status-broken{color:#e74c3c;font-size:.6rem;font-weight:700}
-.mine-grid{display:grid;grid-template-columns:repeat(20,1fr);gap:3px;max-width:100%;margin:0 auto;background:#1e2538;border-radius:15px;padding:10px}
-.mine-block{aspect-ratio:1/1;background:#2d2d2d;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.7rem;cursor:pointer;transition:all .15s;border:1px solid #3a3a3a;user-select:none;min-width:20px;min-height:20px;position:relative}
-.mine-block:hover:not(.mined):not(.disabled){background:#4a4a4a;transform:scale(1.05);z-index:2}
-.mine-block.mined{background:#1a1a1a;border-color:#2d2d2d;cursor:default}
-.mine-block .reveal{font-size:.9rem}
-.mine-block.disabled{cursor:not-allowed;opacity:.3}
-.mine-msg{text-align:center;margin-top:15px;padding:12px;border-radius:15px;background:rgba(0,0,0,0.3);font-size:1rem;min-height:50px}
-.mine-msg.winner{background:rgba(241,196,15,0.15);border:1px solid #f1c40f;color:#f1c40f}
-.progress-bar{width:100%;height:8px;background:#1a2235;border-radius:10px;margin-top:15px;overflow:hidden}
-.progress-bar .fill{height:100%;background:linear-gradient(90deg,#f1c40f,#f39c12);border-radius:10px;transition:width .3s;width:0%}
-.progress-bar .fill.complete{background:linear-gradient(90deg,#f1c40f,#2ecc71)}
-.board-wrapper{position:relative}
-.game-ended-overlay{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.85);border-radius:25px;display:none;flex-direction:column;align-items:center;justify-content:center;z-index:10;padding:30px}
-.game-ended-overlay.show{display:flex}
-.game-ended-overlay .big-icon{font-size:5rem;margin-bottom:10px}
-.game-ended-overlay .title{font-size:2rem;font-weight:700;color:#f1c40f}
-.game-ended-overlay .subtitle{color:#a0b5d9;font-size:1.1rem;margin:5px 0}
-.game-ended-overlay .reward{color:#f1c40f;font-size:1.4rem;margin:10px 0}
-.game-ended-overlay .stats-summary{color:#7a8bb0;font-size:.9rem;margin:5px 0;text-align:center;line-height:1.8}
-.game-ended-overlay .back-btn{background:#f1c40f;border:none;padding:14px 50px;border-radius:50px;color:#1a1f30;font-weight:700;font-size:1.1rem;cursor:pointer;text-decoration:none;margin-top:20px;transition:all .2s}
-.game-ended-overlay .back-btn:hover{transform:scale(1.05)}
-@media(max-width:768px){.mine-grid{grid-template-columns:repeat(10,1fr);gap:2px}.mine-block{font-size:.5rem;min-width:14px;min-height:14px}.stats-bar{flex-direction:column;align-items:stretch}.pickaxe-grid{justify-content:center}}
-@media(max-width:480px){.mine-grid{gap:1px}.mine-block{font-size:.35rem;min-width:10px;min-height:10px}.game-container{padding:15px}}
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+:root{
+    --gold:#ffd54a;
+    --gold2:#ff9f1a;
+    --cyan:#37e8ff;
+    --purple:#9b6cff;
+    --green:#35e58a;
+    --red:#ff5c70;
+    --bg:#070b16;
+    --panel:rgba(12,18,35,.82);
+}
+
+html,body{
+    min-height:100%;
+}
+
+body{
+    font-family:"Segoe UI",Tahoma,sans-serif;
+    color:#eef5ff;
+    background:
+        radial-gradient(circle at 15% 10%,rgba(55,232,255,.12),transparent 30%),
+        radial-gradient(circle at 85% 20%,rgba(155,108,255,.14),transparent 30%),
+        linear-gradient(135deg,#050812,#0b1020 45%,#11172b);
+    padding:14px;
+    overflow-x:hidden;
+}
+
+body:before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    background-image:
+        radial-gradient(circle,rgba(255,255,255,.5) 1px,transparent 1px);
+    background-size:55px 55px;
+    opacity:.08;
+}
+
+.main-container{
+    width:min(1250px,100%);
+    margin:auto;
+    position:relative;
+    z-index:1;
+}
+
+.header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:14px 18px;
+    margin-bottom:15px;
+    border-radius:22px;
+    background:rgba(10,16,31,.78);
+    border:1px solid rgba(55,232,255,.13);
+    box-shadow:0 15px 45px rgba(0,0,0,.35);
+    backdrop-filter:blur(12px);
+}
+
+.logo{
+    font-size:1.35rem;
+    font-weight:900;
+    color:#fff;
+}
+
+.logo b{
+    color:var(--cyan);
+}
+
+.logo span{
+    color:#8998b8;
+    font-weight:400;
+    font-size:.9rem;
+}
+
+.header-right{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    flex-wrap:wrap;
+}
+
+.user-info-bar{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    padding:7px 13px;
+    border-radius:30px;
+    background:rgba(255,255,255,.045);
+    border:1px solid rgba(255,255,255,.08);
+    font-size:.82rem;
+}
+
+.user-icon{
+    font-size:1.35rem;
+}
+
+.back-home{
+    text-decoration:none;
+    color:#eef5ff;
+    background:linear-gradient(135deg,#263653,#17243d);
+    border:1px solid #405273;
+    border-radius:30px;
+    padding:9px 18px;
+    transition:.2s;
+}
+
+.back-home:hover{
+    border-color:var(--cyan);
+    transform:translateY(-2px);
+}
+
+.game-container{
+    padding:20px;
+    border-radius:30px;
+    background:rgba(9,14,28,.78);
+    border:1px solid rgba(255,255,255,.08);
+    box-shadow:0 25px 80px rgba(0,0,0,.42);
+}
+
+.mine-title{
+    text-align:center;
+    margin-bottom:14px;
+}
+
+.mine-title h3{
+    font-size:2rem;
+    color:#fff;
+    text-shadow:0 0 20px rgba(55,232,255,.22);
+}
+
+.mine-title h3 span{
+    color:var(--gold);
+}
+
+.mine-title p{
+    color:#8191b1;
+    margin-top:5px;
+    font-size:.9rem;
+}
+
+.stats-bar{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:9px;
+    margin-bottom:12px;
+}
+
+.stat{
+    min-height:60px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    border-radius:16px;
+    background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.02));
+    border:1px solid rgba(255,255,255,.07);
+    color:#8292b1;
+    font-size:.76rem;
+}
+
+.stat .value{
+    color:#fff;
+    font-weight:800;
+    font-size:1rem;
+    margin-top:3px;
+}
+
+.stat.gold .value{
+    color:var(--gold);
+}
+
+.stat.green .value{
+    color:var(--green);
+}
+
+.pickaxe-section{
+    margin-bottom:14px;
+    padding:14px;
+    border-radius:18px;
+    background:rgba(0,0,0,.2);
+    border:1px solid rgba(255,255,255,.06);
+}
+
+.pickaxe-title{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:10px;
+}
+
+.pickaxe-title h4{
+    color:#eaf2ff;
+}
+
+.pickaxe-title small{
+    color:#71809e;
+}
+
+.pickaxe-grid{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:8px;
+}
+
+.pickaxe-item{
+    position:relative;
+    padding:11px 6px;
+    min-height:115px;
+    text-align:center;
+    cursor:pointer;
+    user-select:none;
+    border-radius:15px;
+    background:linear-gradient(145deg,#111a2e,#0a1120);
+    border:1px solid #263754;
+    transition:.18s;
+    overflow:hidden;
+}
+
+.pickaxe-item:hover{
+    transform:translateY(-3px);
+    border-color:#647ba7;
+}
+
+.pickaxe-item.active{
+    border-color:var(--gold);
+    box-shadow:
+        0 0 0 1px rgba(255,213,74,.2),
+        0 0 25px rgba(255,213,74,.12);
+}
+
+.pickaxe-item.owned{
+    border-color:rgba(53,229,138,.55);
+}
+
+.pickaxe-item.broken{
+    opacity:.5;
+}
+
+.pickaxe-item .emoji{
+    font-size:2rem;
+}
+
+.pickaxe-item .name{
+    font-weight:700;
+    font-size:.8rem;
+    margin-top:2px;
+}
+
+.pickaxe-item .info{
+    color:#8291ac;
+    font-size:.62rem;
+    margin-top:4px;
+}
+
+.pickaxe-item .price{
+    color:var(--gold);
+    font-size:.65rem;
+    margin-top:3px;
+}
+
+.pickaxe-item .status{
+    margin-top:5px;
+    font-size:.62rem;
+    font-weight:700;
+}
+
+.status.active{
+    color:var(--gold);
+}
+
+.status.owned{
+    color:var(--green);
+}
+
+.status.broken{
+    color:var(--red);
+}
+
+.board-wrapper{
+    position:relative;
+}
+
+.mine-grid{
+    position:relative;
+    display:grid;
+    grid-template-columns:repeat(20,1fr);
+    gap:2px;
+    padding:10px;
+    border-radius:20px;
+    overflow:hidden;
+
+    background:
+        linear-gradient(#101827,#0b1220),
+        radial-gradient(circle at 50% 20%,#26385c,transparent 60%);
+
+    border:1px solid #283b5d;
+    box-shadow:
+        inset 0 0 50px rgba(0,0,0,.65),
+        0 0 40px rgba(0,0,0,.35);
+}
+
+.mine-block{
+    position:relative;
+    aspect-ratio:1;
+    min-width:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:5px;
+    cursor:pointer;
+    user-select:none;
+    overflow:hidden;
+    border:1px solid rgba(255,255,255,.05);
+    transition:
+        transform .1s,
+        filter .1s,
+        box-shadow .1s;
+}
+
+.mine-block:not(.mined):not(.disabled):hover{
+    transform:scale(1.08);
+    z-index:5;
+    filter:brightness(1.35);
+    box-shadow:0 0 12px rgba(255,213,74,.25);
+}
+
+.mine-block:active:not(.disabled){
+    transform:scale(.91);
+}
+
+.mine-block.hidden{
+    background:
+        linear-gradient(135deg,#313b4d,#1c2638);
+}
+
+.mine-block.hidden:before{
+    content:"";
+    position:absolute;
+    inset:2px;
+    border-radius:3px;
+    background:
+        linear-gradient(135deg,
+        rgba(255,255,255,.05),
+        transparent 40%,
+        rgba(0,0,0,.18));
+}
+
+.mine-block.hidden:after{
+    content:"";
+    width:35%;
+    height:35%;
+    border-radius:3px;
+    background:rgba(255,255,255,.035);
+}
+
+.mine-block.mined{
+    cursor:default;
+    animation:blockReveal .18s ease-out;
+}
+
+.mine-block.mined .reveal{
+    font-size:clamp(.6rem,1.5vw,1.15rem);
+    filter:drop-shadow(0 2px 3px rgba(0,0,0,.7));
+}
+
+.mine-block.disabled{
+    cursor:not-allowed;
+    opacity:.55;
+}
+
+@keyframes blockReveal{
+    0%{transform:scale(.5);opacity:.2}
+    70%{transform:scale(1.12)}
+    100%{transform:scale(1);opacity:1}
+}
+
+.block-grass{
+    background:linear-gradient(145deg,#458c47,#24572d);
+}
+
+.block-dirt{
+    background:linear-gradient(145deg,#87552e,#4b2d1a);
+}
+
+.block-stone{
+    background:linear-gradient(145deg,#737b85,#40464d);
+}
+
+.block-coal{
+    background:linear-gradient(145deg,#444,#151515);
+}
+
+.block-iron{
+    background:linear-gradient(145deg,#927f72,#51453f);
+}
+
+.block-diamond{
+    background:linear-gradient(145deg,#27d9dc,#146b85);
+    box-shadow:inset 0 0 12px rgba(90,255,255,.25);
+}
+
+.block-netherite{
+    background:linear-gradient(145deg,#6d5268,#281d2b);
+    box-shadow:inset 0 0 12px rgba(255,82,201,.12);
+}
+
+.mine-msg{
+    min-height:52px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    margin-top:12px;
+    padding:10px 15px;
+    border-radius:15px;
+    color:#b8c7df;
+    background:rgba(0,0,0,.27);
+    border:1px solid rgba(255,255,255,.05);
+    transition:.2s;
+}
+
+.mine-msg.winner{
+    color:var(--gold);
+    border-color:rgba(255,213,74,.45);
+    background:rgba(255,213,74,.08);
+    box-shadow:0 0 30px rgba(255,213,74,.1);
+}
+
+.progress-wrap{
+    margin-top:12px;
+}
+
+.progress-info{
+    display:flex;
+    justify-content:space-between;
+    color:#7787a6;
+    font-size:.7rem;
+    margin-bottom:5px;
+}
+
+.progress-bar{
+    height:9px;
+    width:100%;
+    border-radius:20px;
+    overflow:hidden;
+    background:#101827;
+    border:1px solid #25334c;
+}
+
+.progress-bar .fill{
+    width:0%;
+    height:100%;
+    border-radius:20px;
+    background:linear-gradient(90deg,var(--cyan),var(--purple),var(--gold));
+    box-shadow:0 0 15px rgba(55,232,255,.25);
+    transition:width .25s;
+}
+
+.progress-bar .fill.complete{
+    background:linear-gradient(90deg,var(--green),var(--gold));
+}
+
+.game-ended-overlay{
+    position:absolute;
+    inset:0;
+    z-index:20;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    text-align:center;
+    padding:30px;
+    border-radius:20px;
+    background:rgba(3,6,13,.91);
+    backdrop-filter:blur(7px);
+}
+
+.game-ended-overlay.show{
+    display:flex;
+}
+
+.big-icon{
+    font-size:5rem;
+    animation:winBounce 1s infinite alternate;
+}
+
+@keyframes winBounce{
+    from{transform:translateY(0) rotate(-3deg)}
+    to{transform:translateY(-10px) rotate(3deg)}
+}
+
+.game-ended-overlay .title{
+    color:var(--gold);
+    font-size:clamp(1.3rem,4vw,2.1rem);
+    font-weight:900;
+    margin-top:8px;
+}
+
+.game-ended-overlay .subtitle{
+    color:#9aaccc;
+    margin-top:6px;
+}
+
+.reward{
+    margin-top:15px;
+    color:var(--gold);
+    font-size:1.45rem;
+    font-weight:900;
+}
+
+.stats-summary{
+    margin-top:8px;
+    color:#7889a8;
+}
+
+.restart-note{
+    color:#687998;
+    font-size:.76rem;
+    margin-top:14px;
+}
+
+@media(max-width:800px){
+    .stats-bar{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .pickaxe-grid{
+        grid-template-columns:repeat(5,1fr);
+    }
+
+    .game-container{
+        padding:12px;
+    }
+}
+
+@media(max-width:560px){
+    body{
+        padding:7px;
+    }
+
+    .header{
+        border-radius:17px;
+        padding:10px;
+    }
+
+    .logo{
+        font-size:1rem;
+    }
+
+    .logo span{
+        display:none;
+    }
+
+    .user-info-bar{
+        font-size:.68rem;
+    }
+
+    .back-home{
+        padding:7px 12px;
+        font-size:.75rem;
+    }
+
+    .mine-title h3{
+        font-size:1.45rem;
+    }
+
+    .mine-title p{
+        font-size:.72rem;
+    }
+
+    .pickaxe-grid{
+        grid-template-columns:repeat(5,1fr);
+        gap:4px;
+    }
+
+    .pickaxe-item{
+        min-height:95px;
+        padding:7px 2px;
+    }
+
+    .pickaxe-item .emoji{
+        font-size:1.45rem;
+    }
+
+    .pickaxe-item .name{
+        font-size:.62rem;
+    }
+
+    .pickaxe-item .info,
+    .pickaxe-item .price,
+    .pickaxe-item .status{
+        font-size:.5rem;
+    }
+
+    .mine-grid{
+        grid-template-columns:repeat(10,1fr);
+        gap:2px;
+        padding:6px;
+    }
+
+    .mine-block{
+        border-radius:3px;
+    }
+}
+
+@media(max-width:370px){
+    .pickaxe-grid{
+        grid-template-columns:repeat(3,1fr);
+    }
+
+    .mine-grid{
+        grid-template-columns:repeat(10,1fr);
+    }
+}
 </style>
 </head>
+
 <body>
+
 <div class="main-container">
-<div class="header">
-<div class="logo">✦ StarLoom_Game <span>| ماینکرفت</span></div>
-<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-<div class="user-info-bar" id="userInfoBar">
-<span class="user-icon" id="userIcon">😊</span>
-<span>👤 <span id="displayName">کاربر</span></span>
-<span>💰 <span id="displayCoins">0</span></span>
-</div>
-<a href="index.html" class="back-home">← بازگشت</a>
-</div>
-</div>
 
-<div class="game-container">
-<div class="board-wrapper">
-<div class="mine-title">
-<h3>⛏️ ماینکرفت</h3>
-<p>۱۰۰۰ مکعب را بکنید! برنده <strong style="color:#f1c40f;">۱۳,۰۰۰</strong> سکه</p>
-</div>
+<header class="header">
 
-<div class="stats-bar">
-<div class="stat">⛏️ بلاک‌ها: <span class="value" id="minedCount">0</span>/1000</div>
-<div class="stat">💰 سکه: <span class="value" id="coinDisplay">0</span></div>
-<div class="stat">🎯 کلنگ: <span class="value" id="pickaxeDisplay">هیچ</span></div>
-<div class="stat">🔨 دوام: <span class="value" id="durabilityDisplay">0/0</span></div>
-</div>
+    <div class="logo">
+        ✦ <b>StarLoom</b>_Game
+        <span>| StarLoom Craft</span>
+    </div>
 
-<div class="pickaxe-section">
-<h4>🔧 فروشگاه کلنگ</h4>
-<div class="pickaxe-grid" id="pickaxeShop"></div>
-</div>
+    <div class="header-right">
 
-<div class="mine-grid" id="mineGrid"></div>
+        <div class="user-info-bar">
+            <span class="user-icon" id="userIcon">😊</span>
+            <span>👤 <span id="displayName">کاربر</span></span>
+            <span>💰 <b id="displayCoins">0</b></span>
+        </div>
 
-<div class="progress-bar"><div class="fill" id="progressFill"></div></div>
-<div class="mine-msg" id="mineMsg">⛏️ ابتدا یک کلنگ بخرید!</div>
+        <a href="index.html" class="back-home">← بازگشت</a>
 
-<div class="game-ended-overlay" id="gameEndedOverlay">
-<div class="big-icon">🎉</div>
-<div class="title">تبریک! همه بلاک‌ها را کندید!</div>
-<div class="subtitle">شما برنده جایزه بزرگ شدید!</div>
-<div class="reward">🎁 +۱۳,۰۰۰ سکه</div>
-<div class="stats-summary" id="finalStats">💰 سکه جمع‌آوری شده: 0</div>
-<div style="color:#a0b5d9;font-size:.85rem;margin-top:15px;">⏳ بازی خودکار از اول شروع می‌شود...</div>
-</div>
-</div>
-</div>
+    </div>
+
+</header>
+
+<main class="game-container">
+
+    <div class="mine-title">
+        <h3>⛏️ <span>StarLoom Craft</span></h3>
+        <p>
+            ۱۰۰۰ بلاک را استخراج کن و
+            <strong style="color:#ffd54a">۱۳٬۰۰۰ سکه</strong>
+            جایزه بگیر!
+        </p>
+    </div>
+
+    <div class="stats-bar">
+
+        <div class="stat">
+            <span>⛏️ استخراج شده</span>
+            <span class="value" id="minedCount">0/1000</span>
+        </div>
+
+        <div class="stat gold">
+            <span>💰 سکه این دور</span>
+            <span class="value" id="coinDisplay">0</span>
+        </div>
+
+        <div class="stat green">
+            <span>⛏️ کلنگ</span>
+            <span class="value" id="pickaxeDisplay">هیچ</span>
+        </div>
+
+        <div class="stat">
+            <span>🔨 دوام</span>
+            <span class="value" id="durabilityDisplay">0/0</span>
+        </div>
+
+    </div>
+
+    <section class="pickaxe-section">
+
+        <div class="pickaxe-title">
+            <h4>🔧 فروشگاه کلنگ</h4>
+            <small>کلنگ بهتر = استخراج بیشتر</small>
+        </div>
+
+        <div class="pickaxe-grid" id="pickaxeShop"></div>
+
+    </section>
+
+    <div class="board-wrapper">
+
+        <div class="mine-grid" id="mineGrid"></div>
+
+        <div class="progress-wrap">
+
+            <div class="progress-info">
+                <span>پیشرفت جهان</span>
+                <span id="progressText">0%</span>
+            </div>
+
+            <div class="progress-bar">
+                <div class="fill" id="progressFill"></div>
+            </div>
+
+        </div>
+
+        <div class="mine-msg" id="mineMsg">
+            ⛏️ ابتدا یک کلنگ بخرید!
+        </div>
+
+        <div class="game-ended-overlay" id="gameEndedOverlay">
+
+            <div class="big-icon">🎉</div>
+
+            <div class="title">
+                جهان استخراج شد!
+            </div>
+
+            <div class="subtitle">
+                تمام ۱۰۰۰ بلاک را پیدا کردی.
+            </div>
+
+            <div class="reward">
+                🎁 +۱۳٬۰۰۰ سکه
+            </div>
+
+            <div class="stats-summary" id="finalStats">
+                💰 سکه جمع‌آوری شده: 0
+            </div>
+
+            <div class="restart-note">
+                🔄 دنیای جدید تا چند لحظه دیگر ساخته می‌شود...
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
 </div>
 
 <script>
-// ============================================================
-//  بازی ماینکرفت - 1000 مکعب - بدون ثبت‌نام
-// ============================================================
 
-var TOTAL_BLOCKS = 1000;
-var username = 'کاربر', userIcon = '😊';
+/* =========================================================
+   STARLOOM CRAFT
+   Minecraft-style mining game
+   ========================================================= */
 
-var PICKAXES = {
-    'wooden': {name:'چوبی',emoji:'🪵',price:100,durability:10,maxDurability:10},
-    'stone': {name:'سنگی',emoji:'🪨',price:300,durability:20,maxDurability:20},
-    'iron': {name:'آهنی',emoji:'🔩',price:600,durability:30,maxDurability:30},
-    'diamond': {name:'الماسی',emoji:'💎',price:1200,durability:50,maxDurability:50},
-    'netherite': {name:'ندرایتی',emoji:'🔱',price:2500,durability:100,maxDurability:100}
+const TOTAL_BLOCKS = 1000;
+const STORAGE_KEY = "starloom_minecraft_state";
+
+let username = "کاربر";
+let userIcon = "😊";
+
+
+/* =========================================================
+   PICKAXES
+   ========================================================= */
+
+const PICKAXES = {
+
+    wooden:{
+        name:"چوبی",
+        emoji:"🪵",
+        price:100,
+        durability:10,
+        maxDurability:10
+    },
+
+    stone:{
+        name:"سنگی",
+        emoji:"🪨",
+        price:300,
+        durability:20,
+        maxDurability:20
+    },
+
+    iron:{
+        name:"آهنی",
+        emoji:"🔩",
+        price:600,
+        durability:30,
+        maxDurability:30
+    },
+
+    diamond:{
+        name:"الماسی",
+        emoji:"💎",
+        price:1200,
+        durability:50,
+        maxDurability:50
+    },
+
+    netherite:{
+        name:"ندرایتی",
+        emoji:"🔱",
+        price:2500,
+        durability:100,
+        maxDurability:100
+    }
+
 };
 
-var BLOCK_TYPES = [
-    { name: 'چمن', emoji: '🌿', coins: 0, weight: 20 },
-    { name: 'خاک', emoji: '🟫', coins: 0, weight: 25 },
-    { name: 'سنگ', emoji: '🪨', coins: 10, weight: 20 },
-    { name: 'ذغال', emoji: '⚫', coins: 15, weight: 15 },
-    { name: 'آهن', emoji: '🔘', coins: 20, weight: 10 },
-    { name: 'الماس', emoji: '💎', coins: 26, weight: 7 },
-    { name: 'ندرایت', emoji: '🔱', coins: 32, weight: 3 }
+
+/* =========================================================
+   BLOCKS
+   ========================================================= */
+
+const BLOCK_TYPES = [
+
+    {
+        name:"چمن",
+        emoji:"🌿",
+        coins:0,
+        weight:20,
+        css:"block-grass"
+    },
+
+    {
+        name:"خاک",
+        emoji:"🟫",
+        coins:0,
+        weight:25,
+        css:"block-dirt"
+    },
+
+    {
+        name:"سنگ",
+        emoji:"🪨",
+        coins:10,
+        weight:20,
+        css:"block-stone"
+    },
+
+    {
+        name:"ذغال",
+        emoji:"⚫",
+        coins:15,
+        weight:15,
+        css:"block-coal"
+    },
+
+    {
+        name:"آهن",
+        emoji:"🔘",
+        coins:20,
+        weight:10,
+        css:"block-iron"
+    },
+
+    {
+        name:"الماس",
+        emoji:"💎",
+        coins:26,
+        weight:7,
+        css:"block-diamond"
+    },
+
+    {
+        name:"ندرایت",
+        emoji:"🔱",
+        coins:32,
+        weight:3,
+        css:"block-netherite"
+    }
+
 ];
 
-var gameState = {
-    grid: [],
-    revealed: [],
-    minedCount: 0,
-    totalCoins: 0,
-    gameOver: false,
-    currentPickaxe: null,
-    pickaxeDurability: 0,
-    pickaxeMaxDurability: 0,
-    ownedPickaxes: [],
-    totalBlocksMined: 0
+
+/* =========================================================
+   GAME STATE
+   ========================================================= */
+
+let gameState = {
+
+    grid:[],
+    revealed:[],
+
+    minedCount:0,
+
+    totalCoins:0,
+
+    gameOver:false,
+
+    currentPickaxe:null,
+
+    pickaxeDurability:0,
+
+    pickaxeMaxDurability:0,
+
+    ownedPickaxes:[],
+
+    totalBlocksMined:0
+
 };
 
-function loadUser() {
-    var saved = localStorage.getItem('starloom_current_user');
-    if (saved) {
-        try {
-            var data = JSON.parse(saved);
-            username = data.username;
-            userIcon = getIconEmoji(data.icon);
-            document.getElementById('displayName').textContent = username;
-            document.getElementById('displayCoins').textContent = data.coins || 0;
-            document.getElementById('userIcon').textContent = userIcon;
-        } catch (e) {}
-    }
-    loadGameState();
-}
 
-function getIconEmoji(id) {
-    var icons = {
-        'default': '😊','smile':'😄','heart':'❤️','star':'⭐','lion':'🦁','tiger':'🐯',
-        'eagle':'🦅','wolf':'🐺','dragon':'🐉','phoenix':'🔥','unicorn':'🦄','crown':'👑',
-        'diamond':'💎','king':'👸','gold':'🏆','robot':'🤖','gem':'💠','pizza':'🍕',
-        'burger':'🍔','cake':'🎂','donut':'🍩','ninja':'🥷','mage':'🧙','knight':'⚔️',
-        'angel':'👼','demon':'👿','skeleton':'💀','galaxy':'🌌','crystal':'🔮',
-        'cosmic':'🚀','legendary':'🌟','ultimate':'⚡','void':'🌑'
+/* =========================================================
+   USER
+   ========================================================= */
+
+function getIconEmoji(id){
+
+    const icons = {
+
+        default:"😊",
+        smile:"😄",
+        heart:"❤️",
+        star:"⭐",
+        lion:"🦁",
+        tiger:"🐯",
+        eagle:"🦅",
+        wolf:"🐺",
+        dragon:"🐉",
+        phoenix:"🔥",
+        unicorn:"🦄",
+        crown:"👑",
+        diamond:"💎",
+        king:"👸",
+        gold:"🏆",
+        robot:"🤖",
+        gem:"💠",
+        pizza:"🍕",
+        burger:"🍔",
+        cake:"🎂",
+        donut:"🍩",
+        ninja:"🥷",
+        mage:"🧙",
+        knight:"⚔️",
+        angel:"👼",
+        demon:"👿",
+        skeleton:"💀",
+        galaxy:"🌌",
+        crystal:"🔮",
+        cosmic:"🚀",
+        legendary:"🌟",
+        ultimate:"⚡",
+        void:"🌑"
+
     };
-    return icons[id] || '😊';
+
+    return icons[id] || "😊";
 }
 
-function getUsers() {
-    try { return JSON.parse(localStorage.getItem('starloom_users')) || {}; } catch (e) { return {}; }
-}
-function saveUsers(u) { localStorage.setItem('starloom_users', JSON.stringify(u)); }
 
-function saveGameState() {
-    try {
-        var stateToSave = {
-            grid: gameState.grid,
-            revealed: gameState.revealed,
-            minedCount: gameState.minedCount,
-            totalCoins: gameState.totalCoins,
-            gameOver: gameState.gameOver,
-            currentPickaxe: gameState.currentPickaxe,
-            pickaxeDurability: gameState.pickaxeDurability,
-            pickaxeMaxDurability: gameState.pickaxeMaxDurability,
-            ownedPickaxes: gameState.ownedPickaxes,
-            totalBlocksMined: gameState.totalBlocksMined
-        };
-        localStorage.setItem('starloom_minecraft_state', JSON.stringify(stateToSave));
-    } catch (e) {}
+function getUsers(){
+
+    try{
+
+        return JSON.parse(
+            localStorage.getItem("starloom_users")
+        ) || {};
+
+    }catch(e){
+
+        return {};
+
+    }
+
 }
 
-function loadGameState() {
-    try {
-        var saved = localStorage.getItem('starloom_minecraft_state');
-        if (saved) {
-            var data = JSON.parse(saved);
-            if (data.grid && data.grid.length === TOTAL_BLOCKS) {
-                gameState.grid = data.grid;
-                gameState.revealed = data.revealed || new Array(TOTAL_BLOCKS).fill(false);
-                gameState.minedCount = data.minedCount || 0;
-                gameState.totalCoins = data.totalCoins || 0;
-                gameState.gameOver = data.gameOver || false;
-                gameState.currentPickaxe = data.currentPickaxe || null;
-                gameState.pickaxeDurability = data.pickaxeDurability || 0;
-                gameState.pickaxeMaxDurability = data.pickaxeMaxDurability || 0;
-                gameState.ownedPickaxes = data.ownedPickaxes || [];
-                gameState.totalBlocksMined = data.totalBlocksMined || 0;
-                return true;
+
+function loadUser(){
+
+    const saved =
+        localStorage.getItem("starloom_current_user");
+
+    if(saved){
+
+        try{
+
+            const data = JSON.parse(saved);
+
+            username =
+                data.username || "کاربر";
+
+            userIcon =
+                getIconEmoji(data.icon);
+
+            document.getElementById(
+                "displayName"
+            ).textContent = username;
+
+            document.getElementById(
+                "displayCoins"
+            ).textContent =
+                Number(data.coins || 0).toLocaleString("fa-IR");
+
+            document.getElementById(
+                "userIcon"
+            ).textContent = userIcon;
+
+        }catch(e){}
+
+    }
+
+}
+
+
+/* =========================================================
+   SAVE / LOAD
+   ========================================================= */
+
+function saveGameState(){
+
+    try{
+
+        localStorage.setItem(
+
+            STORAGE_KEY,
+
+            JSON.stringify({
+
+                grid:gameState.grid,
+
+                revealed:gameState.revealed,
+
+                minedCount:gameState.minedCount,
+
+                totalCoins:gameState.totalCoins,
+
+                gameOver:gameState.gameOver,
+
+                currentPickaxe:gameState.currentPickaxe,
+
+                pickaxeDurability:
+                    gameState.pickaxeDurability,
+
+                pickaxeMaxDurability:
+                    gameState.pickaxeMaxDurability,
+
+                ownedPickaxes:
+                    gameState.ownedPickaxes,
+
+                totalBlocksMined:
+                    gameState.totalBlocksMined
+
+            })
+
+        );
+
+    }catch(e){}
+
+}
+
+
+function loadGameState(){
+
+    try{
+
+        const saved =
+            localStorage.getItem(STORAGE_KEY);
+
+        if(!saved)
+            return false;
+
+        const data = JSON.parse(saved);
+
+        if(
+            !Array.isArray(data.grid) ||
+            data.grid.length !== TOTAL_BLOCKS
+        ){
+
+            return false;
+
+        }
+
+        gameState.grid =
+            data.grid;
+
+        gameState.revealed =
+            Array.isArray(data.revealed)
+                ? data.revealed
+                : new Array(TOTAL_BLOCKS).fill(false);
+
+        gameState.minedCount =
+            Number(data.minedCount || 0);
+
+        gameState.totalCoins =
+            Number(data.totalCoins || 0);
+
+        gameState.gameOver =
+            Boolean(data.gameOver);
+
+        gameState.currentPickaxe =
+            data.currentPickaxe || null;
+
+        gameState.pickaxeDurability =
+            Number(data.pickaxeDurability || 0);
+
+        gameState.pickaxeMaxDurability =
+            Number(data.pickaxeMaxDurability || 0);
+
+        gameState.ownedPickaxes =
+            Array.isArray(data.ownedPickaxes)
+                ? data.ownedPickaxes
+                : [];
+
+        gameState.totalBlocksMined =
+            Number(data.totalBlocksMined || 0);
+
+        return true;
+
+    }catch(e){
+
+        return false;
+
+    }
+
+}
+
+
+/* =========================================================
+   WORLD GENERATION
+   ========================================================= */
+
+function generateWorld(){
+
+    const blocks = [];
+
+    let totalWeight = 0;
+
+    for(const block of BLOCK_TYPES){
+
+        totalWeight += block.weight;
+
+    }
+
+    for(let i=0;i<TOTAL_BLOCKS;i++){
+
+        const random =
+            Math.random()*totalWeight;
+
+        let cumulative = 0;
+
+        let selected = 0;
+
+        for(let j=0;j<BLOCK_TYPES.length;j++){
+
+            cumulative +=
+                BLOCK_TYPES[j].weight;
+
+            if(random <= cumulative){
+
+                selected = j;
+                break;
+
             }
-        }
-    } catch (e) {}
-    return false;
-}
 
-function saveUserCoins(amount) {
-    var users = getUsers();
-    if (users[username]) {
-        users[username].coins = (users[username].coins || 0) + amount;
-        localStorage.setItem('starloom_users', JSON.stringify(users));
-        var current = JSON.parse(localStorage.getItem('starloom_current_user')) || {};
-        current.coins = users[username].coins;
-        localStorage.setItem('starloom_current_user', JSON.stringify(current));
-        document.getElementById('displayCoins').textContent = users[username].coins;
-    }
-}
-
-function initGame() {
-    var loaded = loadGameState();
-
-    if (!loaded || gameState.grid.length === 0) {
-        var blocks = [];
-        var totalWeight = 0;
-        for (var i = 0; i < BLOCK_TYPES.length; i++) {
-            totalWeight += BLOCK_TYPES[i].weight;
         }
 
-        for (var i = 0; i < TOTAL_BLOCKS; i++) {
-            var rand = Math.random() * totalWeight;
-            var cumulative = 0;
-            for (var j = 0; j < BLOCK_TYPES.length; j++) {
-                cumulative += BLOCK_TYPES[j].weight;
-                if (rand <= cumulative) {
-                    blocks.push(j);
-                    break;
-                }
-            }
-        }
+        blocks.push(selected);
 
-        gameState.grid = blocks;
-        gameState.revealed = new Array(TOTAL_BLOCKS).fill(false);
-        gameState.minedCount = 0;
-        gameState.totalCoins = 0;
-        gameState.gameOver = false;
-        gameState.currentPickaxe = null;
-        gameState.pickaxeDurability = 0;
-        gameState.pickaxeMaxDurability = 0;
-        gameState.ownedPickaxes = [];
-        gameState.totalBlocksMined = 0;
-        saveGameState();
     }
 
-    renderGrid();
-    updateUI();
-    renderPickaxeShop();
+    gameState.grid = blocks;
 
-    if (gameState.gameOver) {
-        document.getElementById('gameEndedOverlay').classList.add('show');
-        document.getElementById('finalStats').innerHTML = '💰 سکه جمع‌آوری شده: ' + gameState.totalCoins;
-    }
+    gameState.revealed =
+        new Array(TOTAL_BLOCKS).fill(false);
 
-    if (!gameState.currentPickaxe) {
-        document.getElementById('mineMsg').textContent = '⛏️ ابتدا یک کلنگ بخرید!';
-    }
+    gameState.minedCount = 0;
+
+    gameState.totalCoins = 0;
+
+    gameState.gameOver = false;
+
+    gameState.currentPickaxe = null;
+
+    gameState.pickaxeDurability = 0;
+
+    gameState.pickaxeMaxDurability = 0;
+
+    gameState.ownedPickaxes = [];
+
+    gameState.totalBlocksMined = 0;
+
+    saveGameState();
+
 }
 
-function renderGrid() {
-    var gridEl = document.getElementById('mineGrid');
-    gridEl.innerHTML = '';
 
-    var hasPickaxe = gameState.currentPickaxe !== null && gameState.pickaxeDurability > 0;
-    var isDisabled = gameState.gameOver || !hasPickaxe;
+/* =========================================================
+   USER COINS
+   ========================================================= */
 
-    for (var i = 0; i < TOTAL_BLOCKS; i++) {
-        var cell = document.createElement('div');
-        cell.className = 'mine-block';
+function getCurrentUserCoins(){
+
+    const el =
+        document.getElementById("displayCoins");
+
+    if(!el)
+        return 0;
+
+    return parseInt(
+        el.textContent.replace(/[^\d]/g,"")
+    ) || 0;
+
+}
+
+
+function setCurrentUserCoins(value){
+
+    const formatted =
+        Number(value).toLocaleString("fa-IR");
+
+    document.getElementById(
+        "displayCoins"
+    ).textContent = formatted;
+
+}
+
+
+function changeUserCoins(amount){
+
+    const users = getUsers();
+
+    if(!users[username])
+        return false;
+
+    const oldCoins =
+        Number(users[username].coins || 0);
+
+    const newCoins =
+        Math.max(0,oldCoins + amount);
+
+    users[username].coins = newCoins;
+
+    localStorage.setItem(
+        "starloom_users",
+        JSON.stringify(users)
+    );
+
+    try{
+
+        const current =
+            JSON.parse(
+                localStorage.getItem(
+                    "starloom_current_user"
+                )
+            ) || {};
+
+        current.coins = newCoins;
+
+        localStorage.setItem(
+            "starloom_current_user",
+            JSON.stringify(current)
+        );
+
+    }catch(e){}
+
+    setCurrentUserCoins(newCoins);
+
+    return true;
+
+}
+
+
+/* =========================================================
+   RENDER GRID
+   ========================================================= */
+
+function renderGrid(){
+
+    const grid =
+        document.getElementById("mineGrid");
+
+    grid.innerHTML = "";
+
+    const canMine =
+        !gameState.gameOver &&
+        gameState.currentPickaxe !== null &&
+        gameState.pickaxeDurability > 0;
+
+    const fragment =
+        document.createDocumentFragment();
+
+    for(let i=0;i<TOTAL_BLOCKS;i++){
+
+        const cell =
+            document.createElement("div");
+
+        cell.className =
+            "mine-block";
+
         cell.dataset.index = i;
 
-        if (gameState.revealed[i]) {
-            cell.classList.add('mined');
-            var blockIndex = gameState.grid[i];
-            var block = BLOCK_TYPES[blockIndex];
-            cell.innerHTML = '<span class="reveal">' + block.emoji + '</span>';
-        } else {
-            cell.textContent = '⬛';
-            if (isDisabled) {
-                cell.classList.add('disabled');
-            } else {
-                cell.addEventListener('click', function() {
-                    var idx = parseInt(this.dataset.index);
-                    mineBlock(idx);
-                });
+        if(gameState.revealed[i]){
+
+            const block =
+                BLOCK_TYPES[
+                    gameState.grid[i]
+                ];
+
+            cell.classList.add(
+                "mined",
+                block.css
+            );
+
+            cell.innerHTML =
+                `<span class="reveal">${block.emoji}</span>`;
+
+        }else{
+
+            cell.classList.add("hidden");
+
+            if(!canMine){
+
+                cell.classList.add("disabled");
+
+            }else{
+
+                cell.addEventListener(
+                    "click",
+                    function(){
+
+                        mineBlock(
+                            Number(this.dataset.index)
+                        );
+
+                    }
+                );
+
             }
+
         }
-        gridEl.appendChild(cell);
+
+        fragment.appendChild(cell);
+
     }
+
+    grid.appendChild(fragment);
+
 }
 
-function mineBlock(index) {
-    if (gameState.gameOver) {
-        document.getElementById('mineMsg').textContent = '⛔ بازی تمام شده!';
+
+/* =========================================================
+   MINE BLOCK
+   ========================================================= */
+
+function mineBlock(index){
+
+    if(gameState.gameOver)
         return;
-    }
-    if (gameState.revealed[index]) return;
-    if (!gameState.currentPickaxe) {
-        document.getElementById('mineMsg').textContent = '❌ ابتدا یک کلنگ بخرید!';
+
+    if(index < 0 || index >= TOTAL_BLOCKS)
         return;
-    }
-    if (gameState.pickaxeDurability <= 0) {
-        document.getElementById('mineMsg').textContent = '❌ کلنگ شما شکست! یک کلنگ جدید بخرید.';
+
+    if(gameState.revealed[index])
         return;
+
+    if(!gameState.currentPickaxe){
+
+        showMessage(
+            "❌ ابتدا یک کلنگ بخرید!"
+        );
+
+        return;
+
     }
+
+    if(gameState.pickaxeDurability <= 0){
+
+        showMessage(
+            "💔 کلنگ شما شکسته است!"
+        );
+
+        return;
+
+    }
+
+    const pickaxe =
+        PICKAXES[
+            gameState.currentPickaxe
+        ];
 
     gameState.pickaxeDurability--;
+
     gameState.revealed[index] = true;
+
     gameState.minedCount++;
+
     gameState.totalBlocksMined++;
 
-    var blockIndex = gameState.grid[index];
-    var block = BLOCK_TYPES[blockIndex];
-    var coinsEarned = block.coins;
-    gameState.totalCoins += coinsEarned;
+    const block =
+        BLOCK_TYPES[
+            gameState.grid[index]
+        ];
 
-    var msg = '⛏️ ' + block.name + '! +' + coinsEarned + ' سکه';
-    document.getElementById('mineMsg').textContent = msg;
+    const coins =
+        block.coins;
 
-    if (gameState.pickaxeDurability <= 0) {
-        var pickaxeName = PICKAXES[gameState.currentPickaxe].name;
-        document.getElementById('mineMsg').textContent = '💔 کلنگ ' + pickaxeName + ' شما شکست!';
+    gameState.totalCoins += coins;
+
+    if(coins > 0){
+
+        showMessage(
+            `⛏️ ${block.emoji} ${block.name} پیدا شد! +${coins} سکه`
+        );
+
+    }else{
+
+        showMessage(
+            `⛏️ ${block.emoji} ${block.name} استخراج شد`
+        );
+
+    }
+
+    if(gameState.pickaxeDurability <= 0){
+
+        showMessage(
+            `💔 کلنگ ${pickaxe.name} شکست!`
+        );
+
         gameState.currentPickaxe = null;
+
         gameState.pickaxeDurability = 0;
+
         gameState.pickaxeMaxDurability = 0;
-        saveGameState();
-        renderPickaxeShop();
-        renderGrid();
-        updateUI();
-        return;
+
     }
 
     saveGameState();
+
     updateUI();
-    renderGrid();
 
-    if (gameState.minedCount >= TOTAL_BLOCKS) {
-        gameState.gameOver = true;
-        var bonus = 13000;
-        gameState.totalCoins += bonus;
-        saveUserCoins(bonus);
-        document.getElementById('displayCoins').textContent = (parseInt(document.getElementById('displayCoins').textContent) || 0) + bonus;
-        document.getElementById('mineMsg').textContent = '🎉 همه بلاک‌ها را کندید! +۱۳,۰۰۰ سکه!';
-        document.getElementById('mineMsg').className = 'mine-msg winner';
-        document.getElementById('progressFill').className = 'fill complete';
-        document.getElementById('finalStats').innerHTML = '💰 سکه جمع‌آوری شده: ' + gameState.totalCoins;
-        document.getElementById('gameEndedOverlay').classList.add('show');
-        saveGameState();
-        renderGrid();
-        updateUI();
-
-        // ✅ شروع خودکار از اول بعد از ۳ ثانیه
-        setTimeout(function() {
-            localStorage.removeItem('starloom_minecraft_state');
-            gameState.grid = [];
-            gameState.revealed = [];
-            gameState.minedCount = 0;
-            gameState.totalCoins = 0;
-            gameState.gameOver = false;
-            gameState.currentPickaxe = null;
-            gameState.pickaxeDurability = 0;
-            gameState.pickaxeMaxDurability = 0;
-            gameState.ownedPickaxes = [];
-            gameState.totalBlocksMined = 0;
-            document.getElementById('gameEndedOverlay').classList.remove('show');
-            initGame();
-        }, 3000);
-    }
-}
-
-function updateUI() {
-    document.getElementById('minedCount').textContent = gameState.minedCount;
-    document.getElementById('coinDisplay').textContent = gameState.totalCoins;
-
-    var pickaxe = gameState.currentPickaxe ? PICKAXES[gameState.currentPickaxe] : null;
-    document.getElementById('pickaxeDisplay').textContent = pickaxe ? pickaxe.name : 'هیچ';
-    document.getElementById('durabilityDisplay').textContent = gameState.pickaxeDurability + '/' + gameState.pickaxeMaxDurability;
-
-    var progress = (gameState.minedCount / TOTAL_BLOCKS) * 100;
-    document.getElementById('progressFill').style.width = Math.min(progress, 100) + '%';
-}
-
-function renderPickaxeShop() {
-    var shopEl = document.getElementById('pickaxeShop');
-    shopEl.innerHTML = '';
-
-    for (var id in PICKAXES) {
-        var pickaxe = PICKAXES[id];
-        var isOwned = gameState.ownedPickaxes.indexOf(id) !== -1;
-        var isActive = gameState.currentPickaxe === id;
-        var isBroken = isOwned && gameState.currentPickaxe === id && gameState.pickaxeDurability <= 0;
-
-        var div = document.createElement('div');
-        div.className = 'pickaxe-item';
-        if (isOwned) div.classList.add('owned');
-        if (isActive && !isBroken) div.classList.add('active');
-        if (isBroken) div.classList.add('broken');
-
-        var priceText = pickaxe.price === 0 ? 'رایگان' : '💰 ' + pickaxe.price.toLocaleString('fa-IR') + ' سکه';
-        var durabilityText = '🔨 ' + pickaxe.durability + ' بلاک';
-
-        var statusText = '';
-        if (isActive && !isBroken) {
-            statusText = '<div style="color:#f1c40f;font-size:.6rem;">✅ فعال</div>';
-        } else if (isBroken) {
-            statusText = '<div class="status-broken">💔 شکسته</div>';
-        } else if (isOwned) {
-            statusText = '<div style="color:#2ecc71;font-size:.6rem;">📦 مالک</div>';
-        }
-
-        div.innerHTML =
-            '<div class="emoji">' + pickaxe.emoji + '</div>' +
-            '<div class="name">' + pickaxe.name + '</div>' +
-            '<div class="info">' + durabilityText + '</div>' +
-            '<div class="price">' + priceText + '</div>' +
-            statusText;
-
-        div.addEventListener('click', function() {
-            var pickaxeId = this.dataset.id;
-            handlePickaxeClick(pickaxeId);
-        });
-        div.dataset.id = id;
-
-        shopEl.appendChild(div);
-    }
-}
-
-function handlePickaxeClick(pickaxeId) {
-    var pickaxe = PICKAXES[pickaxeId];
-    var isOwned = gameState.ownedPickaxes.indexOf(pickaxeId) !== -1;
-
-    if (gameState.currentPickaxe === pickaxeId && gameState.pickaxeDurability > 0) {
-        alert('این کلنگ در حال استفاده است!');
-        return;
-    }
-
-    if (isOwned && gameState.currentPickaxe === pickaxeId && gameState.pickaxeDurability <= 0) {
-        var userCoins = parseInt(document.getElementById('displayCoins').textContent) || 0;
-        if (userCoins < pickaxe.price) {
-            alert('❌ سکه کافی ندارید! نیاز به ' + pickaxe.price.toLocaleString('fa-IR') + ' سکه.');
-            return;
-        }
-        if (!confirm('💔 کلنگ ' + pickaxe.name + ' شکسته! خرید مجدد به قیمت ' + pickaxe.price.toLocaleString('fa-IR') + ' سکه؟')) return;
-
-        var users = getUsers();
-        if (users[username]) {
-            users[username].coins = (users[username].coins || 0) - pickaxe.price;
-            localStorage.setItem('starloom_users', JSON.stringify(users));
-            var current = JSON.parse(localStorage.getItem('starloom_current_user')) || {};
-            current.coins = users[username].coins;
-            localStorage.setItem('starloom_current_user', JSON.stringify(current));
-            document.getElementById('displayCoins').textContent = users[username].coins;
-        }
-
-        gameState.currentPickaxe = pickaxeId;
-        gameState.pickaxeDurability = pickaxe.maxDurability;
-        gameState.pickaxeMaxDurability = pickaxe.maxDurability;
-        saveGameState();
-        updateUI();
-        renderPickaxeShop();
-        renderGrid();
-        document.getElementById('mineMsg').textContent = '🔧 کلنگ ' + pickaxe.name + ' خریداری و فعال شد!';
-        return;
-    }
-
-    if (isOwned && gameState.pickaxeDurability > 0) {
-        gameState.currentPickaxe = pickaxeId;
-        gameState.pickaxeDurability = pickaxe.maxDurability;
-        gameState.pickaxeMaxDurability = pickaxe.maxDurability;
-        saveGameState();
-        updateUI();
-        renderPickaxeShop();
-        renderGrid();
-        document.getElementById('mineMsg').textContent = '🔧 کلنگ ' + pickaxe.name + ' فعال شد!';
-        return;
-    }
-
-    var userCoins = parseInt(document.getElementById('displayCoins').textContent) || 0;
-    if (userCoins < pickaxe.price) {
-        alert('❌ سکه کافی ندارید! نیاز به ' + pickaxe.price.toLocaleString('fa-IR') + ' سکه.');
-        return;
-    }
-
-    if (!confirm('آیا ' + pickaxe.emoji + ' ' + pickaxe.name + ' رو به قیمت ' + pickaxe.price.toLocaleString('fa-IR') + ' سکه می‌خواهید؟')) return;
-
-    var users = getUsers();
-    if (users[username]) {
-        users[username].coins = (users[username].coins || 0) - pickaxe.price;
-        localStorage.setItem('starloom_users', JSON.stringify(users));
-        var current = JSON.parse(localStorage.getItem('starloom_current_user')) || {};
-        current.coins = users[username].coins;
-        localStorage.setItem('starloom_current_user', JSON.stringify(current));
-        document.getElementById('displayCoins').textContent = users[username].coins;
-    }
-
-    if (gameState.ownedPickaxes.indexOf(pickaxeId) === -1) {
-        gameState.ownedPickaxes.push(pickaxeId);
-    }
-    gameState.currentPickaxe = pickaxeId;
-    gameState.pickaxeDurability = pickaxe.maxDurability;
-    gameState.pickaxeMaxDurability = pickaxe.maxDurability;
-    saveGameState();
-    updateUI();
     renderPickaxeShop();
+
     renderGrid();
-    document.getElementById('mineMsg').textContent = '🎉 ' + pickaxe.emoji + ' ' + pickaxe.name + ' خریداری و فعال شد!';
+
+    if(gameState.minedCount >= TOTAL_BLOCKS){
+
+        finishGame();
+
+    }
+
 }
+
+
+/* =========================================================
+   FINISH
+   ========================================================= */
+
+function finishGame(){
+
+    if(gameState.gameOver)
+        return;
+
+    gameState.gameOver = true;
+
+    const bonus = 13000;
+
+    gameState.totalCoins += bonus;
+
+    /*
+       قبلاً اینجا سکه در displayCoins دوباره
+       اضافه می‌شد و باعث دوبل شدن نمایش می‌شد.
+       حالا فقط یک بار اضافه می‌کنیم.
+    */
+
+    const rewarded =
+        changeUserCoins(bonus);
+
+    saveGameState();
+
+    document.getElementById(
+        "mineMsg"
+    ).className =
+        "mine-msg winner";
+
+    document.getElementById(
+        "mineMsg"
+    ).textContent =
+        "🎉 همه بلاک‌ها استخراج شدند! +۱۳٬۰۰۰ سکه";
+
+    document.getElementById(
+        "finalStats"
+    ).innerHTML =
+        `💰 سکه استخراج‌شده: ${gameState.totalCoins.toLocaleString("fa-IR")}
+         <br>
+         ${rewarded ? "✅ جایزه به حساب شما اضافه شد" : "ℹ️ برای دریافت سکه وارد حساب StarLoom شوید"}`;
+
+    document.getElementById(
+        "gameEndedOverlay"
+    ).classList.add("show");
+
+    updateUI();
+
+    renderGrid();
+
+    setTimeout(
+        startNewWorld,
+        5000
+    );
+
+}
+
+
+/* =========================================================
+   NEW WORLD
+   ========================================================= */
+
+function startNewWorld(){
+
+    localStorage.removeItem(
+        STORAGE_KEY
+    );
+
+    document.getElementById(
+        "gameEndedOverlay"
+    ).classList.remove("show");
+
+    gameState = {
+
+        grid:[],
+        revealed:[],
+        minedCount:0,
+        totalCoins:0,
+        gameOver:false,
+        currentPickaxe:null,
+        pickaxeDurability:0,
+        pickaxeMaxDurability:0,
+        ownedPickaxes:[],
+        totalBlocksMined:0
+
+    };
+
+    generateWorld();
+
+    renderGrid();
+
+    renderPickaxeShop();
+
+    updateUI();
+
+    showMessage(
+        "🌎 دنیای جدید ساخته شد! ⛏️"
+    );
+
+}
+
+
+/* =========================================================
+   UI
+   ========================================================= */
+
+function showMessage(text){
+
+    const msg =
+        document.getElementById(
+            "mineMsg"
+        );
+
+    msg.className =
+        "mine-msg";
+
+    msg.textContent = text;
+
+}
+
+
+function updateUI(){
+
+    document.getElementById(
+        "minedCount"
+    ).textContent =
+        `${gameState.minedCount}/${TOTAL_BLOCKS}`;
+
+    document.getElementById(
+        "coinDisplay"
+    ).textContent =
+        gameState.totalCoins.toLocaleString("fa-IR");
+
+    const pickaxe =
+        gameState.currentPickaxe
+            ? PICKAXES[
+                gameState.currentPickaxe
+              ]
+            : null;
+
+    document.getElementById(
+        "pickaxeDisplay"
+    ).textContent =
+        pickaxe
+            ? pickaxe.name
+            : "هیچ";
+
+    document.getElementById(
+        "durabilityDisplay"
+    ).textContent =
+        `${gameState.pickaxeDurability}/${gameState.pickaxeMaxDurability}`;
+
+    const percent =
+        Math.min(
+            100,
+            gameState.minedCount /
+            TOTAL_BLOCKS *
+            100
+        );
+
+    document.getElementById(
+        "progressFill"
+    ).style.width =
+        percent + "%";
+
+    document.getElementById(
+        "progressText"
+    ).textContent =
+        Math.floor(percent) + "%";
+
+    if(percent >= 100){
+
+        document.getElementById(
+            "progressFill"
+        ).classList.add("complete");
+
+    }else{
+
+        document.getElementById(
+            "progressFill"
+        ).classList.remove("complete");
+
+    }
+
+}
+
+
+/* =========================================================
+   PICKAXE SHOP
+   ========================================================= */
+
+function renderPickaxeShop(){
+
+    const shop =
+        document.getElementById(
+            "pickaxeShop"
+        );
+
+    shop.innerHTML = "";
+
+    Object.keys(PICKAXES)
+        .forEach(function(id){
+
+            const pickaxe =
+                PICKAXES[id];
+
+            const owned =
+                gameState.ownedPickaxes
+                    .includes(id);
+
+            const active =
+                gameState.currentPickaxe === id &&
+                gameState.pickaxeDurability > 0;
+
+            const broken =
+                gameState.currentPickaxe === id &&
+                gameState.pickaxeDurability <= 0;
+
+            const div =
+                document.createElement("div");
+
+            div.className =
+                "pickaxe-item";
+
+            if(owned)
+                div.classList.add("owned");
+
+            if(active)
+                div.classList.add("active");
+
+            if(broken)
+                div.classList.add("broken");
+
+            let status = "";
+
+            if(active){
+
+                status =
+                    `<div class="status active">● فعال</div>`;
+
+            }else if(broken){
+
+                status =
+                    `<div class="status broken">● شکسته</div>`;
+
+            }else if(owned){
+
+                status =
+                    `<div class="status owned">● مالک</div>`;
+
+            }
+
+            div.innerHTML = `
+
+                <div class="emoji">
+                    ${pickaxe.emoji}
+                </div>
+
+                <div class="name">
+                    ${pickaxe.name}
+                </div>
+
+                <div class="info">
+                    🔨 ${pickaxe.maxDurability} بلاک
+                </div>
+
+                <div class="price">
+                    💰 ${pickaxe.price.toLocaleString("fa-IR")}
+                </div>
+
+                ${status}
+
+            `;
+
+            div.addEventListener(
+                "click",
+                function(){
+
+                    handlePickaxeClick(id);
+
+                }
+            );
+
+            shop.appendChild(div);
+
+        });
+
+}
+
+
+/* =========================================================
+   BUY / EQUIP PICKAXE
+   ========================================================= */
+
+function handlePickaxeClick(id){
+
+    const pickaxe =
+        PICKAXES[id];
+
+    const owned =
+        gameState.ownedPickaxes
+            .includes(id);
+
+    const active =
+        gameState.currentPickaxe === id &&
+        gameState.pickaxeDurability > 0;
+
+    if(active){
+
+        showMessage(
+            `⛏️ کلنگ ${pickaxe.name} همین حالا فعال است`
+        );
+
+        return;
+
+    }
+
+
+    /* Owned + broken */
+
+    if(
+        owned &&
+        gameState.currentPickaxe === id &&
+        gameState.pickaxeDurability <= 0
+    ){
+
+        const coins =
+            getCurrentUserCoins();
+
+        if(coins < pickaxe.price){
+
+            alert(
+                `❌ سکه کافی ندارید!\nنیاز: ${pickaxe.price.toLocaleString("fa-IR")} سکه`
+            );
+
+            return;
+
+        }
+
+        if(
+            !confirm(
+                `💔 کلنگ ${pickaxe.name} شکسته است.\n\nخرید مجدد با ${pickaxe.price.toLocaleString("fa-IR")} سکه؟`
+            )
+        ){
+
+            return;
+
+        }
+
+        if(!changeUserCoins(-pickaxe.price))
+            return;
+
+        activatePickaxe(id);
+
+        showMessage(
+            `🔧 کلنگ ${pickaxe.name} تعمیر/خریداری شد`
+        );
+
+        return;
+
+    }
+
+
+    /* Owned */
+
+    if(owned){
+
+        activatePickaxe(id);
+
+        showMessage(
+            `⛏️ کلنگ ${pickaxe.name} فعال شد`
+        );
+
+        return;
+
+    }
+
+
+    /* New purchase */
+
+    const coins =
+        getCurrentUserCoins();
+
+    if(coins < pickaxe.price){
+
+        alert(
+            `❌ سکه کافی ندارید!\nنیاز: ${pickaxe.price.toLocaleString("fa-IR")} سکه`
+        );
+
+        return;
+
+    }
+
+    if(
+        !confirm(
+            `⛏️ ${pickaxe.name}\n\nقیمت: ${pickaxe.price.toLocaleString("fa-IR")} سکه\n\nخریداری شود؟`
+        )
+    ){
+
+        return;
+
+    }
+
+    if(!changeUserCoins(-pickaxe.price))
+        return;
+
+    gameState.ownedPickaxes.push(id);
+
+    activatePickaxe(id);
+
+    showMessage(
+        `🎉 ${pickaxe.emoji} کلنگ ${pickaxe.name} خریداری شد!`
+    );
+
+}
+
+
+/* =========================================================
+   ACTIVATE PICKAXE
+   ========================================================= */
+
+function activatePickaxe(id){
+
+    const pickaxe =
+        PICKAXES[id];
+
+    gameState.currentPickaxe = id;
+
+    gameState.pickaxeDurability =
+        pickaxe.maxDurability;
+
+    gameState.pickaxeMaxDurability =
+        pickaxe.maxDurability;
+
+    saveGameState();
+
+    updateUI();
+
+    renderPickaxeShop();
+
+    renderGrid();
+
+}
+
+
+/* =========================================================
+   START
+   ========================================================= */
+
+function initGame(){
+
+    const loaded =
+        loadGameState();
+
+    if(!loaded){
+
+        generateWorld();
+
+    }
+
+    renderGrid();
+
+    renderPickaxeShop();
+
+    updateUI();
+
+    if(gameState.gameOver){
+
+        document.getElementById(
+            "gameEndedOverlay"
+        ).classList.add("show");
+
+        document.getElementById(
+            "finalStats"
+        ).innerHTML =
+            `💰 سکه جمع‌آوری‌شده:
+             ${gameState.totalCoins.toLocaleString("fa-IR")}`;
+
+    }else if(!gameState.currentPickaxe){
+
+        showMessage(
+            "⛏️ برای شروع یک کلنگ از فروشگاه انتخاب کن!"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   BOOT
+   ========================================================= */
 
 loadUser();
+
 initGame();
 
-console.log('⛏️ Minecraft Game Ready - 1000 blocks!');
-console.log('💰 جایزه نهایی: 13,000 سکه');
+console.log(
+    "✦ StarLoom Craft loaded successfully"
+);
+
+console.log(
+    "⛏️ World size: 1000 blocks"
+);
+
+console.log(
+    "🎁 Final reward: 13,000 coins"
+);
+
 </script>
+
 </body>
 </html>
