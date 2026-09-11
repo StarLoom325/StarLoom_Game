@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>StarLoom Idle ⭐</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background: #050810;
+  color: #fff;
+  touch-action: manipulation;
+}
+
+body {
+  background: radial-gradient(circle at 50% 30%, #1a1f3a 0%, #0a0e1a 50%, #050810 100%);
+  position: relative;
+}
+
+.aurora {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.aurora::before,
+.aurora::after {
+  content: '';
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  top: -50%;
+  left: -50%;
+  background:
+    radial-gradient(ellipse at 30% 50%, rgba(241,196,15,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 80%, rgba(100,180,255,0.05) 0%, transparent 55%),
+    radial-gradient(ellipse at 50% 20%, rgba(180,80,255,0.04) 0%, transparent 55%);
+  animation: auroraFloat 20s ease-in-out infinite alternate;
+}
+.aurora::after {
+  animation-delay: -10s;
+  background:
+    radial-gradient(ellipse at 60% 40%, rgba(255,100,150,0.05) 0%, transparent 55%),
+    radial-gradient(ellipse at 20% 70%, rgba(100,255,180,0.04) 0%, transparent 55%);
+}
+@keyframes auroraFloat {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(3%, -3%) scale(1.02); }
+}
+
+#bgStars {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.hud-top {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  right: 15px;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  flex-wrap: wrap;
+  pointer-events: none;
+}
+
+.hud-box {
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(241, 196, 15, 0.3);
+  border-radius: 12px;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+.hud-box .icon { font-size: 1.3rem; }
+.hud-box .info { display: flex; flex-direction: column; }
+.hud-box .label {
+  font-size: 0.65rem;
+  color: #8899bb;
+  letter-spacing: 1px;
+}
+.hud-box .value {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #f1c40f;
+}
+.hud-box.stars .value { color: #f9d976; }
+.hud-box.perSec .value { color: #2ecc71; }
+.hud-box.coins .value { color: #f1c40f; }
+.hud-box.milestone { border-color: #2ecc71; }
+.hud-box.milestone .value { color: #2ecc71; font-size: 0.85rem; }
+.hud-box.milestone.ready {
+  animation: milestonePulse 1s ease-in-out infinite alternate;
+}
+@keyframes milestonePulse {
+  0% { box-shadow: 0 0 10px rgba(46, 204, 113, 0.3); }
+  100% { box-shadow: 0 0 25px rgba(46, 204, 113, 0.8); }
+}
+
+.main-area {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 200px;
+}
+
+.big-star-container {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.1s;
+  z-index: 6;
+}
+.big-star-container:active {
+  transform: scale(0.92);
+}
+
+.big-star {
+  font-size: 8rem;
+  color: #f9d976;
+  text-shadow:
+    0 0 30px #f1c40f,
+    0 0 60px #f39c12,
+    0 0 100px rgba(241, 196, 15, 0.6);
+  animation: starPulse 2s ease-in-out infinite alternate;
+  pointer-events: none;
+  user-select: none;
+}
+@keyframes starPulse {
+  0% { transform: scale(1) rotate(0deg); filter: brightness(1); }
+  100% { transform: scale(1.08) rotate(5deg); filter: brightness(1.3); }
+}
+
+.star-ring {
+  position: absolute;
+  inset: -20px;
+  border: 3px solid transparent;
+  border-top-color: rgba(241, 196, 15, 0.6);
+  border-right-color: rgba(241, 196, 15, 0.3);
+  border-radius: 50%;
+  animation: ringSpin 4s linear infinite;
+  pointer-events: none;
+}
+.star-ring:nth-child(2) {
+  inset: -40px;
+  border-top-color: rgba(100, 180, 255, 0.4);
+  border-left-color: rgba(100, 180, 255, 0.2);
+  animation: ringSpin 6s linear infinite reverse;
+}
+@keyframes ringSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.click-hint {
+  position: absolute;
+  bottom: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #8899bb;
+  font-size: 0.85rem;
+  letter-spacing: 2px;
+  animation: hintPulse 1.5s ease-in-out infinite alternate;
+  white-space: nowrap;
+}
+@keyframes hintPulse {
+  0% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+.floating-num {
+  position: fixed;
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: #f9d976;
+  text-shadow: 0 0 10px #f1c40f, 0 0 20px #f39c12;
+  pointer-events: none;
+  z-index: 100;
+  animation: floatUp 1s ease-out forwards;
+}
+@keyframes floatUp {
+  0% { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-120px) scale(1.8); }
+}
+
+.bottom-panel {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background: rgba(10, 15, 30, 0.95);
+  backdrop-filter: blur(20px);
+  border-top: 2px solid rgba(241, 196, 15, 0.3);
+  border-radius: 25px 25px 0 0;
+  padding: 12px 15px 15px;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+}
+
+.tabs {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 10px;
+  flex-shrink: 0;
+}
+
+.tab {
+  flex: 1;
+  padding: 10px 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(241, 196, 15, 0.15);
+  border-radius: 12px;
+  color: #8899bb;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  font-family: inherit;
+}
+.tab .tab-icon { font-size: 1.2rem; }
+.tab.active {
+  background: rgba(241, 196, 15, 0.15);
+  border-color: #f1c40f;
+  color: #f1c40f;
+}
+.tab:hover {
+  background: rgba(241, 196, 15, 0.1);
+}
+
+.tab-content {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+.tab-content::-webkit-scrollbar { width: 4px; }
+.tab-content::-webkit-scrollbar-thumb {
+  background: rgba(241, 196, 15, 0.4);
+  border-radius: 10px;
+}
+
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+.upgrade-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(241, 196, 15, 0.15);
+  border-radius: 12px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.upgrade-item:hover {
+  background: rgba(241, 196, 15, 0.08);
+  border-color: rgba(241, 196, 15, 0.4);
+}
+.upgrade-item.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.upgrade-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 8px rgba(241, 196, 15, 0.5));
+}
+.upgrade-info { flex: 1; min-width: 0; }
+.upgrade-name {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #f0f4ff;
+  margin-bottom: 3px;
+}
+.upgrade-desc {
+  font-size: 0.7rem;
+  color: #8899bb;
+  margin-bottom: 3px;
+}
+.upgrade-count {
+  font-size: 0.75rem;
+  color: #2ecc71;
+  font-weight: 600;
+}
+.upgrade-cost {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #f1c40f;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.upgrade-cost.expensive { color: #e74c3c; }
+
+.powerup-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(241, 196, 15, 0.15);
+  border-radius: 12px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.powerup-item:hover { background: rgba(241, 196, 15, 0.08); }
+.powerup-item.active {
+  background: rgba(46, 204, 113, 0.15);
+  border-color: #2ecc71;
+}
+.powerup-icon { font-size: 2rem; flex-shrink: 0; }
+.powerup-info { flex: 1; }
+.powerup-name {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #f0f4ff;
+  margin-bottom: 3px;
+}
+.powerup-desc { font-size: 0.7rem; color: #8899bb; }
+.powerup-cost {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #f1c40f;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.achievement-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(241, 196, 15, 0.15);
+  border-radius: 12px;
+  margin-bottom: 8px;
+}
+.achievement-item.unlocked {
+  background: rgba(46, 204, 113, 0.1);
+  border-color: rgba(46, 204, 113, 0.4);
+}
+.achievement-item.locked { opacity: 0.5; }
+.achievement-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+  filter: grayscale(100%);
+}
+.achievement-item.unlocked .achievement-icon {
+  filter: grayscale(0%);
+  filter: drop-shadow(0 0 8px rgba(46, 204, 113, 0.6));
+}
+.achievement-info { flex: 1; }
+.achievement-name {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #f0f4ff;
+  margin-bottom: 2px;
+}
+.achievement-desc { font-size: 0.65rem; color: #8899bb; }
+.achievement-status { font-size: 1.2rem; color: #2ecc71; }
+
+.action-buttons {
+  position: fixed;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 15;
+}
+
+.icon-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(241, 196, 15, 0.3);
+  color: #f1c40f;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  backdrop-filter: blur(10px);
+}
+.icon-btn:hover {
+  background: rgba(241, 196, 15, 0.2);
+  transform: scale(1.1);
+}
+.icon-btn.active {
+  background: rgba(46, 204, 113, 0.3);
+  border-color: #2ecc71;
+  color: #2ecc71;
+}
+
+.toast {
+  position: fixed;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-100px);
+  background: linear-gradient(135deg, rgba(241, 196, 15, 0.95), rgba(230, 126, 34, 0.95));
+  color: #1a1f30;
+  padding: 12px 24px;
+  border-radius: 50px;
+  font-weight: 800;
+  font-size: 0.9rem;
+  z-index: 200;
+  box-shadow: 0 10px 30px rgba(241, 196, 15, 0.5);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none;
+  letter-spacing: 0.5px;
+  max-width: 90%;
+  text-align: center;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast.achievement {
+  background: linear-gradient(135deg, rgba(46, 204, 113, 0.95), rgba(26, 188, 156, 0.95));
+  color: #fff;
+}
+.toast.milestone {
+  background: linear-gradient(135deg, rgba(241, 196, 15, 0.98), rgba(255, 100, 0, 0.98));
+  color: #fff;
+  font-size: 1rem;
+  padding: 15px 30px;
+  box-shadow: 0 10px 40px rgba(241, 196, 15, 0.8);
+}
+
+.back-btn {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  z-index: 20;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(241, 196, 15, 0.3);
+  border-radius: 50px;
+  padding: 8px 16px;
+  color: #f1c40f;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  backdrop-filter: blur(10px);
+  transition: all 0.2s;
+}
+.back-btn:hover { background: rgba(241, 196, 15, 0.2); }
+
+.convert-section {
+  position: fixed;
+  bottom: 210px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 12;
+  display: flex;
+  gap: 8px;
+}
+
+.convert-btn {
+  background: linear-gradient(135deg, #f1c40f, #e67e22);
+  border: none;
+  border-radius: 50px;
+  padding: 10px 20px;
+  color: #1a1f30;
+  font-weight: 800;
+  font-size: 0.8rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 5px 20px rgba(241, 196, 15, 0.4);
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.convert-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(241, 196, 15, 0.6);
+}
+.convert-btn:active { transform: translateY(0) scale(0.95); }
+.convert-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+@media (max-width: 500px) {
+  .big-star { font-size: 6rem; }
+  .big-star-container { width: 160px; height: 160px; }
+  .main-area { padding-bottom: 240px; }
+  .bottom-panel { height: 220px; padding: 10px 10px 12px; }
+  .hud-box { padding: 6px 10px; }
+  .hud-box .icon { font-size: 1rem; }
+  .hud-box .label { font-size: 0.5rem; }
+  .hud-box .value { font-size: 0.8rem; }
+  .hud-box.milestone .value { font-size: 0.7rem; }
+  .tab { padding: 8px 4px; font-size: 0.7rem; }
+  .tab .tab-icon { font-size: 1rem; }
+  .upgrade-icon, .powerup-icon, .achievement-icon { font-size: 1.5rem; }
+  .upgrade-name, .powerup-name { font-size: 0.8rem; }
+  .convert-section { bottom: 250px; }
+  .convert-btn { font-size: 0.7rem; padding: 8px 14px; }
+  .hud-top { gap: 5px; }
+  .action-buttons { top: auto; bottom: 240px; }
+}
+</style>
+</head>
+<body>
+
+<div class="aurora"></div>
+<canvas id="bgStars"></canvas>
+
+<div class="hud-top">
+  <div class="hud-box stars">
+    <span class="icon">⭐</span>
+    <div class="info">
+      <div class="label">STARS</div>
+      <div class="value" id="hudStars">0</div>
+    </div>
+  </div>
+  <div class="hud-box perSec">
+    <span class="icon">⚡</span>
+    <div class="info">
+      <div class="label">PER SEC</div>
+      <div class="value" id="hudPerSec">0</div>
+    </div>
+  </div>
+  <div class="hud-box coins">
+    <span class="icon">🪙</span>
+    <div class="info">
+      <div class="label">COINS</div>
+      <div class="value" id="hudCoins">0</div>
+    </div>
+  </div>
+  <div class="hud-box milestone" id="milestoneBox">
+    <span class="icon">🏆</span>
+    <div class="info">
+      <div class="label">NEXT REWARD</div>
+      <div class="value" id="hudMilestone">5,000 ⭐</div>
+    </div>
+  </div>
+</div>
+
+<div class="action-buttons">
+  <button class="icon-btn" id="soundBtn" title="صدا">🔊</button>
+  <button class="icon-btn" id="resetBtn" title="ریست">🔄</button>
+</div>
+
+<a href="home.html" class="back-btn">🏠 خانه</a>
+
+<div class="main-area">
+  <div class="big-star-container" id="bigStar">
+    <div class="star-ring"></div>
+    <div class="star-ring"></div>
+    <div class="big-star">⭐</div>
+    <div class="click-hint">👆 بزن!</div>
+  </div>
+</div>
+
+<div class="convert-section">
+  <button class="convert-btn" id="convertBtn" disabled>
+    💰 تبدیل (1000 ⭐ = 10 🪙)
+  </button>
+</div>
+
+<div class="bottom-panel">
+  <div class="tabs">
+    <button class="tab active" data-tab="upgrades">
+      <span class="tab-icon">🛒</span>
+      <span>ارتقا</span>
+    </button>
+    <button class="tab" data-tab="powerups">
+      <span class="tab-icon">⚡</span>
+      <span>پاورآپ</span>
+    </button>
+    <button class="tab" data-tab="achievements">
+      <span class="tab-icon">🏆</span>
+      <span>دستاورد</span>
+    </button>
+  </div>
+
+  <div class="tab-content">
+    <div class="tab-pane active" id="pane-upgrades"></div>
+    <div class="tab-pane" id="pane-powerups"></div>
+    <div class="tab-pane" id="pane-achievements"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+//  STARLOOM IDLE ⭐ - Clicker Game + Milestone Rewards
+// ============================================================
+
+// ============ تنظیمات جایزه ============
+const MILESTONE_STEP = 5000;    // هر ۵۰۰۰ ستاره
+const MILESTONE_REWARD = 5000;  // = ۵,۰۰۰ سکه
+
+// ============ داده‌های بازی ============
+const game = {
+  stars: 0,
+  totalStars: 0,
+  coins: 0,
+  perClick: 1,
+  perSecond: 0,
+  lastUpdate: Date.now(),
+  soundOn: true,
+  lastMilestone: 0,
+  
+  upgrades: {
+    finger:   { level: 0, baseCost: 10,      multiplier: 1.5, perClick: 1 },
+    robot:    { level: 0, baseCost: 50,      multiplier: 1.6, perSecond: 1 },
+    factory:  { level: 0, baseCost: 200,     multiplier: 1.7, perSecond: 5 },
+    maker:    { level: 0, baseCost: 1000,    multiplier: 1.8, perSecond: 25 },
+    galaxy:   { level: 0, baseCost: 10000,   multiplier: 1.9, perSecond: 100 },
+    ship:     { level: 0, baseCost: 100000,  multiplier: 2.0, perSecond: 1000 },
+    universe: { level: 0, baseCost: 1000000, multiplier: 2.2, perSecond: 10000 }
+  },
+  
+  powerups: {
+    clickStorm: { duration: 0, multiplier: 2 },
+    goldStar:   { duration: 0, multiplier: 10 },
+    megaBoost:  { duration: 0, multiplier: 3 }
+  },
+  
+  achievements: {
+    firstClick:    { unlocked: false, name: 'اولین کلیک',    desc: '۱ بار کلیک کن' },
+    hundredStars:  { unlocked: false, name: 'صد ستاره',      desc: '۱۰۰ ستاره جمع کن' },
+    thousandStars: { unlocked: false, name: 'هزار ستاره',    desc: '۱۰۰۰ ستاره جمع کن' },
+    fiveKStars:    { unlocked: false, name: 'پنج هزار ستاره', desc: '۵۰۰۰ ستاره جمع کن' },
+    millionStars:  { unlocked: false, name: 'میلیون ستاره',  desc: '۱ میلیون ستاره' },
+    firstUpgrade:  { unlocked: false, name: 'اولین ارتقا',   desc: 'یه ارتقا بخر' },
+    tenUpgrades:   { unlocked: false, name: '۱۰ ارتقا',      desc: '۱۰ بار ارتقا بده' },
+    firstConvert:  { unlocked: false, name: 'اولین تبدیل',   desc: 'ستاره به سکه تبدیل کن' },
+    billionaire:   { unlocked: false, name: 'میلیاردر',      desc: '۱ میلیارد ستاره' }
+  }
+};
+
+const UPGRADE_INFO = {
+  finger:   { icon: '👆', name: 'انگشت طلایی',  desc: '+۱ ستاره در هر کلیک' },
+  robot:    { icon: '🤖', name: 'ربات کمکی',    desc: '+۱ ستاره در ثانیه' },
+  factory:  { icon: '🏭', name: 'کارگاه ستاره', desc: '+۵ ستاره در ثانیه' },
+  maker:    { icon: '🌟', name: 'ستاره‌ساز',    desc: '+۲۵ ستاره در ثانیه' },
+  galaxy:   { icon: '🌌', name: 'کهکشان',       desc: '+۱۰۰ ستاره در ثانیه' },
+  ship:     { icon: '🚀', name: 'سفینه فضایی',  desc: '+۱۰۰۰ ستاره در ثانیه' },
+  universe: { icon: '🌠', name: 'جهان بی‌کران', desc: '+۱۰۰۰۰ ستاره در ثانیه' }
+};
+
+const POWERUP_INFO = {
+  clickStorm: { icon: '⚡', name: 'کلیک طوفانی', desc: '۲ برابر کلیک برای ۳۰ ثانیه', cost: 100, duration: 30 },
+  goldStar:   { icon: '🌟', name: 'ستاره طلایی', desc: '۱۰ برابر کلیک برای ۱۰ ثانیه', cost: 500, duration: 10 },
+  megaBoost:  { icon: '💎', name: 'الماس مگا',  desc: '۳ برابر همه چیز برای ۲۰ ثانیه', cost: 1000, duration: 20 }
+};
+
+const SAVE_KEY = 'starloomidle_save';
+
+function saveGame() {
+  try {
+    const data = {
+      stars: game.stars,
+      totalStars: game.totalStars,
+      coins: game.coins,
+      lastMilestone: game.lastMilestone,
+      upgrades: {},
+      achievements: game.achievements,
+      lastUpdate: Date.now()
+    };
+    for (const key in game.upgrades) {
+      data.upgrades[key] = game.upgrades[key].level;
+    }
+    localStorage.setItem(SAVE_KEY, JSON.stringify(data));
+  } catch (e) {}
+}
+
+function loadGame() {
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (!raw) return;
+    
+    const data = JSON.parse(raw);
+    
+    if (data.upgrades) {
+      for (const key in data.upgrades) {
+        if (game.upgrades[key]) {
+          game.upgrades[key].level = data.upgrades[key] || 0;
+        }
+      }
+    }
+    
+    if (data.achievements) {
+      game.achievements = data.achievements;
+    }
+    
+    game.stars = data.stars || 0;
+    game.totalStars = data.totalStars || 0;
+    game.coins = data.coins || 0;
+    game.lastMilestone = data.lastMilestone || 0;
+    
+    if (data.lastUpdate) {
+      const offlineTime = (Date.now() - data.lastUpdate) / 1000;
+      const maxOffline = 8 * 3600;
+      const actualOffline = Math.min(offlineTime, maxOffline);
+      
+      if (actualOffline > 5) {
+        recalcStats();
+        const offlineEarnings = Math.floor(game.perSecond * actualOffline);
+        if (offlineEarnings > 0) {
+          game.stars += offlineEarnings;
+          game.totalStars += offlineEarnings;
+          
+          setTimeout(() => {
+            showToast(`💤 در ${formatTime(actualOffline)} آفلاین، ${formatNumber(offlineEarnings)} ⭐ گرفتی!`);
+            checkMilestone();
+          }, 1000);
+        }
+      }
+    }
+    
+    recalcStats();
+  } catch (e) {}
+}
+
+function resetGame() {
+  if (!confirm('مطمئنی؟ همه چیز پاک می‌شه!')) return;
+  
+  localStorage.removeItem(SAVE_KEY);
+  
+  game.stars = 0;
+  game.totalStars = 0;
+  game.coins = 0;
+  game.lastMilestone = 0;
+  
+  for (const key in game.upgrades) {
+    game.upgrades[key].level = 0;
+  }
+  for (const key in game.achievements) {
+    game.achievements[key].unlocked = false;
+  }
+  for (const key in game.powerups) {
+    game.powerups[key].duration = 0;
+  }
+  
+  recalcStats();
+  renderUpgrades();
+  renderPowerups();
+  renderAchievements();
+  updateHUD();
+  showToast('🔄 بازی ریست شد!');
+}
+
+function recalcStats() {
+  let pc = 1;
+  for (const key in game.upgrades) {
+    const u = game.upgrades[key];
+    if (u.perClick) pc += u.perClick * u.level;
+  }
+  game.perClick = pc;
+  
+  let ps = 0;
+  for (const key in game.upgrades) {
+    const u = game.upgrades[key];
+    if (u.perSecond) ps += u.perSecond * u.level;
+  }
+  game.perSecond = ps;
+}
+
+function onStarClick(e) {
+  let multiplier = 1;
+  if (game.powerups.clickStorm.duration > 0) multiplier *= game.powerups.clickStorm.multiplier;
+  if (game.powerups.goldStar.duration > 0) multiplier *= game.powerups.goldStar.multiplier;
+  if (game.powerups.megaBoost.duration > 0) multiplier *= game.powerups.megaBoost.multiplier;
+  
+  const amount = Math.floor(game.perClick * multiplier);
+  
+  game.stars += amount;
+  game.totalStars += amount;
+  game.lastUpdate = Date.now();
+  
+  const x = e.clientX || (e.touches && e.touches[0].clientX) || window.innerWidth / 2;
+  const y = e.clientY || (e.touches && e.touches[0].clientY) || window.innerHeight / 2;
+  showFloatingNumber(x, y, '+' + formatNumber(amount));
+  
+  playClickSound();
+  
+  const star = document.getElementById('bigStar');
+  star.style.transform = 'scale(0.92)';
+  setTimeout(() => { star.style.transform = ''; }, 80);
+  
+  if (Math.random() < 0.1) saveGame();
+  
+  checkAchievements();
+  checkMilestone();
+  
+  updateHUD();
+}
+
+function showFloatingNumber(x, y, text) {
+  const el = document.createElement('div');
+  el.className = 'floating-num';
+  el.textContent = text;
+  el.style.left = (x - 30) + 'px';
+  el.style.top = (y - 30) + 'px';
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 1000);
+}
+
+function usePowerup(key) {
+  const info = POWERUP_INFO[key];
+  if (!info) return;
+  
+  if (game.stars < info.cost) {
+    showToast('❌ ستاره کافی نداری!');
+    return;
+  }
+  
+  game.stars -= info.cost;
+  game.powerups[key].duration = info.duration;
+  
+  showToast(`${info.icon} ${info.name} فعال شد!`);
+  playSound(800, 0.2, 'sine');
+  
+  renderPowerups();
+  updateHUD();
+}
+
+function buyUpgrade(key) {
+  const u = game.upgrades[key];
+  if (!u) return;
+  
+  const cost = getCost(key);
+  
+  if (game.stars < cost) {
+    showToast('❌ ستاره کافی نداری!');
+    return;
+  }
+  
+  game.stars -= cost;
+  u.level++;
+  
+  recalcStats();
+  playSound(1000, 0.15, 'sine');
+  showToast(`✅ ${UPGRADE_INFO[key].name} خریداری شد!`);
+  
+  checkAchievements();
+  renderUpgrades();
+  updateHUD();
+  saveGame();
+}
+
+function getCost(key) {
+  const u = game.upgrades[key];
+  return Math.floor(u.baseCost * Math.pow(u.multiplier, u.level));
+}
+
+const CONVERT_RATE = 1000;
+const CONVERT_REWARD = 10;
+
+function convertStars() {
+  if (game.stars < CONVERT_RATE) {
+    showToast('❌ حداقل ۱۰۰۰ ستاره لازمه!');
+    return;
+  }
+  
+  const amount = Math.floor(game.stars / CONVERT_RATE);
+  const starsUsed = amount * CONVERT_RATE;
+  const coinsEarned = amount * CONVERT_REWARD;
+  
+  if (amount <= 0) return;
+  
+  game.stars -= starsUsed;
+  game.coins += coinsEarned;
+  
+  saveCoinsToAccount(coinsEarned);
+  
+  if (!game.achievements.firstConvert.unlocked) {
+    game.achievements.firstConvert.unlocked = true;
+    showAchievement('firstConvert');
+  }
+  
+  showToast(`💰 ${formatNumber(coinsEarned)} سکه گرفتی!`);
+  playSound(1200, 0.3, 'sine');
+  
+  updateHUD();
+  saveGame();
+}
+
+function saveCoinsToAccount(amount) {
+  if (amount <= 0) return;
+  try {
+    var users = JSON.parse(localStorage.getItem('starloom_users')) || {};
+    var current = JSON.parse(localStorage.getItem('starloom_current_user')) || {};
+    if (!current.username) {
+      showToast('⚠️ لاگین کن تا سکه‌ها ذخیره شه!');
+      return;
+    }
+    var username = current.username;
+    if (users[username]) {
+      users[username].coins = (users[username].coins || 0) + amount;
+      localStorage.setItem('starloom_users', JSON.stringify(users));
+      current.coins = users[username].coins;
+      localStorage.setItem('starloom_current_user', JSON.stringify(current));
+    }
+  } catch(e) {}
+}
+
+// ============ جایزه رکورد (هر ۵,۰۰۰ ستاره = ۵,۰۰۰ سکه) ============
+function checkMilestone() {
+  const currentMilestone = Math.floor(game.totalStars / MILESTONE_STEP);
+  
+  if (currentMilestone > game.lastMilestone) {
+    const howMany = currentMilestone - game.lastMilestone;
+    const totalReward = howMany * MILESTONE_REWARD;
+    
+    game.lastMilestone = currentMilestone;
+    game.coins += totalReward;
+    
+    saveCoinsToAccount(totalReward);
+    
+    const reachedStars = currentMilestone * MILESTONE_STEP;
+    showMilestoneToast(`🏆 رکورد ${formatNumber(reachedStars)} ⭐!\n+${formatNumber(totalReward)} 🪙`);
+    playMilestoneSound();
+    
+    saveGame();
+  }
+}
+
+let milestoneTimeout = null;
+function checkMilestoneQuiet() {
+  const currentMilestone = Math.floor(game.totalStars / MILESTONE_STEP);
+  
+  if (currentMilestone > game.lastMilestone) {
+    if (milestoneTimeout) return;
+    
+    milestoneTimeout = setTimeout(() => {
+      milestoneTimeout = null;
+      checkMilestone();
+    }, 500);
+  }
+}
+
+function playMilestoneSound() {
+  if (!audioCtx) return;
+  const notes = [523, 659, 784, 1047];
+  notes.forEach((freq, i) => {
+    setTimeout(() => playSound(freq, 0.3, 'sine'), i * 100);
+  });
+}
+
+function showMilestoneToast(text) {
+  const toast = document.getElementById('toast');
+  toast.innerHTML = text.replace('\n', '<br>');
+  toast.className = 'toast show milestone';
+  
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    toast.classList.remove('show');
+  }, 4000);
+}
+
+function checkAchievements() {
+  const checks = [
+    { key: 'firstClick',    test: () => game.totalStars >= 1 },
+    { key: 'hundredStars',  test: () => game.totalStars >= 100 },
+    { key: 'thousandStars', test: () => game.totalStars >= 1000 },
+    { key: 'fiveKStars',    test: () => game.totalStars >= 5000 },
+    { key: 'millionStars',  test: () => game.totalStars >= 1000000 },
+    { key: 'firstUpgrade',  test: () => Object.values(game.upgrades).some(u => u.level >= 1) },
+    { key: 'tenUpgrades',   test: () => Object.values(game.upgrades).reduce((s, u) => s + u.level, 0) >= 10 },
+    { key: 'firstConvert',  test: () => game.coins >= 1 },
+    { key: 'billionaire',   test: () => game.totalStars >= 1000000000 }
+  ];
+  
+  for (const c of checks) {
+    if (!game.achievements[c.key].unlocked && c.test()) {
+      game.achievements[c.key].unlocked = true;
+      showAchievement(c.key);
+      playSound(1500, 0.4, 'sine');
+    }
+  }
+}
+
+function showAchievement(key) {
+  const a = game.achievements[key];
+  showToast(`🏆 دستاورد: ${a.name}!`, true);
+}
+
+let toastTimer = null;
+function showToast(text, isAchievement = false) {
+  const toast = document.getElementById('toast');
+  toast.textContent = text;
+  toast.className = 'toast show' + (isAchievement ? ' achievement' : '');
+  
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    toast.classList.remove('show');
+  }, 2500);
+}
+
+function formatNumber(n) {
+  n = Math.floor(n);
+  if (n < 1000) return n.toString();
+  if (n < 1000000) return (n / 1000).toFixed(1) + 'K';
+  if (n < 1000000000) return (n / 1000000).toFixed(2) + 'M';
+  if (n < 1000000000000) return (n / 1000000000).toFixed(2) + 'B';
+  return (n / 1000000000000).toFixed(2) + 'T';
+}
+
+function formatTime(sec) {
+  const h = Math.floor(sec / 3600);
+  const m = Math.floor((sec % 3600) / 60);
+  if (h > 0) return `${h} ساعت`;
+  if (m > 0) return `${m} دقیقه`;
+  return `${Math.floor(sec)} ثانیه`;
+}
+
+function updateHUD() {
+  document.getElementById('hudStars').textContent = formatNumber(game.stars);
+  
+  let ps = game.perSecond;
+  if (game.powerups.megaBoost.duration > 0) ps *= game.powerups.megaBoost.multiplier;
+  document.getElementById('hudPerSec').textContent = formatNumber(ps);
+  
+  document.getElementById('hudCoins').textContent = formatNumber(game.coins);
+  
+  const nextMilestone = (game.lastMilestone + 1) * MILESTONE_STEP;
+  const remaining = nextMilestone - game.totalStars;
+  
+  const milestoneEl = document.getElementById('hudMilestone');
+  const milestoneBox = document.getElementById('milestoneBox');
+  
+  if (remaining > 0) {
+    milestoneEl.textContent = formatNumber(remaining) + ' ⭐ مانده';
+    milestoneBox.classList.remove('ready');
+  } else {
+    milestoneEl.textContent = '🎁 آماده!';
+    milestoneBox.classList.add('ready');
+  }
+  
+  const convertBtn = document.getElementById('convertBtn');
+  convertBtn.disabled = game.stars < CONVERT_RATE;
+  
+  document.querySelectorAll('.upgrade-item').forEach(el => {
+    const key = el.dataset.key;
+    const cost = getCost(key);
+    const canAfford = game.stars >= cost;
+    el.classList.toggle('disabled', !canAfford);
+    el.querySelector('.upgrade-cost').classList.toggle('expensive', !canAfford);
+  });
+}
+
+function renderUpgrades() {
+  const pane = document.getElementById('pane-upgrades');
+  pane.innerHTML = '';
+  
+  for (const key in game.upgrades) {
+    const u = game.upgrades[key];
+    const info = UPGRADE_INFO[key];
+    const cost = getCost(key);
+    
+    const div = document.createElement('div');
+    div.className = 'upgrade-item';
+    div.dataset.key = key;
+    div.innerHTML = `
+      <div class="upgrade-icon">${info.icon}</div>
+      <div class="upgrade-info">
+        <div class="upgrade-name">${info.name}</div>
+        <div class="upgrade-desc">${info.desc}</div>
+        <div class="upgrade-count">📦 تعداد: ${u.level}</div>
+      </div>
+      <div class="upgrade-cost">
+        <span>⭐</span>
+        <span>${formatNumber(cost)}</span>
+      </div>
+    `;
+    
+    div.addEventListener('click', () => buyUpgrade(key));
+    pane.appendChild(div);
+  }
+  
+  updateHUD();
+}
+
+function renderPowerups() {
+  const pane = document.getElementById('pane-powerups');
+  pane.innerHTML = '';
+  
+  for (const key in POWERUP_INFO) {
+    const info = POWERUP_INFO[key];
+    const pu = game.powerups[key];
+    const isActive = pu.duration > 0;
+    
+    const div = document.createElement('div');
+    div.className = 'powerup-item' + (isActive ? ' active' : '');
+    div.innerHTML = `
+      <div class="powerup-icon">${info.icon}</div>
+      <div class="powerup-info">
+        <div class="powerup-name">${info.name}</div>
+        <div class="powerup-desc">${isActive ? '⏱️ فعال: ' + Math.ceil(pu.duration) + ' ثانیه' : info.desc}</div>
+      </div>
+      <div class="powerup-cost">
+        <span>⭐</span>
+        <span>${formatNumber(info.cost)}</span>
+      </div>
+    `;
+    
+    if (!isActive) {
+      div.addEventListener('click', () => usePowerup(key));
+    }
+    
+    pane.appendChild(div);
+  }
+}
+
+function renderAchievements() {
+  const pane = document.getElementById('pane-achievements');
+  pane.innerHTML = '';
+  
+  for (const key in game.achievements) {
+    const a = game.achievements[key];
+    
+    const div = document.createElement('div');
+    div.className = 'achievement-item ' + (a.unlocked ? 'unlocked' : 'locked');
+    div.innerHTML = `
+      <div class="achievement-icon">🏆</div>
+      <div class="achievement-info">
+        <div class="achievement-name">${a.name}</div>
+        <div class="achievement-desc">${a.desc}</div>
+      </div>
+      <div class="achievement-status">${a.unlocked ? '✅' : '🔒'}</div>
+    `;
+    
+    pane.appendChild(div);
+  }
+}
+
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    
+    tab.classList.add('active');
+    document.getElementById('pane-' + tab.dataset.tab).classList.add('active');
+    
+    playSound(600, 0.05, 'square');
+  });
+});
+
+let audioCtx = null;
+
+function initAudio() {
+  if (!audioCtx) {
+    try {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    } catch(e) {}
+  }
+}
+
+function playSound(freq, duration, type) {
+  if (!game.soundOn || !audioCtx) return;
+  try {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = type || 'sine';
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + duration);
+  } catch(e) {}
+}
+
+function playClickSound() {
+  const freqs = [800, 900, 1000, 1100, 1200];
+  const freq = freqs[Math.floor(Math.random() * freqs.length)];
+  playSound(freq, 0.08, 'sine');
+}
+
+(function() {
+  const canvas = document.getElementById('bgStars');
+  const ctx = canvas.getContext('2d');
+  let W, H;
+  let stars = [];
+  
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+  
+  for (let i = 0; i < 150; i++) {
+    stars.push({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      size: Math.random() * 2 + 0.5,
+      speed: Math.random() * 0.3 + 0.05,
+      twinkle: Math.random() * Math.PI * 2,
+      twinkleSpeed: Math.random() * 0.05 + 0.01
+    });
+  }
+  
+  function animate() {
+    ctx.clearRect(0, 0, W, H);
+    
+    for (const s of stars) {
+      s.twinkle += s.twinkleSpeed;
+      const alpha = 0.4 + Math.sin(s.twinkle) * 0.4 + 0.2;
+      
+      ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+      ctx.fill();
+      
+      s.y += s.speed;
+      if (s.y > H) { s.y = 0; s.x = Math.random() * W; }
+    }
+    
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+
+let lastLoopTime = performance.now();
+let saveTimer = 0;
+
+function gameLoop() {
+  const now = performance.now();
+  const dt = (now - lastLoopTime) / 1000;
+  lastLoopTime = now;
+  
+  if (game.perSecond > 0) {
+    let ps = game.perSecond;
+    if (game.powerups.megaBoost.duration > 0) ps *= game.powerups.megaBoost.multiplier;
+    
+    const earned = ps * dt;
+    game.stars += earned;
+    game.totalStars += earned;
+    
+    checkMilestoneQuiet();
+  }
+  
+  let powerupChanged = false;
+  for (const key in game.powerups) {
+    if (game.powerups[key].duration > 0) {
+      game.powerups[key].duration -= dt;
+      if (game.powerups[key].duration < 0) game.powerups[key].duration = 0;
+      powerupChanged = true;
+    }
+  }
+  
+  updateHUD();
+  
+  if (powerupChanged && Math.floor(now / 500) !== Math.floor((now - dt * 1000) / 500)) {
+    renderPowerups();
+  }
+  
+  saveTimer += dt;
+  if (saveTimer > 10) {
+    saveTimer = 0;
+    saveGame();
+  }
+  
+  requestAnimationFrame(gameLoop);
+}
+
+document.getElementById('bigStar').addEventListener('click', onStarClick);
+document.getElementById('bigStar').addEventListener('touchstart', (e) => {
+  e.preventDefault();
+  onStarClick(e);
+}, { passive: false });
+
+document.getElementById('convertBtn').addEventListener('click', convertStars);
+document.getElementById('resetBtn').addEventListener('click', resetGame);
+
+document.getElementById('soundBtn').addEventListener('click', function() {
+  game.soundOn = !game.soundOn;
+  this.textContent = game.soundOn ? '🔊' : '🔇';
+  this.classList.toggle('active', game.soundOn);
+  initAudio();
+});
+
+window.addEventListener('beforeunload', saveGame);
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) saveGame();
+});
+
+initAudio();
+loadGame();
+renderUpgrades();
+renderPowerups();
+renderAchievements();
+updateHUD();
+
+setTimeout(() => {
+  if (game.totalStars > 1 && !game.achievements.firstClick.unlocked) {
+    game.achievements.firstClick.unlocked = true;
+  }
+  checkAchievements();
+}, 500);
+
+lastLoopTime = performance.now();
+requestAnimationFrame(gameLoop);
+
+console.log('⭐ StarLoom Idle Ready! (هر ۵۰۰۰ ستاره = ۵۰۰۰ سکه)');
+</script>
+
+</body>
+</html>
