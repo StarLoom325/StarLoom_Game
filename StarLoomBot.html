@@ -3,492 +3,2289 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StarLoomBot - ربات راهنما</title>
+
+    <title>StarLoomBot | ربات راهنمای StarLoom</title>
+
+    <meta
+        name="description"
+        content="StarLoomBot - دستیار و راهنمای دنیای StarLoom_Game"
+    >
+
     <style>
-        *{margin:0;padding:0;box-sizing:border-box}
+
+        /* =====================================================
+           STARLOOM BOT
+           طراحی اختصاصی StarLoom
+           ===================================================== */
+
+        :root{
+            --bg:#03050d;
+            --bg2:#080c1c;
+
+            --panel:rgba(10,16,37,.78);
+            --panel-light:rgba(255,255,255,.045);
+
+            --cyan:#20dcff;
+            --blue:#6578ff;
+            --purple:#a66cff;
+            --gold:#f1c75b;
+
+            --text:#eef6ff;
+            --muted:#8190b5;
+
+            --border:rgba(120,150,255,.18);
+
+            --bot-gradient:
+                linear-gradient(
+                    135deg,
+                    #20dcff,
+                    #6578ff,
+                    #a66cff
+                );
+
+            --shadow:
+                0 25px 80px rgba(0,0,0,.55);
+        }
+
+
+        /* =====================================================
+           RESET
+           ===================================================== */
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+
+        html,
         body{
-            font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
-            background:linear-gradient(135deg,#0b0e1a 0%,#1a1f30 100%);
-            min-height:100vh;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            padding:15px;
-            overflow:hidden;
-        }
-
-        /* شفق پس‌زمینه */
-        .aurora{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;overflow:hidden;pointer-events:none}
-        .aurora::before,.aurora::after{content:'';position:absolute;width:200%;height:200%;top:-50%;left:-50%;background:radial-gradient(ellipse at 30% 50%,rgba(241,196,15,0.05) 0%,transparent 60%),radial-gradient(ellipse at 70% 80%,rgba(231,76,60,0.04) 0%,transparent 50%);animation:auroraFloat 20s ease-in-out infinite alternate}
-        .aurora::after{animation-delay:-10s;background:radial-gradient(ellipse at 60% 40%,rgba(52,152,219,0.04) 0%,transparent 50%)}
-        @keyframes auroraFloat{0%{transform:translate(0,0) scale(1)}100%{transform:translate(3%,-3%) scale(1.01)}}
-
-        /* کانتینر اصلی */
-        .bot-container{
             width:100%;
-            max-width:600px;
-            height:90vh;
-            max-height:800px;
-            background:rgba(255,255,255,0.05);
-            border-radius:30px;
-            border:1px solid rgba(255,215,0,0.15);
-            backdrop-filter:blur(10px);
+            min-height:100%;
+        }
+
+
+        body{
+            min-height:100vh;
+
+            font-family:
+                "Segoe UI",
+                Tahoma,
+                Arial,
+                sans-serif;
+
+            color:var(--text);
+
+            background:
+                radial-gradient(
+                    circle at 50% -10%,
+                    rgba(104,76,255,.25),
+                    transparent 38%
+                ),
+                radial-gradient(
+                    circle at 5% 70%,
+                    rgba(32,220,255,.09),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at 95% 80%,
+                    rgba(166,108,255,.1),
+                    transparent 30%
+                ),
+                linear-gradient(
+                    145deg,
+                    #02030a,
+                    #070b19 50%,
+                    #03050d
+                );
+
             display:flex;
-            flex-direction:column;
+            align-items:center;
+            justify-content:center;
+
+            padding:18px;
+
             overflow:hidden;
-            box-shadow:0 20px 60px rgba(0,0,0,0.5);
-            animation:fadeIn 0.5s ease;
         }
-        @keyframes fadeIn{0%{opacity:0;transform:scale(0.9)}100%{opacity:1;transform:scale(1)}}
 
-        /* هدر ربات */
-        .bot-header{
-            padding:18px 25px;
-            background:linear-gradient(135deg,rgba(241,196,15,0.15),rgba(243,156,18,0.05));
-            border-bottom:1px solid rgba(241,196,15,0.2);
-            display:flex;
-            align-items:center;
-            gap:12px;
+
+        /* =====================================================
+           STAR FIELD
+           ===================================================== */
+
+        body::before{
+            content:"";
+
+            position:fixed;
+            inset:0;
+
+            pointer-events:none;
+
+            background-image:
+                radial-gradient(
+                    circle,
+                    rgba(255,255,255,.75) 1px,
+                    transparent 1px
+                ),
+                radial-gradient(
+                    circle,
+                    rgba(32,220,255,.45) 1px,
+                    transparent 1px
+                ),
+                radial-gradient(
+                    circle,
+                    rgba(166,108,255,.35) 1px,
+                    transparent 1px
+                );
+
+            background-size:
+                85px 85px,
+                145px 145px,
+                210px 210px;
+
+            opacity:.3;
+
+            animation:
+                starsMove
+                35s
+                linear
+                infinite;
         }
-        .bot-avatar{
-            width:50px;
-            height:50px;
+
+
+        @keyframes starsMove{
+
+            from{
+                transform:translateY(0);
+            }
+
+            to{
+                transform:translateY(100px);
+            }
+
+        }
+
+
+        /* =====================================================
+           AURORA
+           ===================================================== */
+
+        .aurora{
+            position:fixed;
+            inset:0;
+
+            pointer-events:none;
+
+            overflow:hidden;
+
+            z-index:-1;
+        }
+
+
+        .aurora::before{
+            content:"";
+
+            position:absolute;
+
+            width:650px;
+            height:650px;
+
+            top:-380px;
+            left:50%;
+
+            transform:translateX(-50%);
+
             border-radius:50%;
-            background:linear-gradient(135deg,#f9d976,#f39c12);
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            font-size:1.8rem;
-            box-shadow:0 0 20px rgba(243,156,18,0.4);
-            animation:pulse 2s ease-in-out infinite;
-        }
-        @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
-        .bot-info h3{color:#f5e9c4;font-size:1.1rem;margin-bottom:2px}
-        .bot-info p{color:#2ecc71;font-size:0.75rem;display:flex;align-items:center;gap:5px}
-        .bot-info p::before{content:'';width:8px;height:8px;background:#2ecc71;border-radius:50%;animation:dot 1.5s ease-in-out infinite}
-        @keyframes dot{0%,100%{opacity:1}50%{opacity:0.3}}
 
-        /* ناحیه پیام‌ها */
-        .messages-area{
-            flex:1;
-            padding:20px;
-            overflow-y:auto;
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(101,120,255,.22),
+                    transparent 68%
+                );
+
+            filter:blur(20px);
+
+            animation:
+                auroraPulse
+                7s
+                ease-in-out
+                infinite
+                alternate;
+        }
+
+
+        .aurora::after{
+            content:"";
+
+            position:absolute;
+
+            width:500px;
+            height:500px;
+
+            bottom:-280px;
+            right:-160px;
+
+            border-radius:50%;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(32,220,255,.09),
+                    transparent 70%
+                );
+
+            filter:blur(25px);
+
+            animation:
+                auroraMove
+                10s
+                ease-in-out
+                infinite
+                alternate;
+        }
+
+
+        @keyframes auroraPulse{
+
+            from{
+                transform:
+                    translateX(-50%)
+                    scale(.9);
+                opacity:.6;
+            }
+
+            to{
+                transform:
+                    translateX(-50%)
+                    scale(1.12);
+                opacity:1;
+            }
+
+        }
+
+
+        @keyframes auroraMove{
+
+            from{
+                transform:translate(0,0);
+            }
+
+            to{
+                transform:translate(-80px,-50px);
+            }
+
+        }
+
+
+        /* =====================================================
+           BOT CONTAINER
+           ===================================================== */
+
+        .bot-container{
+
+            position:relative;
+
+            width:100%;
+            max-width:650px;
+
+            height:92vh;
+            max-height:850px;
+
             display:flex;
             flex-direction:column;
-            gap:12px;
-            scroll-behavior:smooth;
+
+            overflow:hidden;
+
+            border-radius:30px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(13,20,45,.88),
+                    rgba(5,9,23,.88)
+                );
+
+            border:1px solid var(--border);
+
+            box-shadow:
+                var(--shadow),
+                inset 0 1px rgba(255,255,255,.045);
+
+            backdrop-filter:blur(22px);
+
+            animation:
+                containerIn
+                .55s
+                ease;
         }
-        .messages-area::-webkit-scrollbar{width:6px}
-        .messages-area::-webkit-scrollbar-track{background:rgba(0,0,0,0.2);border-radius:10px}
-        .messages-area::-webkit-scrollbar-thumb{background:#f1c40f;border-radius:10px}
 
-        /* پیام ربات */
-        .message{
-            max-width:85%;
-            display:flex;
-            gap:10px;
-            animation:messageIn 0.4s ease;
+
+        @keyframes containerIn{
+
+            from{
+                opacity:0;
+                transform:
+                    translateY(20px)
+                    scale(.97);
+            }
+
+            to{
+                opacity:1;
+                transform:
+                    translateY(0)
+                    scale(1);
+            }
+
         }
-        @keyframes messageIn{0%{opacity:0;transform:translateY(10px)}100%{opacity:1;transform:translateY(0)}}
 
-        .message.bot{align-self:flex-start}
-        .message.user{align-self:flex-end;flex-direction:row-reverse}
 
-        .message-avatar{
-            width:38px;
-            height:38px;
-            border-radius:50%;
-            background:linear-gradient(135deg,#f9d976,#f39c12);
+        /* نور بالای پنجره */
+
+        .bot-container::before{
+
+            content:"";
+
+            position:absolute;
+
+            top:0;
+            left:12%;
+            right:12%;
+
+            height:1px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    transparent,
+                    var(--cyan),
+                    var(--purple),
+                    transparent
+                );
+
+            box-shadow:
+                0 0 18px var(--cyan),
+                0 0 35px var(--purple);
+
+            z-index:10;
+        }
+
+
+        /* =====================================================
+           HEADER
+           ===================================================== */
+
+        .bot-header{
+
+            position:relative;
+
+            min-height:82px;
+
+            padding:14px 20px;
+
             display:flex;
             align-items:center;
-            justify-content:center;
-            font-size:1.3rem;
+
+            gap:13px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(32,220,255,.07),
+                    rgba(166,108,255,.08),
+                    rgba(255,255,255,.015)
+                );
+
+            border-bottom:
+                1px solid
+                rgba(120,150,255,.13);
+
             flex-shrink:0;
         }
-        .message.user .message-avatar{
-            background:linear-gradient(135deg,#5dade2,#3498db);
-        }
 
-        .message-bubble{
-            padding:12px 16px;
-            border-radius:18px;
-            background:rgba(255,255,255,0.06);
-            border:1px solid rgba(255,215,0,0.15);
-            color:#f0f4ff;
-            font-size:0.95rem;
-            line-height:1.6;
+
+        /* =====================================================
+           BOT AVATAR
+           ===================================================== */
+
+        .bot-avatar{
+
             position:relative;
-        }
-        .message.user .message-bubble{
-            background:linear-gradient(135deg,#f1c40f,#d4a800);
-            color:#1a1f30;
-            border-color:#f1c40f;
-        }
-        .message-bubble strong{color:#f1c40f}
-        .message.user .message-bubble strong{color:#1a1f30}
 
-        /* تایپینگ */
-        .typing-indicator{
-            display:inline-flex;
-            gap:4px;
-            padding:8px 0;
-        }
-        .typing-indicator span{
-            width:8px;
-            height:8px;
-            border-radius:50%;
-            background:#f1c40f;
-            animation:typing 1.4s ease-in-out infinite;
-        }
-        .typing-indicator span:nth-child(2){animation-delay:0.2s}
-        .typing-indicator span:nth-child(3){animation-delay:0.4s}
-        @keyframes typing{0%,60%,100%{transform:translateY(0);opacity:0.3}30%{transform:translateY(-8px);opacity:1}}
+            width:54px;
+            height:54px;
 
-        /* دکمه‌های گزینه */
-        .options-area{
-            padding:15px 20px;
-            display:flex;
-            flex-direction:column;
-            gap:10px;
-            border-top:1px solid rgba(255,215,0,0.1);
-            background:rgba(0,0,0,0.2);
-            max-height:45%;
-            overflow-y:auto;
-        }
-        .options-area::-webkit-scrollbar{width:4px}
-        .options-area::-webkit-scrollbar-thumb{background:#f1c40f;border-radius:10px}
-
-        .option-btn{
-            padding:14px 20px;
-            border-radius:15px;
-            border:1px solid rgba(241,196,15,0.3);
-            background:rgba(241,196,15,0.08);
-            color:#f0f4ff;
-            font-size:0.95rem;
-            font-weight:600;
-            cursor:pointer;
-            transition:all 0.3s;
-            text-align:right;
             display:flex;
             align-items:center;
-            gap:10px;
-            font-family:inherit;
-        }
-        .option-btn:hover{
-            background:rgba(241,196,15,0.15);
-            border-color:#f1c40f;
-            transform:translateX(-5px);
-            box-shadow:0 5px 20px rgba(241,196,15,0.2);
-        }
-        .option-btn:active{transform:scale(0.98)}
-        .option-btn .option-icon{font-size:1.3rem}
+            justify-content:center;
 
-        /* واکنش‌گرا */
-        @media(max-width:500px){
-            .bot-container{height:95vh;border-radius:20px}
-            .bot-header{padding:15px 18px}
-            .message-bubble{font-size:0.85rem;padding:10px 14px}
-            .option-btn{font-size:0.85rem;padding:12px 16px}
+            border-radius:17px;
+
+            background:
+                radial-gradient(
+                    circle at 30% 20%,
+                    rgba(255,255,255,.25),
+                    transparent 35%
+                ),
+                linear-gradient(
+                    135deg,
+                    #20dcff,
+                    #6578ff,
+                    #a66cff
+                );
+
+            border:
+                1px solid
+                rgba(255,255,255,.2);
+
+            font-size:28px;
+
+            box-shadow:
+                0 0 25px rgba(32,220,255,.18),
+                0 0 35px rgba(166,108,255,.1);
+
+            animation:
+                botFloat
+                3s
+                ease-in-out
+                infinite;
         }
+
+
+        .bot-avatar::after{
+
+            content:"";
+
+            position:absolute;
+
+            inset:-5px;
+
+            border-radius:20px;
+
+            border:
+                1px solid
+                rgba(32,220,255,.18);
+
+            opacity:.7;
+
+            animation:
+                avatarRing
+                2.5s
+                linear
+                infinite;
+        }
+
+
+        @keyframes botFloat{
+
+            0%,
+            100%{
+                transform:translateY(0);
+            }
+
+            50%{
+                transform:translateY(-3px);
+            }
+
+        }
+
+
+        @keyframes avatarRing{
+
+            from{
+                transform:rotate(0deg);
+                opacity:.2;
+            }
+
+            50%{
+                opacity:.7;
+            }
+
+            to{
+                transform:rotate(360deg);
+                opacity:.2;
+            }
+
+        }
+
+
+        /* =====================================================
+           BOT INFO
+           ===================================================== */
+
+        .bot-info{
+            min-width:0;
+        }
+
+
+        .bot-info h3{
+
+            font-size:18px;
+
+            font-weight:900;
+
+            margin-bottom:3px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #fff,
+                    #8ceeff,
+                    #b17cff
+                );
+
+            -webkit-background-clip:text;
+            background-clip:text;
+
+            color:transparent;
+        }
+
+
+        .bot-info p{
+
+            display:flex;
+            align-items:center;
+
+            gap:6px;
+
+            color:#43e99a;
+
+            font-size:11px;
+        }
+
+
+        .bot-info p::before{
+
+            content:"";
+
+            width:7px;
+            height:7px;
+
+            border-radius:50%;
+
+            background:#35e69a;
+
+            box-shadow:
+                0 0 10px #35e69a;
+
+            animation:
+                onlineDot
+                1.5s
+                ease-in-out
+                infinite;
+        }
+
+
+        @keyframes onlineDot{
+
+            0%,
+            100%{
+                opacity:1;
+                transform:scale(1);
+            }
+
+            50%{
+                opacity:.35;
+                transform:scale(.75);
+            }
+
+        }
+
+
+        /* عنوان کوچک سمت راست */
+
+        .bot-header-label{
+
+            margin-right:auto;
+
+            color:#647394;
+
+            font-size:9px;
+
+            letter-spacing:1px;
+
+            padding:7px 10px;
+
+            border-radius:10px;
+
+            border:
+                1px solid
+                rgba(120,150,255,.12);
+
+            background:
+                rgba(255,255,255,.025);
+        }
+
+
+        /* =====================================================
+           MESSAGES AREA
+           ===================================================== */
+
+        .messages-area{
+
+            flex:1;
+
+            min-height:0;
+
+            padding:20px;
+
+            overflow-y:auto;
+
+            display:flex;
+
+            flex-direction:column;
+
+            gap:13px;
+
+            scroll-behavior:smooth;
+        }
+
+
+        .messages-area::-webkit-scrollbar{
+            width:6px;
+        }
+
+
+        .messages-area::-webkit-scrollbar-track{
+
+            background:
+                rgba(0,0,0,.15);
+
+            border-radius:10px;
+        }
+
+
+        .messages-area::-webkit-scrollbar-thumb{
+
+            background:
+                linear-gradient(
+                    var(--cyan),
+                    var(--purple)
+                );
+
+            border-radius:10px;
+        }
+
+
+        /* =====================================================
+           MESSAGE
+           ===================================================== */
+
+        .message{
+
+            max-width:88%;
+
+            display:flex;
+
+            gap:9px;
+
+            animation:
+                messageIn
+                .35s
+                ease;
+        }
+
+
+        @keyframes messageIn{
+
+            from{
+                opacity:0;
+                transform:translateY(9px);
+            }
+
+            to{
+                opacity:1;
+                transform:translateY(0);
+            }
+
+        }
+
+
+        .message.bot{
+            align-self:flex-start;
+        }
+
+
+        .message.user{
+
+            align-self:flex-end;
+
+            flex-direction:row-reverse;
+        }
+
+
+        /* =====================================================
+           MESSAGE AVATAR
+           ===================================================== */
+
+        .message-avatar{
+
+            width:36px;
+            height:36px;
+
+            flex-shrink:0;
+
+            display:flex;
+            align-items:center;
+            justify-content:center;
+
+            border-radius:12px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #20dcff,
+                    #6578ff,
+                    #a66cff
+                );
+
+            border:
+                1px solid
+                rgba(255,255,255,.12);
+
+            font-size:19px;
+
+            box-shadow:
+                0 6px 18px
+                rgba(0,0,0,.25);
+        }
+
+
+        .message.user .message-avatar{
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #667cff,
+                    #a66cff
+                );
+
+        }
+
+
+        /* =====================================================
+           MESSAGE BUBBLE
+           ===================================================== */
+
+        .message-bubble{
+
+            position:relative;
+
+            padding:12px 16px;
+
+            border-radius:
+                18px
+                18px
+                18px
+                6px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255,255,255,.055),
+                    rgba(255,255,255,.018)
+                );
+
+            border:
+                1px solid
+                rgba(120,150,255,.16);
+
+            color:#dce7fa;
+
+            font-size:14px;
+
+            line-height:1.8;
+
+            box-shadow:
+                0 7px 25px
+                rgba(0,0,0,.15);
+        }
+
+
+        .message.user .message-bubble{
+
+            border-radius:
+                18px
+                18px
+                6px
+                18px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #6578ff,
+                    #8b62ed
+                );
+
+            border-color:
+                rgba(160,180,255,.3);
+
+            color:#fff;
+
+            box-shadow:
+                0 8px 25px
+                rgba(80,90,255,.18);
+        }
+
+
+        .message-bubble strong{
+
+            color:
+                #68eaff;
+        }
+
+
+        .message.user
+        .message-bubble strong{
+
+            color:#fff;
+        }
+
+
+        /* =====================================================
+           TYPING
+           ===================================================== */
+
+        .typing-indicator{
+
+            display:inline-flex;
+
+            align-items:center;
+
+            gap:5px;
+
+            padding:5px 2px;
+        }
+
+
+        .typing-indicator span{
+
+            width:7px;
+            height:7px;
+
+            border-radius:50%;
+
+            background:
+                var(--cyan);
+
+            box-shadow:
+                0 0 8px
+                rgba(32,220,255,.5);
+
+            animation:
+                typing
+                1.3s
+                ease-in-out
+                infinite;
+        }
+
+
+        .typing-indicator span:nth-child(2){
+            animation-delay:.18s;
+        }
+
+
+        .typing-indicator span:nth-child(3){
+            animation-delay:.36s;
+        }
+
+
+        @keyframes typing{
+
+            0%,
+            60%,
+            100%{
+                transform:translateY(0);
+                opacity:.3;
+            }
+
+            30%{
+                transform:translateY(-7px);
+                opacity:1;
+            }
+
+        }
+
+
+        /* =====================================================
+           OPTIONS AREA
+           ===================================================== */
+
+        .options-area{
+
+            flex-shrink:0;
+
+            padding:14px 18px 18px;
+
+            display:flex;
+
+            flex-direction:column;
+
+            gap:9px;
+
+            max-height:43%;
+
+            overflow-y:auto;
+
+            border-top:
+                1px solid
+                rgba(120,150,255,.1);
+
+            background:
+                linear-gradient(
+                    180deg,
+                    rgba(0,0,0,.13),
+                    rgba(0,0,0,.23)
+                );
+        }
+
+
+        .options-area::-webkit-scrollbar{
+            width:4px;
+        }
+
+
+        .options-area::-webkit-scrollbar-thumb{
+
+            background:
+                linear-gradient(
+                    var(--cyan),
+                    var(--purple)
+                );
+
+            border-radius:10px;
+        }
+
+
+        /* =====================================================
+           OPTION BUTTON
+           ===================================================== */
+
+        .option-btn{
+
+            position:relative;
+
+            width:100%;
+
+            padding:13px 16px;
+
+            border-radius:15px;
+
+            border:
+                1px solid
+                rgba(120,150,255,.17);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(32,220,255,.055),
+                    rgba(166,108,255,.055)
+                );
+
+            color:#e7efff;
+
+            font-family:inherit;
+
+            font-size:13px;
+
+            font-weight:700;
+
+            cursor:pointer;
+
+            text-align:right;
+
+            display:flex;
+
+            align-items:center;
+
+            gap:10px;
+
+            transition:
+                transform .25s,
+                border-color .25s,
+                background .25s,
+                box-shadow .25s;
+        }
+
+
+        .option-btn::before{
+
+            content:"";
+
+            position:absolute;
+
+            top:0;
+            bottom:0;
+            right:0;
+
+            width:3px;
+
+            border-radius:
+                0
+                15px
+                15px
+                0;
+
+            background:
+                linear-gradient(
+                    var(--cyan),
+                    var(--purple)
+                );
+
+            opacity:0;
+
+            transition:.25s;
+        }
+
+
+        .option-btn:hover{
+
+            transform:
+                translateX(-5px);
+
+            border-color:
+                rgba(32,220,255,.4);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(32,220,255,.11),
+                    rgba(166,108,255,.11)
+                );
+
+            box-shadow:
+                0 8px 25px
+                rgba(32,220,255,.08);
+        }
+
+
+        .option-btn:hover::before{
+            opacity:1;
+        }
+
+
+        .option-btn:active{
+            transform:scale(.985);
+        }
+
+
+        .option-icon{
+
+            width:32px;
+            height:32px;
+
+            display:flex;
+            align-items:center;
+            justify-content:center;
+
+            flex-shrink:0;
+
+            border-radius:10px;
+
+            background:
+                rgba(255,255,255,.045);
+
+            border:
+                1px solid
+                rgba(120,150,255,.1);
+
+            font-size:18px;
+        }
+
+
+        /* =====================================================
+           FOOTER
+           ===================================================== */
+
+        .bot-footer{
+
+            display:flex;
+
+            align-items:center;
+
+            justify-content:center;
+
+            gap:8px;
+
+            padding:7px;
+
+            color:#465474;
+
+            font-size:8px;
+
+            border-top:
+                1px solid
+                rgba(120,150,255,.06);
+
+            background:
+                rgba(0,0,0,.12);
+        }
+
+
+        .bot-footer span{
+            color:#6a7a9d;
+        }
+
+
+        /* =====================================================
+           HOME BUTTON
+           ===================================================== */
+
+        .home-button{
+
+            position:absolute;
+
+            top:14px;
+            left:16px;
+
+            z-index:20;
+
+            display:flex;
+            align-items:center;
+
+            gap:5px;
+
+            padding:7px 10px;
+
+            border-radius:10px;
+
+            color:#9aabd0;
+
+            text-decoration:none;
+
+            font-size:10px;
+
+            border:
+                1px solid
+                rgba(120,150,255,.14);
+
+            background:
+                rgba(0,0,0,.16);
+
+            transition:.25s;
+        }
+
+
+        .home-button:hover{
+
+            color:#fff;
+
+            border-color:
+                rgba(32,220,255,.4);
+
+            background:
+                rgba(32,220,255,.07);
+
+            transform:translateY(-2px);
+        }
+
+
+        /* =====================================================
+           MOBILE
+           ===================================================== */
+
+        @media(max-width:600px){
+
+            body{
+                padding:0;
+            }
+
+
+            .bot-container{
+
+                width:100%;
+                height:100vh;
+                max-height:none;
+
+                border-radius:0;
+
+                border-left:0;
+                border-right:0;
+            }
+
+
+            .bot-header{
+
+                min-height:76px;
+
+                padding:
+                    12px
+                    15px;
+            }
+
+
+            .bot-avatar{
+
+                width:48px;
+                height:48px;
+
+                border-radius:15px;
+
+                font-size:25px;
+            }
+
+
+            .bot-info h3{
+                font-size:16px;
+            }
+
+
+            .bot-header-label{
+                display:none;
+            }
+
+
+            .home-button{
+
+                top:12px;
+                left:12px;
+            }
+
+
+            .messages-area{
+
+                padding:
+                    15px 12px;
+            }
+
+
+            .message{
+                max-width:92%;
+            }
+
+
+            .message-bubble{
+
+                font-size:13px;
+
+                padding:
+                    10px 13px;
+            }
+
+
+            .message-avatar{
+
+                width:33px;
+                height:33px;
+
+                border-radius:10px;
+
+                font-size:17px;
+            }
+
+
+            .options-area{
+
+                padding:
+                    10px
+                    11px
+                    12px;
+
+                max-height:45%;
+            }
+
+
+            .option-btn{
+
+                padding:
+                    11px
+                    13px;
+
+                font-size:12px;
+            }
+
+
+            .option-icon{
+
+                width:29px;
+                height:29px;
+
+                font-size:16px;
+            }
+
+        }
+
+
+        /* =====================================================
+           SMALL PHONE
+           ===================================================== */
+
+        @media(max-width:380px){
+
+            .message-bubble{
+                font-size:12px;
+                line-height:1.7;
+            }
+
+
+            .option-btn{
+                font-size:11px;
+            }
+
+
+            .bot-footer{
+                display:none;
+            }
+
+        }
+
+
+        /* =====================================================
+           REDUCED MOTION
+           ===================================================== */
+
+        @media(prefers-reduced-motion:reduce){
+
+            *,
+            *::before,
+            *::after{
+
+                animation-duration:
+                    .01ms !important;
+
+                animation-iteration-count:
+                    1 !important;
+
+                transition-duration:
+                    .01ms !important;
+            }
+
+        }
+
     </style>
 </head>
+
+
 <body>
 
-    <!-- شفق پس‌زمینه -->
+    <!-- =====================================================
+         پس‌زمینه
+         ===================================================== -->
+
     <div class="aurora"></div>
 
-    <!-- کانتینر ربات -->
+
+    <!-- =====================================================
+         ربات
+         ===================================================== -->
+
     <div class="bot-container">
-        <!-- هدر -->
+
+
+        <!-- بازگشت به خانه -->
+
+        <a
+            href="home.html"
+            class="home-button"
+            title="بازگشت به صفحه اصلی">
+
+            🏠 خانه
+
+        </a>
+
+
+        <!-- =================================================
+             HEADER
+             ================================================= -->
+
         <div class="bot-header">
-            <div class="bot-avatar">🤖</div>
-            <div class="bot-info">
-                <h3>StarLoomBot</h3>
-                <p>آنلاین</p>
+
+            <div class="bot-avatar">
+                🤖
             </div>
+
+
+            <div class="bot-info">
+
+                <h3>
+                    StarLoomBot
+                </h3>
+
+                <p>
+                    آنلاین
+                </p>
+
+            </div>
+
+
+            <div class="bot-header-label">
+                STARLOOM AI GUIDE
+            </div>
+
         </div>
 
-        <!-- پیام‌ها -->
-        <div class="messages-area" id="messagesArea"></div>
 
-        <!-- دکمه‌های گزینه -->
-        <div class="options-area" id="optionsArea"></div>
+        <!-- =================================================
+             MESSAGES
+             ================================================= -->
+
+        <div
+            class="messages-area"
+            id="messagesArea">
+        </div>
+
+
+        <!-- =================================================
+             OPTIONS
+             ================================================= -->
+
+        <div
+            class="options-area"
+            id="optionsArea">
+        </div>
+
+
+        <!-- =================================================
+             FOOTER
+             ================================================= -->
+
+        <div class="bot-footer">
+
+            <span>✦</span>
+
+            StarLoom_Game
+
+            <span>•</span>
+
+            StarLoomBot
+
+            <span>•</span>
+
+            راهنمای بازی‌ها
+
+            <span>✦</span>
+
+        </div>
+
     </div>
 
+
     <script>
+
         (function(){
-            // ============================================
-            //  المان‌ها
-            // ============================================
-            var messagesArea = document.getElementById('messagesArea');
-            var optionsArea = document.getElementById('optionsArea');
 
-            // ============================================
-            //  توابع کمکی
-            // ============================================
+            /* =================================================
+               ELEMENTS
+               ================================================= */
+
+            var messagesArea =
+                document.getElementById(
+                    'messagesArea'
+                );
+
+            var optionsArea =
+                document.getElementById(
+                    'optionsArea'
+                );
+
+
+            /* =================================================
+               SCROLL
+               ================================================= */
+
             function scrollToBottom(){
-                setTimeout(function(){
-                    messagesArea.scrollTop = messagesArea.scrollHeight;
-                }, 100);
+
+                setTimeout(
+                    function(){
+
+                        messagesArea.scrollTop =
+                            messagesArea.scrollHeight;
+
+                    },
+                    100
+                );
+
             }
 
-            function addMessage(text, sender){
-                var msgDiv = document.createElement('div');
-                msgDiv.className = 'message ' + sender;
 
-                var avatar = document.createElement('div');
-                avatar.className = 'message-avatar';
-                avatar.textContent = sender === 'bot' ? '🤖' : '👤';
+            /* =================================================
+               ADD MESSAGE
+               ================================================= */
 
-                var bubble = document.createElement('div');
-                bubble.className = 'message-bubble';
-                bubble.innerHTML = text;
+            function addMessage(
+                text,
+                sender
+            ){
 
-                msgDiv.appendChild(avatar);
-                msgDiv.appendChild(bubble);
-                messagesArea.appendChild(msgDiv);
+                var msgDiv =
+                    document.createElement(
+                        'div'
+                    );
+
+                msgDiv.className =
+                    'message ' +
+                    sender;
+
+
+                var avatar =
+                    document.createElement(
+                        'div'
+                    );
+
+                avatar.className =
+                    'message-avatar';
+
+                avatar.textContent =
+                    sender === 'bot'
+                    ?
+                    '🤖'
+                    :
+                    '👤';
+
+
+                var bubble =
+                    document.createElement(
+                        'div'
+                    );
+
+                bubble.className =
+                    'message-bubble';
+
+                bubble.innerHTML =
+                    text;
+
+
+                msgDiv.appendChild(
+                    avatar
+                );
+
+                msgDiv.appendChild(
+                    bubble
+                );
+
+                messagesArea.appendChild(
+                    msgDiv
+                );
+
+
                 scrollToBottom();
+
             }
+
+
+            /* =================================================
+               TYPING
+               ================================================= */
 
             function addTyping(){
-                var typingDiv = document.createElement('div');
-                typingDiv.className = 'message bot';
-                typingDiv.id = 'typingIndicator';
 
-                var avatar = document.createElement('div');
-                avatar.className = 'message-avatar';
-                avatar.textContent = '🤖';
+                var typingDiv =
+                    document.createElement(
+                        'div'
+                    );
 
-                var bubble = document.createElement('div');
-                bubble.className = 'message-bubble';
-                bubble.innerHTML = '<div class="typing-indicator"><span></span><span></span><span></span></div>';
+                typingDiv.className =
+                    'message bot';
 
-                typingDiv.appendChild(avatar);
-                typingDiv.appendChild(bubble);
-                messagesArea.appendChild(typingDiv);
+                typingDiv.id =
+                    'typingIndicator';
+
+
+                var avatar =
+                    document.createElement(
+                        'div'
+                    );
+
+                avatar.className =
+                    'message-avatar';
+
+                avatar.textContent =
+                    '🤖';
+
+
+                var bubble =
+                    document.createElement(
+                        'div'
+                    );
+
+                bubble.className =
+                    'message-bubble';
+
+
+                bubble.innerHTML =
+                    '<div class="typing-indicator">' +
+                    '<span></span>' +
+                    '<span></span>' +
+                    '<span></span>' +
+                    '</div>';
+
+
+                typingDiv.appendChild(
+                    avatar
+                );
+
+                typingDiv.appendChild(
+                    bubble
+                );
+
+                messagesArea.appendChild(
+                    typingDiv
+                );
+
+
                 scrollToBottom();
+
             }
+
 
             function removeTyping(){
-                var typing = document.getElementById('typingIndicator');
-                if(typing) typing.remove();
+
+                var typing =
+                    document.getElementById(
+                        'typingIndicator'
+                    );
+
+                if(typing)
+                    typing.remove();
+
             }
 
-            function botSay(text, callback, delay){
-                delay = delay || 800;
+
+            /* =================================================
+               BOT SAY
+               ================================================= */
+
+            function botSay(
+                text,
+                callback,
+                delay
+            ){
+
+                delay =
+                    delay ||
+                    800;
+
+
                 addTyping();
-                setTimeout(function(){
-                    removeTyping();
-                    addMessage(text, 'bot');
-                    if(callback) callback();
-                }, delay);
+
+
+                setTimeout(
+                    function(){
+
+                        removeTyping();
+
+                        addMessage(
+                            text,
+                            'bot'
+                        );
+
+
+                        if(callback)
+                            callback();
+
+                    },
+                    delay
+                );
+
             }
 
-            function showOptions(options){
-                optionsArea.innerHTML = '';
-                options.forEach(function(opt){
-                    var btn = document.createElement('button');
-                    btn.className = 'option-btn';
-                    btn.innerHTML = '<span class="option-icon">' + opt.icon + '</span><span>' + opt.text + '</span>';
-                    btn.addEventListener('click', function(){
-                        handleOption(opt);
-                    });
-                    optionsArea.appendChild(btn);
-                });
+
+            /* =================================================
+               OPTIONS
+               ================================================= */
+
+            function showOptions(
+                options
+            ){
+
+                optionsArea.innerHTML =
+                    '';
+
+
+                options.forEach(
+                    function(opt){
+
+                        var btn =
+                            document.createElement(
+                                'button'
+                            );
+
+                        btn.className =
+                            'option-btn';
+
+
+                        btn.innerHTML =
+                            '<span class="option-icon">' +
+                            opt.icon +
+                            '</span>' +
+
+                            '<span>' +
+                            opt.text +
+                            '</span>';
+
+
+                        btn.addEventListener(
+                            'click',
+                            function(){
+
+                                handleOption(
+                                    opt
+                                );
+
+                            }
+                        );
+
+
+                        optionsArea.appendChild(
+                            btn
+                        );
+
+                    }
+                );
+
             }
+
 
             function clearOptions(){
-                optionsArea.innerHTML = '';
+
+                optionsArea.innerHTML =
+                    '';
+
             }
 
-            // ============================================
-            //  سناریوهای ربات
-            // ============================================
 
-            // سناریو ۱: شروع
+            /* =================================================
+               SCENARIO START
+               ================================================= */
+
             function scenarioStart(){
+
                 clearOptions();
-                botSay('سلام! 👋 خوش اومدی به <strong>StarLoom_Game</strong>!', function(){
-                    botSay('من <strong>StarLoomBot</strong> هستم 🤖', function(){
-                        botSay('دستیار شخصی و راهنمای تو در دنیای بازی‌های StarLoom!', function(){
-                            botSay('خب بگو ببینم، چطور می‌تونم کمکت کنم؟ 😊', function(){
-                                showOptions([
-                                    { icon: '🎮', text: '🎮 می‌خوام بازی کنم', action: 'play' },
-                                    { icon: '📚', text: '📚 آموزش بازی‌ها', action: 'tutorial' },
-                                    { icon: '❓', text: '❓ درباره StarLoom_Game بدونم', action: 'about' },
-                                    { icon: '🏠', text: '🏠 رفتن به صفحه اصلی', action: 'home' }
-                                ]);
-                            }, 1200);
-                        }, 1000);
-                    }, 1200);
-                }, 800);
+
+
+                botSay(
+                    'سلام! 👋 خوش اومدی به <strong>StarLoom_Game</strong>!',
+                    function(){
+
+                        botSay(
+                            'من <strong>StarLoomBot</strong> هستم 🤖',
+                            function(){
+
+                                botSay(
+                                    'دستیار شخصی و راهنمای تو در دنیای بازی‌های StarLoom!',
+                                    function(){
+
+                                        botSay(
+                                            'خب بگو ببینم، چطور می‌تونم کمکت کنم؟ 😊',
+                                            function(){
+
+                                                showOptions([
+
+                                                    {
+                                                        icon:'🎮',
+                                                        text:'🎮 می‌خوام بازی کنم',
+                                                        action:'play'
+                                                    },
+
+                                                    {
+                                                        icon:'📚',
+                                                        text:'📚 آموزش بازی‌ها',
+                                                        action:'tutorial'
+                                                    },
+
+                                                    {
+                                                        icon:'❓',
+                                                        text:'❓ درباره StarLoom_Game بدونم',
+                                                        action:'about'
+                                                    },
+
+                                                    {
+                                                        icon:'🏠',
+                                                        text:'🏠 رفتن به صفحه اصلی',
+                                                        action:'home'
+                                                    }
+
+                                                ]);
+
+                                            },
+                                            1000
+                                        );
+
+                                    },
+                                    850
+                                );
+
+                            },
+                            950
+                        );
+
+                    },
+                    650
+                );
+
             }
 
-            // سناریو ۲: درباره سایت
+
+            /* =================================================
+               ABOUT
+               ================================================= */
+
             function scenarioAbout(){
-                clearOptions();
-                botSay('🌟 <strong>StarLoom_Game</strong> چیه؟', function(){
-                    botSay('یعنی یه سایت پر از بازی‌های <strong>آنلاین و رایگان</strong> که می‌تونی توش سکه جمع کنی!', function(){
-                        botSay('💰 با سکه‌ها می‌تونی <strong>آیکون‌های خاص</strong> بخری و پروفایلت رو خفن کنی!', function(){
-                            botSay('🏆 هر بازی جایزه‌های مختلفی داره!', function(){
-                                botSay('می‌خوای بیشتر بدونی یا بریم سراغ بازی‌ها؟', function(){
-                                    showOptions([
-                                        { icon: '🎮', text: '🎮 بریم سراغ بازی‌ها', action: 'play' },
-                                        { icon: '📚', text: '📚 آموزش بازی‌ها', action: 'tutorial' },
-                                        { icon: '🔙', text: '🔙 برگرد', action: 'start' }
-                                    ]);
-                                });
-                            }, 1000);
-                        }, 1200);
-                    }, 1000);
-                }, 900);
-            }
 
-            // سناریو ۳: آموزش بازی‌ها
-            function scenarioTutorial(){
                 clearOptions();
-                botSay('📚 عالیه! بذار همه بازی‌ها رو برات معرفی کنم:', function(){
-                    botSay(
-                        '<strong>🐍 بازی اول: مار و پله</strong><br>' +
-                        '🎯 یه تخته ۲۲۰ خانه‌ای<br>' +
-                        '🎲 با تاس باید جلو بری<br>' +
-                        '🪜 از نردبان بالا برو<br>' +
-                        '🐍 از مارها فرار کن<br>' +
-                        '🏆 جایزه: <strong>۸۰۰ سکه + ۱ لول</strong>',
-                        function(){
-                            botSay(
-                                '<strong>⛏️ بازی دوم: ماینکرفت</strong><br>' +
-                                '🎯 ۲۰۰۰ بلاک سیاه<br>' +
-                                '🔨 با کلنگ بکنشون<br>' +
-                                '💎 الماس و ندرایت پیدا کن<br>' +
-                                '🏆 جایزه: <strong>۱۳,۰۰۰ سکه</strong>',
-                                function(){
-                                    botSay(
-                                        '<strong>💣 بازی سوم: بوم بوم</strong><br>' +
-                                        '🎯 ۱۰۰۰ مکعب جادویی<br>' +
-                                        '🪙 سکه، بمب، مار، چکشت<br>' +
-                                        '🎁 صندوق‌های جایزه<br>' +
-                                        '🏆 جایزه: <strong>۳۰۰۰ سکه</strong>',
-                                        function(){
-                                            botSay(
-                                                '<strong>🏎️ بازی چهارم: مسابقه سرعت</strong><br>' +
-                                                '🎯 با کامپیوتر مسابقه بده<br>' +
-                                                '⚡ سریع کلیک کن<br>' +
-                                                '🚗 ماشین بخر<br>' +
-                                                '🏆 جایزه: <strong>۳۰۰ سکه + ۰.۵ لول</strong>',
-                                                function(){
-                                                    botSay('خب، کدوم بازی رو می‌خوای شروع کنی؟ 🎮', function(){
+
+
+                botSay(
+                    '🌟 <strong>StarLoom_Game</strong> چیه؟',
+                    function(){
+
+                        botSay(
+                            'یه دنیای بازیه که می‌تونی داخلش بازی کنی، سکه جمع کنی و پروفایلت رو ارتقا بدی! 🎮',
+                            function(){
+
+                                botSay(
+                                    '💰 با سکه‌ها می‌تونی <strong>آیکون‌های خاص</strong> بخری و پروفایلت رو شخصی‌سازی کنی!',
+                                    function(){
+
+                                        botSay(
+                                            '🏆 بعضی بازی‌ها هم بهت سکه و لول جایزه میدن!',
+                                            function(){
+
+                                                botSay(
+                                                    'خب، می‌خوای بیشتر درباره بازی‌ها بدونی یا بریم بازی کنیم؟',
+                                                    function(){
+
                                                         showOptions([
-                                                            { icon: '🐍', text: '🐍 شروع مار و پله', action: 'snake' },
-                                                            { icon: '⛏️', text: '⛏️ شروع ماینکرفت', action: 'minecraft' },
-                                                            { icon: '💣', text: '💣 شروع بوم بوم', action: 'boom' },
-                                                            { icon: '🏎️', text: '🏎️ شروع مسابقه سرعت', action: 'race' },
-                                                            { icon: '⚔️', text: '⚔️ Loom Wars', action: 'loomwars' },
-                                                            { icon: '🔙', text: '🔙 برگرد', action: 'start' }
+
+                                                            {
+                                                                icon:'🎮',
+                                                                text:'🎮 بریم سراغ بازی‌ها',
+                                                                action:'play'
+                                                            },
+
+                                                            {
+                                                                icon:'📚',
+                                                                text:'📚 آموزش بازی‌ها',
+                                                                action:'tutorial'
+                                                            },
+
+                                                            {
+                                                                icon:'🔙',
+                                                                text:'🔙 برگرد',
+                                                                action:'start'
+                                                            }
+
                                                         ]);
-                                                    }, 1500);
-                                                }, 1500);
-                                        }, 1500);
-                                }, 1500);
-                        }, 1500);
-                }, 900);
+
+                                                    }
+                                                );
+
+                                            },
+                                            900
+                                        );
+
+                                    },
+                                    950
+                                );
+
+                            },
+                            850
+                        );
+
+                    },
+                    700
+                );
+
             }
 
-            // سناریو ۴: انتخاب بازی
+
+            /* =================================================
+               TUTORIAL
+               ================================================= */
+
+            function scenarioTutorial(){
+
+                clearOptions();
+
+
+                botSay(
+                    '📚 عالیه! بذار بازی‌های StarLoom رو برات معرفی کنم:',
+                    function(){
+
+                        botSay(
+
+                            '<strong>🐍 بازی اول: مار و پله</strong><br>' +
+
+                            '🎯 تخته ۲۲۰ خانه‌ای<br>' +
+
+                            '🎲 با تاس حرکت کن<br>' +
+
+                            '🪜 از نردبان بالا برو<br>' +
+
+                            '🐍 مراقب مارها باش<br>' +
+
+                            '🏆 جایزه: <strong>۸۰۰ سکه + ۱ لول</strong>',
+
+                            function(){
+
+                                botSay(
+
+                                    '<strong>⛏️ بازی دوم: ماینکرفت</strong><br>' +
+
+                                    '🎯 مکعب‌ها رو خراب کن<br>' +
+
+                                    '🔨 با کلنگ پیش برو<br>' +
+
+                                    '💎 دنبال منابع باش<br>' +
+
+                                    '🏆 جایزه: <strong>۱۳,۰۰۰ سکه</strong>',
+
+                                    function(){
+
+                                        botSay(
+
+                                            '<strong>💣 بازی سوم: بوم بوم</strong><br>' +
+
+                                            '🎯 مکعب‌های جادویی<br>' +
+
+                                            '🪙 سکه و آیتم پیدا کن<br>' +
+
+                                            '🎁 صندوق‌های جایزه<br>' +
+
+                                            '🏆 جایزه: <strong>۳۰۰۰ سکه</strong>',
+
+                                            function(){
+
+                                                botSay(
+
+                                                    '<strong>🏎️ بازی چهارم: مسابقه سرعت</strong><br>' +
+
+                                                    '🎯 با کامپیوتر مسابقه بده<br>' +
+
+                                                    '⚡ سریع عمل کن<br>' +
+
+                                                    '🚗 ماشین بخر<br>' +
+
+                                                    '🏆 جایزه: <strong>۳۰۰ سکه + ۰.۵ لول</strong>',
+
+                                                    function(){
+
+                                                        botSay(
+
+                                                            '<strong>⚔️ بازی پنجم: Loom Wars</strong><br>' +
+
+                                                            '🏰 وارد نبرد قلعه‌ها شو<br>' +
+
+                                                            '⚔️ با حریف مبارزه کن<br>' +
+
+                                                            '🏆 جایزه: <strong>۶۰۰ سکه</strong>',
+
+                                                            function(){
+
+                                                                botSay(
+                                                                    'خب، کدوم بازی رو می‌خوای شروع کنی؟ 🎮',
+                                                                    function(){
+
+                                                                        showOptions([
+
+                                                                            {
+                                                                                icon:'🐍',
+                                                                                text:'🐍 شروع مار و پله',
+                                                                                action:'snake'
+                                                                            },
+
+                                                                            {
+                                                                                icon:'⛏️',
+                                                                                text:'⛏️ شروع ماینکرفت',
+                                                                                action:'minecraft'
+                                                                            },
+
+                                                                            {
+                                                                                icon:'💣',
+                                                                                text:'💣 شروع بوم بوم',
+                                                                                action:'boom'
+                                                                            },
+
+                                                                            {
+                                                                                icon:'🏎️',
+                                                                                text:'🏎️ شروع مسابقه سرعت',
+                                                                                action:'race'
+                                                                            },
+
+                                                                            {
+                                                                                icon:'⚔️',
+                                                                                text:'⚔️ شروع Loom Wars',
+                                                                                action:'loomwars'
+                                                                            },
+
+                                                                            {
+                                                                                icon:'🔙',
+                                                                                text:'🔙 برگرد',
+                                                                                action:'start'
+                                                                            }
+
+                                                                        ]);
+
+                                                                    },
+                                                                    900
+                                                                );
+
+                                                            },
+                                                            900
+                                                        );
+
+                                                    },
+                                                    1000
+                                                );
+
+                                            },
+                                            1000
+                                        );
+
+                                    },
+                                    1000
+                                );
+
+                            },
+                            1000
+                        );
+
+                    },
+                    700
+                );
+
+            }
+
+
+            /* =================================================
+               PLAY
+               ================================================= */
+
             function scenarioPlay(){
+
                 clearOptions();
-                botSay('🎮 چه خوب! کدوم بازی رو می‌خوای شروع کنی؟', function(){
-                    showOptions([
-                        { icon: '🐍', text: '🐍 مار و پله', action: 'snake' },
-                        { icon: '⛏️', text: '⛏️ ماینکرفت', action: 'minecraft' },
-                        { icon: '💣', text: '💣 بوم بوم', action: 'boom' },
-                        { icon: '🏎️', text: '🏎️ مسابقه سرعت', action: 'race' },
-                        { icon: '⚔️', text: '⚔️ Loom Wars', action: 'loomwars' },
-                        { icon: '🔙', text: '🔙 برگرد', action: 'start' }
-                    ]);
-                }, 700);
+
+
+                botSay(
+                    '🎮 چه خوب! کدوم بازی رو می‌خوای شروع کنی؟',
+                    function(){
+
+                        showOptions([
+
+                            {
+                                icon:'🐍',
+                                text:'🐍 مار و پله',
+                                action:'snake'
+                            },
+
+                            {
+                                icon:'⛏️',
+                                text:'⛏️ ماینکرفت',
+                                action:'minecraft'
+                            },
+
+                            {
+                                icon:'💣',
+                                text:'💣 بوم بوم',
+                                action:'boom'
+                            },
+
+                            {
+                                icon:'🏎️',
+                                text:'🏎️ مسابقه سرعت',
+                                action:'race'
+                            },
+
+                            {
+                                icon:'⚔️',
+                                text:'⚔️ Loom Wars',
+                                action:'loomwars'
+                            },
+
+                            {
+                                icon:'🔙',
+                                text:'🔙 برگرد',
+                                action:'start'
+                            }
+
+                        ]);
+
+                    },
+                    650
+                );
+
             }
 
-            // ============================================
-            //  مدیریت انتخاب کاربر
-            // ============================================
-            function handleOption(opt){
-                // پیام کاربر
-                addMessage(opt.text, 'user');
+
+            /* =================================================
+               NAVIGATION
+               ================================================= */
+
+            function goToPage(
+                page,
+                message
+            ){
+
+                botSay(
+                    message,
+                    function(){
+
+                        setTimeout(
+                            function(){
+
+                                window.location.href =
+                                    page;
+
+                            },
+                            800
+                        );
+
+                    },
+                    650
+                );
+
+            }
+
+
+            /* =================================================
+               HANDLE OPTION
+               ================================================= */
+
+            function handleOption(
+                opt
+            ){
+
+                addMessage(
+                    opt.text,
+                    'user'
+                );
+
+
                 clearOptions();
 
-                // واکنش ربات
-                setTimeout(function(){
-                    switch(opt.action){
-                        case 'start':
-                            scenarioStart();
-                            break;
-                        case 'about':
-                            scenarioAbout();
-                            break;
-                        case 'tutorial':
-                            scenarioTutorial();
-                            break;
-                        case 'play':
-                            scenarioPlay();
-                            break;
-                        case 'home':
-                            botSay('🏠 عالیه! در حال رفتن به صفحه اصلی...', function(){
-                                setTimeout(function(){
-                                    window.location.href = 'home.html';
-                                }, 1000);
-                            }, 700);
-                            break;
-                        case 'snake':
-                            botSay('🐍 عالیه! در حال رفتن به <strong>مار و پله</strong>...', function(){
-                                setTimeout(function(){
-                                    window.location.href = 'snake.html';
-                                }, 1000);
-                            }, 700);
-                            break;
-                        case 'minecraft':
-                            botSay('⛏️ عالیه! در حال رفتن به <strong>ماینکرفت</strong>...', function(){
-                                setTimeout(function(){
-                                    window.location.href = 'minecraft.html';
-                                }, 1000);
-                            }, 700);
-                            break;
-                        case 'boom':
-                            botSay('💣 عالیه! در حال رفتن به <strong>بوم بوم</strong>...', function(){
-                                setTimeout(function(){
-                                    window.location.href = 'boom.html';
-                                }, 1000);
-                            }, 700);
-                            break;
-                        case 'race':
-                            botSay('🏎️ عالیه! در حال رفتن به <strong>مسابقه سرعت</strong>...', function(){
-                                setTimeout(function(){
-                                    window.location.href = 'race.html';
-                                }, 1000);
-                            }, 700);
-                            break;
+
+                setTimeout(
+                    function(){
+
+                        switch(
+                            opt.action
+                        ){
+
+                            case 'start':
+
+                                scenarioStart();
+
+                                break;
+
+
+                            case 'about':
+
+                                scenarioAbout();
+
+                                break;
+
+
+                            case 'tutorial':
+
+                                scenarioTutorial();
+
+                                break;
+
+
+                            case 'play':
+
+                                scenarioPlay();
+
+                                break;
+
+
+                            case 'home':
+
+                                goToPage(
+                                    'home.html',
+                                    '🏠 عالیه! در حال رفتن به <strong>صفحه اصلی StarLoom</strong>...'
+                                );
+
+                                break;
+
+
+                            case 'snake':
+
+                                goToPage(
+                                    'snake.html',
+                                    '🐍 عالیه! در حال ورود به <strong>مار و پله</strong>...'
+                                );
+
+                                break;
+
+
+                            case 'minecraft':
+
+                                goToPage(
+                                    'minecraft.html',
+                                    '⛏️ عالیه! در حال ورود به <strong>ماینکرفت</strong>...'
+                                );
+
+                                break;
+
+
+                            case 'boom':
+
+                                goToPage(
+                                    'boom.html',
+                                    '💣 عالیه! در حال ورود به <strong>بوم بوم</strong>...'
+                                );
+
+                                break;
+
+
+                            case 'race':
+
+                                goToPage(
+                                    'race.html',
+                                    '🏎️ عالیه! در حال ورود به <strong>مسابقه سرعت</strong>...'
+                                );
+
+                                break;
+
+
                             case 'loomwars':
-                        botSay('⚔️ عالیه! در حال رفتن به <strong>Loom Wars</strong>...', function(){
-                        setTimeout(function(){
-                        window.location.href = 'loomwars.html';
-                        }, 1000);
-                        }, 700);
-                        break;
-                        default:
-                            scenarioStart();
-                    }
-                }, 500);
+
+                                goToPage(
+                                    'loomwars.html',
+                                    '⚔️ عالیه! در حال ورود به <strong>Loom Wars</strong>...'
+                                );
+
+                                break;
+
+
+                            default:
+
+                                scenarioStart();
+
+                                break;
+
+                        }
+
+                    },
+                    350
+                );
+
             }
 
-            // ============================================
-            //  شروع
-            // ============================================
-            setTimeout(scenarioStart, 500);
 
-            console.log('🤖 StarLoomBot آماده است!');
-            console.log('📚 ربات راهنمای StarLoom_Game');
+            /* =================================================
+               START
+               ================================================= */
+
+            setTimeout(
+                scenarioStart,
+                500
+            );
+
+
+            console.log(
+                '🤖 StarLoomBot آماده است!'
+            );
+
+            console.log(
+                '✦ StarLoom AI Guide'
+            );
 
         })();
+
     </script>
+
 </body>
 </html>
