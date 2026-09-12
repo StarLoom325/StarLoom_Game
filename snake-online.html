@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+<title>StarLoom_Game - مار و پله آنلاین</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+    font-family:"Segoe UI",Tahoma,sans-serif;
+    min-height:100vh;
+    color:#f4f7ff;
+    padding:12px;
+    background:
+        radial-gradient(circle at 20% 10%,#26365e 0%,transparent 30%),
+        radial-gradient(circle at 80% 90%,#33204f 0%,transparent 30%),
+        linear-gradient(135deg,#070b16,#111a2e 50%,#080c18);
+}
+
+.main-container{width:min(950px,100%);margin:auto}
+
+.header{
+    display:flex;justify-content:space-between;align-items:center;
+    gap:12px;padding:14px 20px;margin-bottom:14px;
+    border:1px solid rgba(255,215,80,.18);border-radius:24px;
+    background:rgba(12,18,35,.82);
+    box-shadow:0 15px 40px rgba(0,0,0,.35);
+    backdrop-filter:blur(15px);
+}
+
+.logo{
+    font-size:1.45rem;font-weight:900;
+    background:linear-gradient(135deg,#ffe58a,#ffc400,#ff8a00);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.logo span{color:#8fa2c9;font-weight:400}
+
+.header-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+
+.user-info-bar{
+    display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+    padding:7px 13px;border-radius:30px;
+    background:rgba(0,0,0,.35);
+    border:1px solid rgba(255,255,255,.08);
+    color:#d9e3f8;font-size:.82rem;
+}
+
+.user-icon{font-size:1.35rem}
+
+.back-home{
+    text-decoration:none;color:white;
+    background:linear-gradient(145deg,#344363,#202b44);
+    border:1px solid #566889;padding:9px 18px;
+    border-radius:30px;transition:.2s;
+}
+.back-home:hover{transform:translateY(-2px);border-color:#ffd43b}
+
+.lobby{
+    padding:30px 20px;
+    border-radius:32px;
+    background:rgba(12,18,35,.82);
+    border:1px solid rgba(255,215,80,.15);
+    text-align:center;
+}
+
+.lobby h2{
+    color:#ffe28a;font-size:1.6rem;margin-bottom:10px;
+    text-shadow:0 0 20px rgba(255,205,50,.25);
+}
+
+.lobby p{color:#8294b7;font-size:.9rem;margin-bottom:25px;line-height:1.8}
+
+.lobby-buttons{
+    display:flex;gap:12px;justify-content:center;flex-wrap:wrap;
+    margin-bottom:25px;
+}
+
+.btn{
+    border:0;padding:14px 30px;border-radius:50px;
+    color:#251b00;font-size:1rem;font-weight:900;
+    cursor:pointer;font-family:inherit;transition:.2s;
+}
+.btn.primary{
+    background:linear-gradient(145deg,#ffe875,#ffc400,#e49d00);
+    box-shadow:0 5px 0 #906900,0 8px 20px rgba(255,190,0,.18);
+}
+.btn.primary:hover{transform:translateY(-2px);filter:brightness(1.08)}
+.btn.secondary{
+    background:linear-gradient(145deg,#5a7fff,#3d5fd9);
+    color:#fff;box-shadow:0 5px 0 #223d99,0 8px 20px rgba(60,100,255,.18);
+}
+.btn.secondary:hover{transform:translateY(-2px);filter:brightness(1.08)}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important}
+
+.input-room{
+    display:flex;gap:10px;max-width:400px;margin:0 auto 15px;
+    flex-wrap:wrap;justify-content:center;
+}
+.input-room input{
+    flex:1;min-width:180px;
+    padding:14px 20px;border-radius:50px;
+    border:2px solid rgba(120,150,255,.3);
+    background:rgba(0,0,0,.4);color:#fff;
+    font-size:1.1rem;text-align:center;letter-spacing:3px;
+    font-family:monospace;text-transform:uppercase;
+    outline:none;transition:.3s;
+}
+.input-room input:focus{border-color:#ffd43b;box-shadow:0 0 20px rgba(255,200,0,.2)}
+
+.game-info{
+    display:flex;justify-content:space-between;align-items:center;
+    gap:10px;padding:12px 18px;margin-bottom:14px;
+    border-radius:20px;background:rgba(0,0,0,.35);
+    border:1px solid rgba(255,215,80,.15);flex-wrap:wrap;
+}
+
+.room-code{
+    font-family:monospace;font-size:1.2rem;font-weight:900;
+    color:#ffd43b;letter-spacing:4px;
+    background:rgba(255,200,0,.1);
+    padding:6px 15px;border-radius:12px;
+    border:1px solid rgba(255,200,0,.3);
+    cursor:pointer;transition:.2s;
+}
+.room-code:hover{background:rgba(255,200,0,.2)}
+
+.players-status{display:flex;gap:10px;flex-wrap:wrap}
+
+.player-badge{
+    display:flex;align-items:center;gap:6px;
+    padding:7px 14px;border-radius:50px;
+    font-size:.85rem;font-weight:700;
+    transition:.3s;
+}
+.player-badge.p1{
+    background:rgba(60,140,255,.15);color:#5dade2;
+    border:1px solid rgba(60,140,255,.4);
+}
+.player-badge.p2{
+    background:rgba(240,80,120,.15);color:#f87171;
+    border:1px solid rgba(240,80,120,.4);
+}
+.player-badge.turn{
+    box-shadow:0 0 20px rgba(255,200,0,.4);
+    border-color:#ffd43b;
+    animation:pulseTurn 1s ease-in-out infinite alternate;
+}
+@keyframes pulseTurn{
+    from{box-shadow:0 0 15px rgba(255,200,0,.3)}
+    to{box-shadow:0 0 30px rgba(255,200,0,.6)}
+}
+
+.game-container{
+    position:relative;padding:18px;border-radius:32px;
+    background:rgba(12,18,35,.82);
+    border:1px solid rgba(255,215,80,.15);
+    box-shadow:0 20px 60px rgba(0,0,0,.4);
+}
+
+.board-wrapper{
+    position:relative;width:min(780px,100%);margin:auto;padding:11px;
+    border-radius:28px;background:linear-gradient(145deg,#27385c,#10182b);
+    border:2px solid #394b70;
+    box-shadow:inset 0 0 30px rgba(0,0,0,.45),0 20px 50px rgba(0,0,0,.45);
+}
+
+#board{
+    display:grid;grid-template-columns:repeat(10,1fr);
+    gap:3px;width:100%;aspect-ratio:10/22;padding:5px;
+    border-radius:20px;background:#080e1b;overflow:hidden;
+}
+
+.cell{
+    position:relative;display:flex;justify-content:center;align-items:center;
+    aspect-ratio:1/1;border-radius:7px;overflow:hidden;
+    background:linear-gradient(145deg,rgba(65,86,126,.8),rgba(27,39,65,.95));
+    border:1px solid rgba(255,255,255,.07);
+    color:#9eafd0;font-weight:700;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 2px 3px rgba(0,0,0,.2);
+    transition:.2s;
+}
+.cell:nth-child(odd){
+    background:linear-gradient(145deg,rgba(52,72,109,.85),rgba(24,35,59,.95));
+}
+
+.number{
+    position:absolute;top:3px;right:4px;
+    font-size:.52rem;color:#91a4c8;opacity:.85;z-index:2;
+}
+
+.cell.has-snake{
+    background:radial-gradient(circle at 30% 30%,rgba(255,65,90,.35),transparent 45%),linear-gradient(145deg,#472334,#251526);
+    border-color:#d64d68;
+}
+.cell.has-ladder{
+    background:radial-gradient(circle at 70% 30%,rgba(60,230,140,.3),transparent 45%),linear-gradient(145deg,#1f4939,#172d29);
+    border-color:#42c982;
+}
+.cell.win-cell{
+    background:radial-gradient(circle,#ffe47a,#d99400 70%);
+    color:#302100;border-color:#fff0a3;
+    box-shadow:0 0 15px #ffc400,inset 0 0 15px rgba(255,255,255,.5);
+    animation:winPulse 1.3s infinite alternate;
+}
+@keyframes winPulse{
+    from{box-shadow:0 0 12px #ffc400}
+    to{box-shadow:0 0 30px #ffd43b,0 0 55px rgba(255,190,0,.35)}
+}
+
+.snake-icon,.ladder-icon{
+    position:absolute;font-size:clamp(.65rem,2vw,1.15rem);
+    filter:drop-shadow(0 2px 3px #000);z-index:3;
+}
+.snake-icon{left:3px;top:2px}
+.ladder-icon{right:3px;bottom:2px}
+
+.p1-marker,.p2-marker{
+    position:absolute;width:42%;height:42%;
+    display:flex;justify-content:center;align-items:center;
+    border-radius:50%;font-size:clamp(.6rem,1.9vw,1.15rem);
+    z-index:8;transition:transform .2s;
+}
+.p1-marker{
+    right:5%;bottom:5%;
+    border:2px solid #5dade2;
+    background:radial-gradient(circle at 35% 25%,rgba(93,173,226,.4),transparent 40%),rgba(10,20,40,.9);
+    box-shadow:0 0 10px #5dade2,0 0 20px rgba(93,173,226,.6);
+}
+.p2-marker{
+    left:5%;bottom:5%;
+    border:2px solid #f87171;
+    background:radial-gradient(circle at 35% 25%,rgba(248,113,113,.4),transparent 40%),rgba(40,10,20,.9);
+    box-shadow:0 0 10px #f87171,0 0 20px rgba(248,113,113,.6);
+}
+
+.controls{
+    width:min(780px,100%);margin:15px auto 0;
+    display:flex;align-items:center;justify-content:space-between;
+    gap:12px;flex-wrap:wrap;
+}
+
+.dice-area{
+    display:flex;align-items:center;gap:10px;
+    padding:8px 12px;border-radius:50px;
+    background:rgba(0,0,0,.3);border:1px solid #394b6c;
+}
+
+.dice-label{color:#aab9d4}
+
+#dice{
+    width:58px;height:50px;display:flex;align-items:center;justify-content:center;
+    border-radius:14px;
+    background:linear-gradient(145deg,#fffdf3,#d9d4c0);
+    color:#171b26;font-size:2rem;
+    box-shadow:0 5px 0 #8e8875,0 8px 20px rgba(0,0,0,.35);
+    transition:.2s;
+}
+#dice.rolling{animation:diceRoll .55s ease-in-out}
+@keyframes diceRoll{
+    0%{transform:rotate(0) scale(1)}
+    25%{transform:rotate(18deg) scale(1.15)}
+    50%{transform:rotate(-18deg) scale(.9)}
+    75%{transform:rotate(14deg) scale(1.1)}
+    100%{transform:rotate(0) scale(1)}
+}
+
+#rollBtn{
+    border:0;padding:11px 22px;border-radius:40px;
+    color:#251b00;font-size:.95rem;font-weight:900;cursor:pointer;
+    background:linear-gradient(145deg,#ffe875,#ffc400,#e49d00);
+    box-shadow:0 5px 0 #906900,0 8px 20px rgba(255,190,0,.18);
+    transition:.12s;
+}
+#rollBtn:hover:not(:disabled){transform:translateY(-2px);filter:brightness(1.08)}
+#rollBtn:active:not(:disabled){transform:translateY(4px);box-shadow:0 1px 0 #906900}
+#rollBtn:disabled{opacity:.45;cursor:not-allowed}
+
+.status{
+    flex:1;min-width:190px;text-align:center;
+    padding:12px 16px;border-radius:40px;
+    color:#cbd7ee;background:#111a2c;border:1px solid #354666;
+    box-shadow:inset 0 0 20px rgba(0,0,0,.2);
+}
+.status.winner{
+    color:#ffe05a;border-color:#d8a900;background:#222615;
+    box-shadow:0 0 25px rgba(255,205,50,.15);
+}
+.status.waiting{
+    color:#aab9d4;border-color:#4a5a7c;background:#161e30;
+}
+
+.waiting-overlay{
+    position:fixed;inset:0;z-index:100;
+    background:rgba(5,10,20,.95);
+    display:none;flex-direction:column;
+    align-items:center;justify-content:center;
+    padding:30px;text-align:center;
+}
+.waiting-overlay.show{display:flex}
+
+.waiting-icon{
+    font-size:4rem;margin-bottom:15px;
+    animation:waitFloat 1.5s ease-in-out infinite alternate;
+}
+@keyframes waitFloat{
+    to{transform:translateY(-10px) rotate(5deg)}
+}
+
+.waiting-title{
+    font-size:1.5rem;font-weight:900;color:#ffd43b;
+    margin-bottom:10px;text-shadow:0 0 20px rgba(255,200,0,.4);
+}
+.waiting-sub{color:#8fa2c9;font-size:.9rem;margin-bottom:20px}
+
+.room-display{
+    font-family:monospace;font-size:2.5rem;font-weight:900;
+    color:#ffd43b;letter-spacing:8px;
+    padding:20px 40px;border-radius:20px;
+    background:rgba(255,200,0,.1);
+    border:2px dashed rgba(255,200,0,.4);
+    margin-bottom:15px;
+}
+
+.copy-btn{
+    background:linear-gradient(145deg,#5a7fff,#3d5fd9);
+    color:#fff;border:0;padding:10px 25px;border-radius:50px;
+    font-weight:800;cursor:pointer;font-family:inherit;font-size:.85rem;
+    margin-bottom:20px;
+}
+.copy-btn:hover{transform:scale(1.05)}
+
+.spinner{
+    width:40px;height:40px;border-radius:50%;
+    border:3px solid rgba(255,200,0,.2);
+    border-top-color:#ffd43b;
+    animation:spin 1s linear infinite;
+    margin:15px auto;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.game-ended-overlay{
+    position:fixed;inset:0;z-index:200;
+    background:rgba(5,10,20,.95);
+    display:none;flex-direction:column;
+    align-items:center;justify-content:center;
+    padding:30px;text-align:center;
+}
+.game-ended-overlay.show{display:flex;animation:overlayIn .35s ease}
+@keyframes overlayIn{
+    from{opacity:0;transform:scale(.95)}
+    to{opacity:1;transform:scale(1)}
+}
+
+.big-icon{font-size:5rem;animation:trophyFloat 1.5s ease-in-out infinite alternate}
+@keyframes trophyFloat{to{transform:translateY(-8px) rotate(3deg)}}
+
+.overlay-title{
+    margin-top:5px;font-size:2rem;font-weight:900;color:#ffe05a;
+    text-shadow:0 0 25px #ffc400;
+}
+.overlay-subtitle{color:#aebbd1;margin-top:6px;font-size:1rem}
+
+.reward{
+    margin-top:15px;padding:10px 20px;border-radius:30px;
+    color:#ffd84d;background:rgba(255,196,0,.08);
+    border:1px solid rgba(255,196,0,.2);font-size:1.1rem;font-weight:800;
+}
+
+.btn-group{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap;justify-content:center}
+
+.toast{
+    position:fixed;top:100px;left:50%;
+    transform:translateX(-50%) translateY(-100px);
+    background:linear-gradient(135deg,#2ee68a,#24d981);
+    color:#fff;padding:12px 25px;border-radius:50px;
+    font-weight:800;font-size:.85rem;z-index:9999;
+    transition:transform .4s cubic-bezier(.34,1.56,.64,1);
+    box-shadow:0 10px 30px rgba(46,230,138,.5);
+    max-width:90%;text-align:center;
+}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.error{
+    background:linear-gradient(135deg,#ff5874,#e74c3c);
+    box-shadow:0 10px 30px rgba(255,88,116,.5);
+}
+
+@media(max-width:600px){
+    body{padding:7px}
+    .header{padding:10px;border-radius:18px}
+    .logo{font-size:1.05rem}
+    .logo span{display:none}
+    .user-info-bar{font-size:.68rem;gap:5px;padding:5px 8px}
+    .back-home{padding:7px 12px;font-size:.75rem}
+    .game-container{padding:10px;border-radius:22px}
+    .board-wrapper{padding:6px;border-radius:20px}
+    #board{gap:2px;padding:3px}
+    .number{font-size:.38rem;top:2px;right:2px}
+    .controls{justify-content:center}
+    .dice-area{width:100%;justify-content:center}
+    .status{width:100%}
+    .overlay-title{font-size:1.45rem}
+    .big-icon{font-size:3.5rem}
+    .room-display{font-size:1.8rem;letter-spacing:5px;padding:15px 25px}
+    .lobby h2{font-size:1.3rem}
+    .btn{padding:12px 22px;font-size:.9rem}
+}
+</style>
+</head>
+
+<body>
+
+<div class="main-container">
+
+<header class="header">
+    <div class="logo">✦ StarLoom_Game <span>| مار و پله آنلاین</span></div>
+    <div class="header-right">
+        <div class="user-info-bar">
+            <span class="user-icon" id="userIcon">😊</span>
+            <span>👤 <span id="displayName">کاربر</span></span>
+            <span>💰 <span id="displayCoins">0</span></span>
+            <span>🏆 لول <span id="displayLevel">0</span>/62</span>
+            <span>🎲 <span id="displayDice">40</span></span>
+        </div>
+        <a href="home.html" class="back-home">← بازگشت</a>
+    </div>
+</header>
+
+<div class="lobby" id="lobbyScreen">
+    <h2>🐍 مار و پله ۲ نفره آنلاین</h2>
+    <p>با دوستت از دو گوشی مختلف بازی کن! 🎮<br>لینک اتاق رو بفرست، دوستت بیاد و شروع کنید</p>
+
+    <div class="lobby-buttons">
+        <button class="btn primary" id="createRoomBtn">🎮 ساخت اتاق جدید</button>
+    </div>
+
+    <div style="color:#8294b7;margin:20px 0;font-size:.85rem;">یا</div>
+
+    <div class="input-room">
+        <input type="text" id="joinRoomInput" placeholder="کد اتاق" maxlength="6">
+        <button class="btn secondary" id="joinRoomBtn">🚪 ورود</button>
+    </div>
+</div>
+
+<div class="game-info" id="gameInfo" style="display:none;">
+    <div class="room-code" id="roomCodeDisplay" title="کلیک برای کپی">------</div>
+    <div class="players-status">
+        <div class="player-badge p1" id="p1Badge">
+            <span id="p1Emoji">😊</span>
+            <span id="p1Name">بازیکن ۱</span>
+            <span id="p1Pos">1</span>
+        </div>
+        <div class="player-badge p2" id="p2Badge">
+            <span id="p2Emoji">⏳</span>
+            <span id="p2Name">منتظر...</span>
+            <span id="p2Pos">1</span>
+        </div>
+    </div>
+</div>
+
+<div class="game-container" id="gameContainer" style="display:none;">
+    <div class="board-wrapper">
+        <div id="board"></div>
+    </div>
+
+    <div class="controls">
+        <div class="dice-area">
+            <span class="dice-label">🎲 تاس</span>
+            <div id="dice">⚀</div>
+            <button id="rollBtn" disabled>🎲 بینداز</button>
+        </div>
+        <div class="status waiting" id="statusMessage">⏳ منتظر بازیکن دوم...</div>
+    </div>
+</div>
+
+</div>
+
+<div class="waiting-overlay" id="waitingOverlay">
+    <div class="waiting-icon">⏳</div>
+    <div class="waiting-title">منتظر بازیکن دوم...</div>
+    <div class="waiting-sub">این کد رو به دوستت بده:</div>
+    <div class="room-display" id="waitingRoomCode">------</div>
+    <button class="copy-btn" id="copyRoomBtn">📋 کپی کد اتاق</button>
+    <div class="spinner"></div>
+    <button class="btn secondary" id="cancelWaitingBtn" style="margin-top:20px;">❌ انصراف</button>
+</div>
+
+<div class="game-ended-overlay" id="gameOverOverlay">
+    <div class="big-icon" id="gameOverIcon">🏆</div>
+    <div class="overlay-title" id="gameOverTitle">بردی!</div>
+    <div class="overlay-subtitle" id="gameOverSubtitle">تبریک می‌گم!</div>
+    <div class="reward" id="gameOverReward" style="display:none;">🎁 +۸۰۰ سکه | +۱ لول</div>
+    <div class="btn-group">
+        <button class="btn primary" id="playAgainBtn">🔄 بازی دوباره</button>
+        <a href="home.html" class="btn secondary">🏠 خانه</a>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+
+"use strict";
+
+/* ============================================================
+   SUPABASE CONFIG
+============================================================ */
+
+var SUPABASE_URL = 'https://txstexjrypiowndavrtr.supabase.co';
+var SUPABASE_KEY = 'sb_publishable_6WqGjT0eriWi9JcJWRsVvg_J358WuUz';
+
+var supabaseClient = null;
+try {
+    if (typeof supabase !== 'undefined') {
+        supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        console.log('✅ Supabase initialized');
+    }
+} catch(e) {
+    console.error('❌ Supabase error:', e);
+}
+
+
+/* ============================================================
+   CONSTANTS
+============================================================ */
+
+var BOARD_SIZE = 220;
+var COLS = 10;
+var ROWS = 22;
+
+var snakes = [
+    {start:210,end:150},{start:195,end:110},{start:180,end:75},
+    {start:160,end:45},{start:140,end:88},{start:115,end:55},
+    {start:98,end:32},{start:72,end:18},{start:48,end:12},{start:200,end:130}
+];
+
+var ladders = [
+    {start:5,end:52},{start:15,end:70},{start:30,end:90},
+    {start:42,end:120},{start:60,end:145},{start:80,end:165},
+    {start:95,end:185},{start:125,end:205},{start:155,end:215},{start:175,end:218}
+];
+
+var ICONS = {
+    "default":"😊","smile":"😄","heart":"❤️","star":"⭐","lion":"🦁",
+    "tiger":"🐯","eagle":"🦅","wolf":"🐺","dragon":"🐉","phoenix":"🔥",
+    "unicorn":"🦄","crown":"👑","diamond":"💎","king":"👸","gold":"🏆",
+    "robot":"🤖","gem":"💠","pizza":"🍕","burger":"🍔","cake":"🎂",
+    "donut":"🍩","ninja":"🥷","mage":"🧙","knight":"⚔️","angel":"👼",
+    "demon":"👿","skeleton":"💀","galaxy":"🌌","crystal":"🔮","cosmic":"🚀",
+    "legendary":"🌟","ultimate":"⚡","void":"🌑"
+};
+
+
+/* ============================================================
+   STATE
+============================================================ */
+
+var gameState = {
+    myId: null,
+    myName: 'کاربر',
+    myIcon: '😊',
+    myDeviceId: null,
+    roomCode: null,
+    isHost: false,
+    gameData: null,
+    subscription: null,
+    isRolling: false
+};
+
+var username = 'کاربر';
+var userIcon = '😊';
+
+
+/* ============================================================
+   HELPERS
+============================================================ */
+
+function showToast(text, isError) {
+    var toast = document.getElementById('toast');
+    toast.textContent = text;
+    toast.className = 'toast show' + (isError ? ' error' : '');
+    setTimeout(function() {
+        toast.classList.remove('show');
+    }, 3000);
+}
+
+function getDeviceId() {
+    try {
+        var id = localStorage.getItem('starloom_device_id');
+        if (!id) {
+            id = 'dev_' + Math.random().toString(36).substr(2, 12) + '_' + Date.now();
+            localStorage.setItem('starloom_device_id', id);
+        }
+        return id;
+    } catch(e) {
+        return 'dev_anon_' + Date.now();
+    }
+}
+
+function generateRoomCode() {
+    var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    var code = '';
+    for (var i = 0; i < 5; i++) {
+        code += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return code;
+}
+
+
+/* ============================================================
+   LOAD USER
+============================================================ */
+
+function loadUser() {
+    var saved = localStorage.getItem('starloom_current_user');
+    if (saved) {
+        try {
+            var data = JSON.parse(saved);
+            username = data.username || 'کاربر';
+            userIcon = ICONS[data.icon] || '😊';
+
+            document.getElementById('displayName').textContent = username;
+            document.getElementById('displayCoins').textContent = data.coins || 0;
+            document.getElementById('displayLevel').textContent = data.level || 0;
+            document.getElementById('displayDice').textContent = data.dice == null ? 40 : data.dice;
+            document.getElementById('userIcon').textContent = userIcon;
+
+            gameState.myName = username;
+            gameState.myIcon = userIcon;
+        } catch(e) {}
+    }
+    gameState.myDeviceId = getDeviceId();
+}
+
+
+/* ============================================================
+   BOARD
+============================================================ */
+
+function getNumberFromRowCol(row, col) {
+    var c = col;
+    if (row % 2 === 1) c = COLS - 1 - col;
+    return row * COLS + c + 1;
+}
+
+function buildBoard() {
+    var boardEl = document.getElementById('board');
+    if (!boardEl) return;
+    boardEl.innerHTML = '';
+
+    for (var row = ROWS - 1; row >= 0; row--) {
+        for (var col = 0; col < COLS; col++) {
+            var num = getNumberFromRowCol(row, col);
+            var cell = document.createElement('div');
+            cell.className = 'cell';
+            cell.dataset.number = num;
+
+            var number = document.createElement('span');
+            number.className = 'number';
+            number.textContent = num;
+            cell.appendChild(number);
+
+            for (var s = 0; s < snakes.length; s++) {
+                if (snakes[s].start === num) {
+                    cell.classList.add('has-snake');
+                    var snake = document.createElement('span');
+                    snake.className = 'snake-icon';
+                    snake.textContent = '🐍';
+                    cell.appendChild(snake);
+                    break;
+                }
+            }
+
+            for (var l = 0; l < ladders.length; l++) {
+                if (ladders[l].start === num) {
+                    cell.classList.add('has-ladder');
+                    var ladder = document.createElement('span');
+                    ladder.className = 'ladder-icon';
+                    ladder.textContent = '🪜';
+                    cell.appendChild(ladder);
+                    break;
+                }
+            }
+
+            if (num === BOARD_SIZE) cell.classList.add('win-cell');
+            boardEl.appendChild(cell);
+        }
+    }
+}
+
+
+/* ============================================================
+   RENDER PLAYERS
+============================================================ */
+
+function renderPlayers() {
+    var boardEl = document.getElementById('board');
+    if (!boardEl || !gameState.gameData) return;
+
+    var oldMarkers = boardEl.querySelectorAll('.p1-marker, .p2-marker');
+    for (var i = 0; i < oldMarkers.length; i++) {
+        oldMarkers[i].remove();
+    }
+
+    var data = gameState.gameData;
+
+    if (data.player1_pos) {
+        var cell1 = boardEl.querySelector('.cell[data-number="' + data.player1_pos + '"]');
+        if (cell1) {
+            var m1 = document.createElement('div');
+            m1.className = 'p1-marker';
+            m1.textContent = data.player1_icon || '😊';
+            cell1.appendChild(m1);
+        }
+    }
+
+    if (data.player2_id && data.player2_pos) {
+        var cell2 = boardEl.querySelector('.cell[data-number="' + data.player2_pos + '"]');
+        if (cell2) {
+            var m2 = document.createElement('div');
+            m2.className = 'p2-marker';
+            m2.textContent = data.player2_icon || '😊';
+            cell2.appendChild(m2);
+        }
+    }
+
+    var p1Badge = document.getElementById('p1Badge');
+    var p2Badge = document.getElementById('p2Badge');
+
+    document.getElementById('p1Name').textContent = data.player1_name || 'بازیکن ۱';
+    document.getElementById('p1Emoji').textContent = data.player1_icon || '😊';
+    document.getElementById('p1Pos').textContent = data.player1_pos || 1;
+
+    if (data.player2_id) {
+        document.getElementById('p2Name').textContent = data.player2_name || 'بازیکن ۲';
+        document.getElementById('p2Emoji').textContent = data.player2_icon || '😊';
+        document.getElementById('p2Pos').textContent = data.player2_pos || 1;
+    } else {
+        document.getElementById('p2Name').textContent = 'منتظر...';
+        document.getElementById('p2Emoji').textContent = '⏳';
+        document.getElementById('p2Pos').textContent = '1';
+    }
+
+    var isMyTurn = (data.turn === gameState.myDeviceId);
+    var bothPlayers = data.player2_id && data.player1_id;
+
+    if (p1Badge) p1Badge.classList.toggle('turn', data.turn === data.player1_id);
+    if (p2Badge) p2Badge.classList.toggle('turn', data.turn === data.player2_id);
+
+    var rollBtn = document.getElementById('rollBtn');
+    var statusMsg = document.getElementById('statusMessage');
+
+    if (!bothPlayers) {
+        rollBtn.disabled = true;
+        statusMsg.textContent = '⏳ منتظر بازیکن دوم...';
+        statusMsg.className = 'status waiting';
+        return;
+    }
+
+    if (data.winner) {
+        rollBtn.disabled = true;
+        return;
+    }
+
+    if (isMyTurn && !gameState.isRolling) {
+        rollBtn.disabled = false;
+        statusMsg.textContent = '🎲 نوبت توئه! تاس بینداز';
+        statusMsg.className = 'status';
+    } else {
+        rollBtn.disabled = true;
+        statusMsg.textContent = '⏳ نوبت حریف...';
+        statusMsg.className = 'status waiting';
+    }
+}
+
+
+/* ============================================================
+   ROOM CREATE
+============================================================ */
+
+async function createRoom() {
+    if (!supabaseClient) {
+        showToast('⚠️ اتصال به سرور برقرار نیست', true);
+        return;
+    }
+
+    var code = generateRoomCode();
+
+    try {
+        var result = await supabaseClient
+            .from('games')
+            .insert({
+                room_code: code,
+                player1_id: gameState.myDeviceId,
+                player1_name: gameState.myName,
+                player1_icon: gameState.myIcon,
+                player1_pos: 1,
+                player2_pos: 1,
+                turn: gameState.myDeviceId,
+                status: 'waiting'
+            })
+            .select()
+            .single();
+
+        if (result.error) {
+            console.error(result.error);
+            showToast('❌ خطا: ' + result.error.message, true);
+            return;
+        }
+
+        gameState.roomCode = code;
+        gameState.isHost = true;
+        gameState.gameData = result.data;
+
+        document.getElementById('waitingRoomCode').textContent = code;
+        document.getElementById('waitingOverlay').classList.add('show');
+        document.getElementById('lobbyScreen').style.display = 'none';
+
+        subscribeToRoom(code);
+
+    } catch(e) {
+        console.error(e);
+        showToast('❌ خطا در ارتباط', true);
+    }
+}
+
+
+/* ============================================================
+   ROOM JOIN
+============================================================ */
+
+async function joinRoom() {
+    var input = document.getElementById('joinRoomInput');
+    var code = (input.value || '').trim().toUpperCase();
+
+    if (!code || code.length < 5) {
+        showToast('❌ کد اتاق معتبر وارد کن', true);
+        return;
+    }
+
+    if (!supabaseClient) {
+        showToast('⚠️ اتصال به سرور برقرار نیست', true);
+        return;
+    }
+
+    try {
+        var result = await supabaseClient
+            .from('games')
+            .select('*')
+            .eq('room_code', code)
+            .eq('status', 'waiting')
+            .order('created_at', { ascending: false })
+            .limit(1)
+            .maybeSingle();
+
+        if (result.error || !result.data) {
+            showToast('❌ اتاقی با این کد پیدا نشد', true);
+            return;
+        }
+
+        var data = result.data;
+
+        if (data.player1_id === gameState.myDeviceId) {
+            showToast('❌ خودت صاحب این اتاقی!', true);
+            return;
+        }
+
+        var updateResult = await supabaseClient
+            .from('games')
+            .update({
+                player2_id: gameState.myDeviceId,
+                player2_name: gameState.myName,
+                player2_icon: gameState.myIcon,
+                status: 'playing',
+                updated_at: new Date().toISOString()
+            })
+            .eq('id', data.id)
+            .select()
+            .single();
+
+        if (updateResult.error) {
+            console.error(updateResult.error);
+            showToast('❌ خطا در ورود به اتاق', true);
+            return;
+        }
+
+        gameState.roomCode = code;
+        gameState.isHost = false;
+        gameState.gameData = updateResult.data;
+
+        document.getElementById('lobbyScreen').style.display = 'none';
+        document.getElementById('gameInfo').style.display = 'flex';
+        document.getElementById('gameContainer').style.display = 'block';
+        document.getElementById('roomCodeDisplay').textContent = code;
+
+        buildBoard();
+        renderPlayers();
+        subscribeToRoom(code);
+
+        showToast('🎉 به اتاق پیوستی!');
+
+    } catch(e) {
+        console.error(e);
+        showToast('❌ خطا در ارتباط', true);
+    }
+}
+
+
+/* ============================================================
+   SUBSCRIBE TO ROOM
+============================================================ */
+
+function subscribeToRoom(code) {
+    if (gameState.subscription) {
+        try {
+            supabaseClient.removeChannel(gameState.subscription);
+        } catch(e) {}
+    }
+
+    document.getElementById('lobbyScreen').style.display = 'none';
+    document.getElementById('gameInfo').style.display = 'flex';
+    document.getElementById('gameContainer').style.display = 'block';
+    document.getElementById('roomCodeDisplay').textContent = code;
+
+    buildBoard();
+
+    gameState.subscription = supabaseClient
+        .channel('room_' + code)
+        .on(
+            'postgres_changes',
+            {
+                event: 'UPDATE',
+                schema: 'public',
+                table: 'games',
+                filter: 'room_code=eq.' + code
+            },
+            function(payload) {
+                console.log('📡 Update:', payload);
+                gameState.gameData = payload.new;
+
+                if (payload.new.player2_id && 
+                    document.getElementById('waitingOverlay').classList.contains('show')) {
+                    document.getElementById('waitingOverlay').classList.remove('show');
+                    showToast('🎉 بازیکن دوم اومد!');
+                }
+
+                renderPlayers();
+                checkWinner(payload.new);
+            }
+        )
+        .subscribe(function(status) {
+            console.log('📡 Status:', status);
+        });
+}
+
+
+/* ============================================================
+   ROLL DICE
+============================================================ */
+
+async function rollDice() {
+    if (!gameState.gameData || gameState.isRolling) return;
+
+    var data = gameState.gameData;
+
+    if (data.turn !== gameState.myDeviceId) {
+        showToast('❌ نوبت تو نیست!', true);
+        return;
+    }
+
+    if (data.winner) return;
+
+    var diceCount = parseInt(document.getElementById('displayDice').textContent) || 0;
+    if (diceCount <= 0) {
+        showToast('❌ تاس نداری! از فروشگاه بخر', true);
+        return;
+    }
+
+    gameState.isRolling = true;
+
+    var diceEl = document.getElementById('dice');
+    var rollBtn = document.getElementById('rollBtn');
+    rollBtn.disabled = true;
+    diceEl.classList.add('rolling');
+
+    var value = Math.floor(Math.random() * 6) + 1;
+    var symbols = ['⚀','⚁','⚂','⚃','⚄','⚅'];
+
+    var animCount = 0;
+    var animInterval = setInterval(function() {
+        diceEl.textContent = symbols[Math.floor(Math.random() * 6)];
+        animCount++;
+        if (animCount >= 7) {
+            clearInterval(animInterval);
+            diceEl.textContent = symbols[value - 1];
+        }
+    }, 70);
+
+    try {
+        var users = JSON.parse(localStorage.getItem('starloom_users')) || {};
+        if (users[username]) {
+            users[username].dice = Math.max(0, (users[username].dice || 0) - 1);
+            localStorage.setItem('starloom_users', JSON.stringify(users));
+
+            var current = JSON.parse(localStorage.getItem('starloom_current_user')) || {};
+            current.dice = users[username].dice;
+            localStorage.setItem('starloom_current_user', JSON.stringify(current));
+
+            document.getElementById('displayDice').textContent = users[username].dice;
+        }
+    } catch(e) {}
+
+    var isP1 = (data.player1_id === gameState.myDeviceId);
+    var currentPos = isP1 ? (data.player1_pos || 1) : (data.player2_pos || 1);
+    var newPos = currentPos + value;
+
+    if (newPos > BOARD_SIZE) {
+        setTimeout(function() {
+            diceEl.classList.remove('rolling');
+            gameState.isRolling = false;
+            showToast('⛔ عدد تاس زیاد بود!');
+            switchTurn();
+        }, 800);
+        return;
+    }
+
+    for (var s = 0; s < snakes.length; s++) {
+        if (snakes[s].start === newPos) {
+            newPos = snakes[s].end;
+            break;
+        }
+    }
+
+    for (var l = 0; l < ladders.length; l++) {
+        if (ladders[l].start === newPos) {
+            newPos = ladders[l].end;
+            break;
+        }
+    }
+
+    setTimeout(async function() {
+        diceEl.classList.remove('rolling');
+
+        var updateData = {};
+        if (isP1) {
+            updateData.player1_pos = newPos;
+        } else {
+            updateData.player2_pos = newPos;
+        }
+
+        if (newPos >= BOARD_SIZE) {
+            updateData.winner = gameState.myDeviceId;
+            updateData.status = 'finished';
+        } else {
+            updateData.turn = isP1 ? data.player2_id : data.player1_id;
+        }
+        updateData.updated_at = new Date().toISOString();
+
+        try {
+            await supabaseClient
+                .from('games')
+                .update(updateData)
+                .eq('id', data.id);
+        } catch(e) {
+            console.error(e);
+        }
+
+        gameState.isRolling = false;
+    }, 800);
+}
+
+
+/* ============================================================
+   SWITCH TURN
+============================================================ */
+
+async function switchTurn() {
+    if (!gameState.gameData) return;
+    var data = gameState.gameData;
+    var isP1 = (data.player1_id === gameState.myDeviceId);
+
+    try {
+        await supabaseClient
+            .from('games')
+            .update({
+                turn: isP1 ? data.player2_id : data.player1_id,
+                updated_at: new Date().toISOString()
+            })
+            .eq('id', data.id);
+    } catch(e) {}
+}
+
+
+/* ============================================================
+   CHECK WINNER
+============================================================ */
+
+function checkWinner(data) {
+    if (!data.winner) return;
+
+    var isMe = (data.winner === gameState.myDeviceId);
+    var gameOverOverlay = document.getElementById('gameOverOverlay');
+
+    document.getElementById('gameOverIcon').textContent = isMe ? '🏆' : '😢';
+    document.getElementById('gameOverTitle').textContent = isMe ? '🎉 بردی!' : '💀 باختی!';
+    document.getElementById('gameOverSubtitle').textContent = isMe 
+        ? 'تبریک! تو برنده شدی 🎉' 
+        : 'دفعه بعد بهتر تلاش کن!';
+
+    if (isMe) {
+        document.getElementById('gameOverReward').style.display = 'block';
+        giveReward();
+    } else {
+        document.getElementById('gameOverReward').style.display = 'none';
+    }
+
+    gameOverOverlay.classList.add('show');
+}
+
+
+/* ============================================================
+   REWARD
+============================================================ */
+
+function giveReward() {
+    try {
+        var users = JSON.parse(localStorage.getItem('starloom_users')) || {};
+        if (!users[username]) return;
+
+        users[username].coins = (users[username].coins || 0) + 800;
+        users[username].level = Math.min((users[username].level || 0) + 1, 62);
+        users[username].levelProgress = 0;
+        users[username].snakeWins = (users[username].snakeWins || 0) + 1;
+        users[username].totalGames = (users[username].totalGames || 0) + 1;
+
+        localStorage.setItem('starloom_users', JSON.stringify(users));
+
+        var current = JSON.parse(localStorage.getItem('starloom_current_user')) || {};
+        current.coins = users[username].coins;
+        current.level = users[username].level;
+        current.levelProgress = 0;
+        localStorage.setItem('starloom_current_user', JSON.stringify(current));
+
+        document.getElementById('displayCoins').textContent = users[username].coins;
+        document.getElementById('displayLevel').textContent = users[username].level;
+
+    } catch(e) {}
+}
+
+
+/* ============================================================
+   EVENTS
+============================================================ */
+
+document.getElementById('createRoomBtn').addEventListener('click', createRoom);
+document.getElementById('joinRoomBtn').addEventListener('click', joinRoom);
+document.getElementById('rollBtn').addEventListener('click', rollDice);
+
+document.getElementById('joinRoomInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') joinRoom();
+});
+
+document.getElementById('copyRoomBtn').addEventListener('click', function() {
+    var code = document.getElementById('waitingRoomCode').textContent;
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(code);
+        showToast('📋 کد کپی شد: ' + code);
+    } else {
+        showToast('📋 کد: ' + code);
+    }
+});
+
+document.getElementById('roomCodeDisplay').addEventListener('click', function() {
+    var code = this.textContent;
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(code);
+        showToast('📋 کد کپی شد: ' + code);
+    }
+});
+
+document.getElementById('cancelWaitingBtn').addEventListener('click', async function() {
+    if (gameState.roomCode) {
+        try {
+            await supabaseClient
+                .from('games')
+                .delete()
+                .eq('room_code', gameState.roomCode)
+                .eq('player1_id', gameState.myDeviceId);
+        } catch(e) {}
+    }
+    location.reload();
+});
+
+document.getElementById('playAgainBtn').addEventListener('click', function() {
+    location.reload();
+});
+
+
+/* ============================================================
+   INIT
+============================================================ */
+
+loadUser();
+
+console.log('🐍 StarLoom Snake Online Ready!');
+
+</script>
+
+</body>
+</html>
