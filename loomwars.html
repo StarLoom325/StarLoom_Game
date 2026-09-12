@@ -154,8 +154,6 @@ body{
 .mode-btn.online{border-color:rgba(32,220,255,.4);}
 .mode-btn.online:hover{border-color:#20dcff;box-shadow:0 10px 30px rgba(32,220,255,.2);}
 
-
-
 /* ============ LOBBY SCREEN ============ */
 #lobbyScreen{
     position:fixed;
@@ -274,8 +272,6 @@ body{
     margin-bottom:15px;
 }
 
-
-
 /* ============ CANVAS ============ */
 #canvasContainer{
     position:relative;
@@ -309,8 +305,6 @@ body{
                 <div class="desc">با دوستت از دو گوشی بازی کن</div>
             </div>
         </button>
-
-
     </div>
 </div>
 
@@ -345,7 +339,6 @@ body{
     <button class="lobby-btn back" id="btnBackToMode">← بازگشت</button>
 </div>
 
-
 <!-- ============ GAME CANVAS ============ -->
 <div id="gameWrapper">
     <div id="canvasContainer">
@@ -356,8 +349,7 @@ body{
 <script>
 
 /* ============================================================
-   LOOM WARS - STARLOOM EDITION
-   با سه حالت: تک‌نفره / دونفره آنلاین / دونفره محلی
+   LOOM WARS - STARLOOM EDITION (Online Multiplayer Fixed)
    ============================================================ */
 
 const GAME_W = 400;
@@ -388,15 +380,17 @@ try {
    STATE
    ============================================================ */
 
-let gameMode = null; // 'solo' | 'online' | 'local'
+let gameMode = null; // 'solo' | 'online'
+
 let networkState = {
-    isHost: false,
+    isHost: false,             // host = player1 (BLUE), guest = player2 (RED)
     roomCode: null,
     myDeviceId: null,
-    player1Id: null,
-    player2Id: null,
+    myRole: null,              // 'player' or 'enemy'
     subscription: null,
-    lastSentAction: 0
+    movesSubscription: null,
+    lastSentAction: 0,
+    isConnected: false
 };
 
 /* ============================================================
@@ -1095,15 +1089,15 @@ class AI{
 }
 
 /* ============================================================
-   CARD UI
+   CARD UI (per-player)
    ============================================================ */
 
 class CardUI{
-    constructor(){
+    constructor(cards){
         this.cardW=43; this.cardH=62;
         this.gap=3;
         this.y=GAME_H-82;
-        this.cards=CARDS.slice();
+        this.cards=cards;
         this.totalW = this.cards.length*this.cardW + (this.cards.length-1)*this.gap;
         this.startX = (GAME_W-this.totalW)/2;
         this.dragging=null;
@@ -1123,7 +1117,7 @@ class CardUI{
         }
         return -1;
     }
-    draw(elixir){
+    draw(elixir, cardIcon){
         for(let i=0;i<this.cards.length;i++){
             const card = this.cards[i];
             const r = this.getCardRect(i);
@@ -1204,7 +1198,9 @@ class Game{
         this.stats = this.loadStats();
         this.arena = new Arena();
         this.elixir = new Elixir(2.8);
-        this.cardUI = new CardUI();
+        // هر بازیکن 4 کارت اول رو داره (knight, archer, hog, bomber)
+        this.myCards = CARDS.slice(0, 4);
+        this.cardUI = new CardUI(this.myCards);
         this.lastTime = 0;
         this.state = "playing";
         this.gameTime = 180;
@@ -1262,10 +1258,18 @@ class Game{
             const i = this.cardUI.dragging;
             const card = this.cardUI.cards[i];
             const {x,y} = this.screenToGame(clientX, clientY);
+
+            // فقط نیمه پایین (زمین خودی) قابل گذاشتن
             if(y>MAP.riverY+MAP.riverH+18 && y<GAME_H-92){
                 if(this.elixir.spend(card.cost)){
+                    // spawn محلی
                     this.arena.spawnUnit(card.id, "player", x, y);
                     this.explode(x,y,card.color,5);
+
+                    // ارسال به حریف در حالت آنلاین
+                    if(gameMode === "online" && networkState.roomCode){
+                        sendMoveToOpponent(card.id, x, y);
+                    }
                 }
             }
         }
@@ -1402,19 +1406,30 @@ class Game{
         ctx.textAlign="center";
         ctx.textBaseline="middle";
         ctx.fillText("⏱ "+timeStr, GAME_W/2, 55);
+
         ctx.fillStyle="rgba(4,8,20,.85)";
         ctx.beginPath();
         ctx.roundRect(10,40,100,30,8);
         ctx.fill();
-        ctx.fillStyle = this.difficulty.level>=7?"#fb7185":this.difficulty.level>=4?"#fbbf24":"#4ade80";
-        ctx.font="bold 11px Tahoma";
-        ctx.textAlign="left";
-        ctx.fillText(gameMode==="solo"?("🤖 AI Lv."+this.difficulty.level):(gameMode==="online"?"🌐 آنلاین":"👥 دونفره"), 18, 55);
+        if(gameMode === "online"){
+            ctx.fillStyle = networkState.isHost ? "#60a5fa" : "#fb7185";
+            ctx.font="bold 11px Tahoma";
+            ctx.textAlign="left";
+            ctx.fillText(networkState.isHost?"🔵 آبی (تو)":"🔴 قرمز (تو)", 18, 55);
+        } else {
+            ctx.fillStyle = this.difficulty.level>=7?"#fb7185":this.difficulty.level>=4?"#fbbf24":"#4ade80";
+            ctx.font="bold 11px Tahoma";
+            ctx.textAlign="left";
+            ctx.fillText("🤖 AI Lv."+this.difficulty.level, 18, 55);
+        }
+
         ctx.fillStyle="rgba(4,8,20,.85)";
         ctx.beginPath();
         ctx.roundRect(GAME_W-110,40,100,30,8);
         ctx.fill();
-        const ratio = gameMode==="solo"?(this.ai.elixir.current/this.ai.elixir.max):.5;
+        let ratio;
+        if(gameMode === "solo") ratio = this.ai.elixir.current/this.ai.elixir.max;
+        else ratio = .5;
         ctx.fillStyle="#86198f";
         ctx.beginPath();
         ctx.roundRect(GAME_W-104,48,88,14,5);
@@ -1426,7 +1441,12 @@ class Game{
         ctx.fillStyle="#fff";
         ctx.font="bold 9px Tahoma";
         ctx.textAlign="center";
-        ctx.fillText(gameMode==="solo"?("AI ⚗ "+this.ai.elixir.current):"حریف", GAME_W-60, 55);
+        ctx.fillText(
+            gameMode === "solo"
+                ? ("AI ⚗ " + this.ai.elixir.current)
+                : (networkState.isHost ? "🔴 حریف" : "🔵 حریف"),
+            GAME_W-60, 55
+        );
     }
     drawElixirBar(){
         const x=15, y=GAME_H-142, w=GAME_W-30, h=25;
@@ -1554,8 +1574,6 @@ document.getElementById("btnOnline").addEventListener("click", function(){
     document.getElementById("lobbyScreen").classList.add("show");
 });
 
-
-
 function startGame(){
     document.getElementById("modeScreen").classList.add("hidden");
     canvasContainer.classList.add("show");
@@ -1588,7 +1606,6 @@ document.getElementById("btnCreateRoom").addEventListener("click", async functio
 
         networkState.isHost = true;
         networkState.roomCode = code;
-        networkState.player1Id = networkState.myDeviceId;
 
         document.getElementById("createRoomView").style.display = "none";
         document.getElementById("waitingRoomView").style.display = "flex";
@@ -1648,8 +1665,6 @@ document.getElementById("btnJoinRoom").addEventListener("click", async function(
 
         networkState.isHost = false;
         networkState.roomCode = code;
-        networkState.player1Id = result.data.player1_id;
-        networkState.player2Id = networkState.myDeviceId;
 
         document.getElementById("lobbyScreen").classList.remove("show");
         canvasContainer.classList.add("show");
@@ -1686,20 +1701,29 @@ document.getElementById("btnCancelWaiting").addEventListener("click", async func
     networkState.roomCode = null;
 });
 
+document.getElementById("btnBackToMode").addEventListener("click", function(){
+    document.getElementById("lobbyScreen").classList.remove("show");
+    document.getElementById("modeScreen").classList.remove("hidden");
+});
+
+/* ============================================================
+   ONLINE SYNC (Realtime)
+   ============================================================ */
+
 function subscribeToRoom(code){
     if(networkState.subscription){
         try{ supabaseClient.removeChannel(networkState.subscription); }catch(e){}
     }
+
+    // Listen for the room getting a player2 (host side)
     networkState.subscription = supabaseClient
         .channel("loom_" + code)
         .on("postgres_changes",
             {event:"UPDATE", schema:"public", table:"loom_games", filter:"room_code=eq."+code},
             function(payload){
-                console.log("📡 Update:", payload);
                 const data = payload.new;
-                if(data.player2_id && networkState.isHost){
-                    // بازیکن دوم اومد - شروع بازی
-                    networkState.player2Id = data.player2_id;
+                if(data.player2_id && networkState.isHost && !networkState.isConnected){
+                    networkState.isConnected = true;
                     document.getElementById("lobbyScreen").classList.remove("show");
                     canvasContainer.classList.add("show");
                     resizeCanvas();
@@ -1707,6 +1731,51 @@ function subscribeToRoom(code){
                 }
             })
         .subscribe();
+
+    // Also listen for moves
+    subscribeToMoves(code);
+}
+
+function subscribeToMoves(code){
+    if(networkState.movesSubscription){
+        try{ supabaseClient.removeChannel(networkState.movesSubscription); }catch(e){}
+    }
+
+    networkState.movesSubscription = supabaseClient
+        .channel("loom_moves_" + code)
+        .on("postgres_changes",
+            {event:"INSERT", schema:"public", table:"loom_moves", filter:"room_code=eq."+code},
+            function(payload){
+                const mv = payload.new;
+                if(!mv) return;
+                if(mv.sender_id === networkState.myDeviceId) return; // my own move
+
+                // Opponent's move: they're the "enemy" from our view
+                // Convert their coordinates: they placed at (x,y) in their view
+                // For player2 (red), their (x,y) maps to our mirrored (x, GAME_H-y)
+                // We'll spawn a unit at their coordinates but flipped vertically
+                const spawnX = mv.x;
+                const spawnY = GAME_H - mv.y;
+
+                game.arena.spawnUnit(mv.card_id, "enemy", spawnX, spawnY);
+                game.explode(spawnX, spawnY, "#fb7185", 5);
+            })
+        .subscribe();
+}
+
+async function sendMoveToOpponent(cardId, x, y){
+    if(!supabaseClient || !networkState.roomCode) return;
+    try{
+        await supabaseClient.from("loom_moves").insert({
+            room_code: networkState.roomCode,
+            sender_id: networkState.myDeviceId,
+            card_id: cardId,
+            x: x,
+            y: y
+        });
+    }catch(e){
+        console.error("Send move error:", e);
+    }
 }
 
 /* ============================================================
@@ -1787,7 +1856,7 @@ if(!CanvasRenderingContext2D.prototype.roundRect){
     };
 }
 
-console.log("⚔️ Loom Wars StarLoom Edition Ready!");
+console.log("⚔️ Loom Wars StarLoom Edition Ready! (Online Multiplayer)");
 
 </script>
 
