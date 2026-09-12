@@ -1,0 +1,1769 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Fruit War 🍎⚔️</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background: #0a0e1a;
+  color: #fff;
+  touch-action: manipulation;
+}
+
+body {
+  background: radial-gradient(circle at 50% 20%, #2a1f3a 0%, #0a0e1a 60%, #050810 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#gameWrapper {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  height: 100vh;
+  max-height: 850px;
+  overflow: hidden;
+}
+
+/* HUD بالا */
+.hud-top {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  z-index: 10;
+  gap: 8px;
+}
+
+.hud-box {
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(241,196,15,0.3);
+  border-radius: 12px;
+  padding: 6px 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #f1c40f;
+}
+
+.hud-box .icon { font-size: 1rem; }
+
+/* میدان نبرد */
+.battle-field {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 70px 15px 200px;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.enemy-area, .player-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.character {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s;
+}
+
+.character-emoji {
+  font-size: 5rem;
+  filter: drop-shadow(0 0 20px rgba(241,196,15,0.5));
+  animation: charIdle 2s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+.character.enemy .character-emoji {
+  filter: drop-shadow(0 0 20px rgba(231,76,60,0.6));
+  animation-delay: 0.5s;
+}
+
+@keyframes charIdle {
+  0% { transform: translateY(0) scale(1); }
+  100% { transform: translateY(-8px) scale(1.03); }
+}
+
+.character.hit .character-emoji {
+  animation: charHit 0.4s ease;
+}
+@keyframes charHit {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-15px) rotate(-10deg); }
+  50% { transform: translateX(15px) rotate(10deg); }
+  75% { transform: translateX(-10px); }
+}
+
+.character.attack .character-emoji {
+  animation: charAttack 0.5s ease;
+}
+@keyframes charAttack {
+  0%, 100% { transform: translateX(0) scale(1); }
+  50% { transform: translateX(30px) scale(1.2); }
+}
+
+.hp-container {
+  width: 220px;
+  max-width: 80vw;
+}
+
+.hp-name {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: #8899bb;
+  margin-bottom: 4px;
+  padding: 0 4px;
+}
+
+.hp-name .hp-value {
+  color: #fff;
+  font-weight: 700;
+}
+
+.hp-bar-bg {
+  width: 100%;
+  height: 16px;
+  background: rgba(0,0,0,0.6);
+  border: 2px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.hp-bar-fill {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, #2ecc71, #27ae60);
+  transition: width 0.4s ease;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(46,204,113,0.5);
+}
+
+.hp-bar-fill.enemy {
+  background: linear-gradient(90deg, #e74c3c, #c0392b);
+  box-shadow: 0 0 15px rgba(231,76,60,0.5);
+}
+
+.hp-bar-fill.mid {
+  background: linear-gradient(90deg, #f39c12, #e67e22);
+}
+
+.rage-container {
+  width: 220px;
+  max-width: 80vw;
+  margin-top: 8px;
+}
+
+.rage-bar-bg {
+  width: 100%;
+  height: 10px;
+  background: rgba(0,0,0,0.6);
+  border: 1px solid rgba(255,100,0,0.3);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.rage-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #f39c12, #ff4400, #ff0000);
+  transition: width 0.4s ease;
+  box-shadow: 0 0 15px rgba(255,100,0,0.8);
+  animation: ragePulse 1s ease-in-out infinite alternate;
+}
+@keyframes ragePulse {
+  0% { filter: brightness(1); }
+  100% { filter: brightness(1.4); }
+}
+
+.rage-label {
+  text-align: center;
+  font-size: 0.65rem;
+  color: #ff8800;
+  margin-top: 3px;
+  font-weight: 700;
+}
+
+/* دکمه بمب خشم */
+.rage-bomb-btn {
+  margin-top: 10px;
+  padding: 12px 25px;
+  background: linear-gradient(135deg, #ff0000, #ff6600, #ff0000);
+  background-size: 200% 100%;
+  border: 3px solid #ffff00;
+  border-radius: 50px;
+  color: #fff;
+  font-weight: 900;
+  font-size: 1rem;
+  cursor: pointer;
+  font-family: inherit;
+  letter-spacing: 1px;
+  box-shadow: 
+    0 0 20px rgba(255,0,0,0.8),
+    0 0 40px rgba(255,100,0,0.6);
+  animation: rageBombPulse 0.6s ease-in-out infinite alternate;
+  pointer-events: auto;
+  position: relative;
+  z-index: 20;
+  text-shadow: 0 0 10px rgba(255,255,0,0.9);
+}
+
+.rage-bomb-btn:active {
+  transform: scale(0.95);
+}
+
+@keyframes rageBombPulse {
+  0% { 
+    transform: scale(1); 
+    box-shadow: 0 0 20px rgba(255,0,0,0.8), 0 0 40px rgba(255,100,0,0.6);
+    background-position: 0% 50%;
+  }
+  100% { 
+    transform: scale(1.08); 
+    box-shadow: 0 0 35px rgba(255,0,0,1), 0 0 70px rgba(255,100,0,0.9);
+    background-position: 200% 50%;
+  }
+}
+
+/* افکت انفجار */
+.explosion {
+  position: absolute;
+  font-size: 8rem;
+  pointer-events: none;
+  z-index: 150;
+  animation: explosionAnim 1s ease-out forwards;
+}
+
+@keyframes explosionAnim {
+  0% { 
+    transform: scale(0.2) rotate(0deg); 
+    opacity: 1;
+    filter: brightness(3);
+  }
+  50% { 
+    transform: scale(1.8) rotate(180deg); 
+    opacity: 0.9;
+    filter: brightness(2);
+  }
+  100% { 
+    transform: scale(3) rotate(360deg); 
+    opacity: 0;
+    filter: brightness(0.5);
+  }
+}
+
+/* لرزش صفحه */
+.shake {
+  animation: screenShake 0.5s ease;
+}
+
+@keyframes screenShake {
+  0%, 100% { transform: translateX(0); }
+  10% { transform: translateX(-10px) rotate(-1deg); }
+  20% { transform: translateX(10px) rotate(1deg); }
+  30% { transform: translateX(-10px) rotate(-1deg); }
+  40% { transform: translateX(10px) rotate(1deg); }
+  50% { transform: translateX(-8px); }
+  60% { transform: translateX(8px); }
+  70% { transform: translateX(-5px); }
+  80% { transform: translateX(5px); }
+  90% { transform: translateX(-2px); }
+}
+
+/* فلاش قرمز */
+.red-flash {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(255,0,0,0.6), transparent 70%);
+  pointer-events: none;
+  z-index: 140;
+  animation: redFlash 0.6s ease-out forwards;
+}
+
+@keyframes redFlash {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.vs-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  flex: 1;
+}
+
+.vs-text {
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: #f1c40f;
+  text-shadow: 0 0 30px rgba(241,196,15,0.8);
+  animation: vsPulse 1s ease-in-out infinite alternate;
+}
+@keyframes vsPulse {
+  0% { transform: scale(1); filter: brightness(1); }
+  100% { transform: scale(1.1); filter: brightness(1.4); }
+}
+
+.turn-indicator {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0,0,0,0.9);
+  border: 3px solid #f1c40f;
+  border-radius: 20px;
+  padding: 15px 30px;
+  font-size: 1.2rem;
+  font-weight: 800;
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+  text-align: center;
+}
+.turn-indicator.show {
+  opacity: 1;
+  animation: turnShow 0.6s ease;
+}
+@keyframes turnShow {
+  0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+  50% { transform: translate(-50%, -50%) scale(1.1); }
+  100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+
+.cards-area {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px;
+  background: linear-gradient(to top, rgba(0,0,0,0.95), transparent);
+  z-index: 10;
+}
+
+.cards-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 0.75rem;
+  color: #8899bb;
+}
+
+.cards-header .cards-left {
+  color: #f1c40f;
+  font-weight: 700;
+}
+
+.cards-grid {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 5px 2px 10px;
+}
+.cards-grid::-webkit-scrollbar { height: 4px; }
+.cards-grid::-webkit-scrollbar-thumb {
+  background: rgba(241,196,15,0.4);
+  border-radius: 10px;
+}
+
+.card {
+  flex: 0 0 auto;
+  width: 80px;
+  height: 115px;
+  border-radius: 12px;
+  background: linear-gradient(145deg, #2a1f3a, #1a1230);
+  border: 2px solid rgba(241,196,15,0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+  padding: 5px;
+}
+
+.card:hover {
+  transform: translateY(-5px) scale(1.03);
+  border-color: #f1c40f;
+  box-shadow: 0 8px 25px rgba(241,196,15,0.4);
+}
+
+.card:active {
+  transform: translateY(-2px) scale(0.98);
+}
+
+.card.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  filter: grayscale(80%);
+}
+
+.card.playing {
+  animation: cardPlay 0.4s ease;
+}
+@keyframes cardPlay {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3) rotate(-5deg); }
+  100% { transform: scale(0); opacity: 0; }
+}
+
+.card-icon {
+  font-size: 2.4rem;
+  margin-bottom: 5px;
+  filter: drop-shadow(0 0 8px rgba(241,196,15,0.5));
+}
+
+.card-name {
+  font-size: 0.65rem;
+  color: #a0b5d9;
+  font-weight: 700;
+  margin-bottom: 3px;
+  text-align: center;
+}
+
+.card-dmg {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #ff5874;
+}
+
+.card.sword { border-color: rgba(200,200,200,0.5); }
+.card.sword .card-dmg { color: #ccc; }
+.card.gun { border-color: rgba(180,180,180,0.5); }
+.card.gun .card-dmg { color: #aaa; }
+.card.bow { border-color: rgba(139,195,74,0.5); }
+.card.bow .card-dmg { color: #8bc34a; }
+.card.bomb { border-color: rgba(255,100,0,0.5); }
+.card.bomb .card-dmg { color: #ff6600; }
+
+.damage-number {
+  position: absolute;
+  font-size: 2rem;
+  font-weight: 900;
+  color: #ff0000;
+  text-shadow: 0 0 20px rgba(255,0,0,0.8);
+  pointer-events: none;
+  z-index: 50;
+  animation: damageFloat 1s ease-out forwards;
+}
+@keyframes damageFloat {
+  0% { transform: translateY(0) scale(0.5); opacity: 1; }
+  50% { transform: translateY(-30px) scale(1.3); }
+  100% { transform: translateY(-80px) scale(1); opacity: 0; }
+}
+
+.hit-effect {
+  position: absolute;
+  font-size: 3rem;
+  pointer-events: none;
+  z-index: 60;
+  animation: hitEffect 0.6s ease-out forwards;
+}
+@keyframes hitEffect {
+  0% { transform: scale(0.3) rotate(0deg); opacity: 1; }
+  50% { transform: scale(1.5) rotate(180deg); }
+  100% { transform: scale(2) rotate(360deg); opacity: 0; }
+}
+
+/* منوی اصلی */
+.main-menu {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, #2a1f3a 0%, #0a0e1a 70%);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 15px;
+  overflow-y: auto;
+  transition: opacity 0.4s;
+}
+.main-menu.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.logo {
+  font-size: 1.8rem;
+  font-weight: 900;
+  letter-spacing: 3px;
+  background: linear-gradient(135deg, #f9d976, #f39c12, #ff6600);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 30px rgba(243,156,18,0.6));
+  margin-bottom: 5px;
+  text-align: center;
+}
+
+.logo-sub {
+  color: #8899bb;
+  font-size: 0.7rem;
+  letter-spacing: 5px;
+  margin-bottom: 15px;
+}
+
+.hero-display {
+  position: relative;
+  width: 130px;
+  height: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(241,196,15,0.15), transparent 70%);
+  border: 3px solid rgba(241,196,15,0.4);
+  box-shadow: 0 0 50px rgba(241,196,15,0.3);
+}
+
+.hero-emoji {
+  font-size: 5rem;
+  filter: drop-shadow(0 0 30px rgba(241,196,15,0.6));
+  animation: heroFloat 2s ease-in-out infinite alternate;
+}
+@keyframes heroFloat {
+  0% { transform: translateY(0) rotate(-5deg); }
+  100% { transform: translateY(-10px) rotate(5deg); }
+}
+
+.hero-level-badge {
+  position: absolute;
+  bottom: -5px;
+  right: -5px;
+  background: linear-gradient(135deg, #f1c40f, #e67e22);
+  color: #1a1f30;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-weight: 900;
+  font-size: 0.9rem;
+  border: 2px solid #0a0e1a;
+  box-shadow: 0 0 20px rgba(241,196,15,0.6);
+  z-index: 5;
+}
+
+.hero-name {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #f1c40f;
+  margin-bottom: 5px;
+}
+
+.hero-stats {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.hero-stat {
+  background: rgba(0,0,0,0.4);
+  border: 1px solid rgba(241,196,15,0.3);
+  border-radius: 12px;
+  padding: 6px 12px;
+  font-size: 0.7rem;
+  color: #a0b5d9;
+}
+
+.hero-stat strong { color: #f1c40f; }
+
+.level-progress-container {
+  width: 100%;
+  max-width: 320px;
+  margin-bottom: 15px;
+  padding: 10px 12px;
+  background: rgba(0,0,0,0.4);
+  border: 1px solid rgba(241,196,15,0.2);
+  border-radius: 15px;
+}
+
+.level-progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  color: #8899bb;
+  margin-bottom: 6px;
+}
+
+.level-progress-bar {
+  width: 100%;
+  height: 8px;
+  background: rgba(0,0,0,0.6);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.level-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #f1c40f, #e67e22);
+  border-radius: 8px;
+  transition: width 0.4s ease;
+  box-shadow: 0 0 15px rgba(241,196,15,0.6);
+}
+
+.menu-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 320px;
+}
+
+.btn {
+  padding: 14px 25px;
+  border: none;
+  border-radius: 50px;
+  font-size: 0.95rem;
+  font-weight: 800;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #f1c40f, #e67e22);
+  color: #1a1f30;
+  box-shadow: 0 8px 25px rgba(241,196,15,0.4);
+}
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(241,196,15,0.6);
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, #a66cff, #6478ff);
+  color: #fff;
+  box-shadow: 0 8px 25px rgba(166,108,255,0.4);
+}
+.btn-secondary:hover {
+  transform: translateY(-3px);
+}
+
+.btn-shop {
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+  color: #fff;
+  box-shadow: 0 8px 25px rgba(46,204,113,0.4);
+}
+.btn-shop:hover {
+  transform: translateY(-3px);
+}
+
+.btn-upgrade {
+  background: linear-gradient(135deg, #ff5874, #e74c3c);
+  color: #fff;
+  box-shadow: 0 8px 25px rgba(255,88,116,0.4);
+}
+.btn-upgrade:hover {
+  transform: translateY(-3px);
+}
+
+.btn-outline {
+  background: rgba(255,255,255,0.05);
+  color: #a0b5d9;
+  border: 1px solid rgba(255,255,255,0.15);
+  font-size: 0.85rem;
+  padding: 10px 20px;
+}
+.btn-outline:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.shop-screen {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 30%, #2a1f3a 0%, #0a0e1a 70%);
+  z-index: 300;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 15px;
+  overflow-y: auto;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s;
+}
+.shop-screen.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.shop-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(241,196,15,0.2);
+}
+
+.shop-title {
+  font-size: 1.3rem;
+  font-weight: 900;
+  background: linear-gradient(90deg, #f9d976, #f39c12);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.shop-coins {
+  background: rgba(0,0,0,0.5);
+  border: 2px solid rgba(241,196,15,0.4);
+  border-radius: 15px;
+  padding: 8px 15px;
+  font-weight: 800;
+  color: #f1c40f;
+  font-size: 0.85rem;
+}
+
+.shop-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+  padding-bottom: 20px;
+}
+
+.shop-item {
+  background: linear-gradient(145deg, rgba(30,20,50,0.9), rgba(15,10,30,0.9));
+  border: 2px solid rgba(120,150,255,0.2);
+  border-radius: 18px;
+  padding: 15px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.shop-item:hover {
+  transform: translateY(-5px);
+  border-color: rgba(241,196,15,0.6);
+}
+
+.shop-item.owned {
+  border-color: rgba(46,204,113,0.5);
+  background: linear-gradient(145deg, rgba(20,40,30,0.9), rgba(15,30,20,0.9));
+}
+
+.shop-item.active {
+  border-color: #f1c40f;
+  box-shadow: 0 0 30px rgba(241,196,15,0.5);
+}
+
+.shop-item.locked {
+  opacity: 0.7;
+}
+
+.shop-emoji {
+  font-size: 3rem;
+  filter: drop-shadow(0 0 15px rgba(241,196,15,0.4));
+}
+
+.shop-name {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #fff;
+  text-align: center;
+}
+
+.shop-stats-mini {
+  display: flex;
+  gap: 5px;
+  font-size: 0.6rem;
+  color: #8899bb;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.shop-stats-mini span {
+  background: rgba(0,0,0,0.4);
+  padding: 2px 6px;
+  border-radius: 8px;
+}
+
+.shop-price {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #f1c40f;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 12px;
+  background: rgba(241,196,15,0.1);
+  border-radius: 20px;
+  border: 1px solid rgba(241,196,15,0.3);
+  margin-top: 5px;
+}
+
+.shop-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 0.6rem;
+  padding: 3px 8px;
+  border-radius: 10px;
+  font-weight: 800;
+  color: #fff;
+}
+.shop-badge.owned-badge { background: #2ecc71; }
+.shop-badge.active-badge { background: #f1c40f; color: #1a1f30; }
+.shop-badge.free-badge { background: #3498db; }
+
+.end-screen {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.9);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s;
+}
+.end-screen.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.end-title {
+  font-size: 2.2rem;
+  font-weight: 900;
+  margin-bottom: 15px;
+  animation: endPop 0.6s ease;
+}
+.end-title.win {
+  color: #2ecc71;
+  text-shadow: 0 0 40px rgba(46,204,113,0.8);
+}
+.end-title.lose {
+  color: #e74c3c;
+  text-shadow: 0 0 40px rgba(231,76,60,0.8);
+}
+@keyframes endPop {
+  0% { transform: scale(0.3); opacity: 0; }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.end-sub {
+  font-size: 0.95rem;
+  color: #8899bb;
+  margin-bottom: 20px;
+}
+
+.end-reward {
+  background: linear-gradient(135deg, rgba(241,196,15,0.2), rgba(243,156,18,0.1));
+  border: 2px solid #f1c40f;
+  border-radius: 18px;
+  padding: 15px 30px;
+  margin-bottom: 20px;
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: #f1c40f;
+  animation: rewardPulse 1s ease-in-out infinite alternate;
+}
+@keyframes rewardPulse {
+  0% { box-shadow: 0 0 20px rgba(241,196,15,0.3); }
+  100% { box-shadow: 0 0 50px rgba(241,196,15,0.8); }
+}
+
+.btn-group {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  max-width: 350px;
+}
+.btn-group .btn {
+  flex: 1;
+  min-width: 130px;
+}
+
+.toast {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+  color: #fff;
+  padding: 12px 25px;
+  border-radius: 50px;
+  font-weight: 800;
+  font-size: 0.85rem;
+  z-index: 500;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  max-width: 90%;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(46,204,113,0.5);
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast.error {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  box-shadow: 0 10px 30px rgba(231,76,60,0.5);
+}
+</style>
+</head>
+<body>
+
+<div id="gameWrapper">
+
+  <div class="hud-top" id="hudTop" style="display:none;">
+    <div class="hud-box">
+      <span class="icon">🪙</span>
+      <span id="hudCoins">0</span>
+    </div>
+    <div class="hud-box">
+      <span class="icon">🏆</span>
+      <span id="hudRound">دور 1</span>
+    </div>
+    <div class="hud-box">
+      <span class="icon">⚔️</span>
+      <span id="hudScore">0</span>
+    </div>
+  </div>
+
+  <div class="battle-field" id="battleField" style="display:none;">
+    <div class="enemy-area">
+      <div class="character enemy" id="enemyChar">
+        <span class="character-emoji" id="enemyEmoji">🍌</span>
+      </div>
+      <div class="hp-container">
+        <div class="hp-name">
+          <span id="enemyName">🍌 دشمن</span>
+          <span class="hp-value"><span id="enemyHp">100</span>/<span id="enemyMaxHp">100</span></span>
+        </div>
+        <div class="hp-bar-bg">
+          <div class="hp-bar-fill enemy" id="enemyHpBar"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="vs-area">
+      <div class="vs-text">⚔️</div>
+    </div>
+
+    <div class="player-area">
+      <div class="character" id="playerChar">
+        <span class="character-emoji" id="playerEmoji">🍎</span>
+      </div>
+      <div class="hp-container">
+        <div class="hp-name">
+          <span id="playerName">🍎 تو</span>
+          <span class="hp-value"><span id="playerHp">100</span>/<span id="playerMaxHp">100</span></span>
+        </div>
+        <div class="hp-bar-bg">
+          <div class="hp-bar-fill" id="playerHpBar"></div>
+        </div>
+      </div>
+      <div class="rage-container">
+        <div class="rage-bar-bg">
+          <div class="rage-bar-fill" id="rageBar"></div>
+        </div>
+        <div class="rage-label" id="rageLabel">🔥 خشم: 0%</div>
+      </div>
+      <button class="rage-bomb-btn" id="rageBombBtn" style="display:none;">
+        💣 بمب خشم!
+      </button>
+    </div>
+  </div>
+
+  <div class="turn-indicator" id="turnIndicator">نوبت تو!</div>
+
+  <div class="cards-area" id="cardsArea" style="display:none;">
+    <div class="cards-header">
+      <span>🎴 کارت‌های تو</span>
+      <span class="cards-left" id="cardsLeft">2 کارت</span>
+    </div>
+    <div class="cards-grid" id="cardsGrid"></div>
+  </div>
+
+  <!-- منوی اصلی -->
+  <div class="main-menu" id="mainMenu">
+    <div class="logo">FRUIT WAR</div>
+    <div class="logo-sub">✦ جنگ میوه‌ها ✦</div>
+
+    <div class="hero-display">
+      <span class="hero-emoji" id="heroEmoji">🍎</span>
+      <div class="hero-level-badge" id="heroLevelBadge">Lv.1</div>
+    </div>
+
+    <div class="hero-name" id="heroName">🍎 سیب</div>
+
+    <div class="hero-stats">
+      <div class="hero-stat">❤️ جان: <strong id="heroHp">100</strong></div>
+      <div class="hero-stat">⚔️ قدرت: <strong id="heroPower">100%</strong></div>
+    </div>
+
+    <div class="level-progress-container">
+      <div class="level-progress-label">
+        <span>🏆 لول <strong id="currentLevel" style="color:#f1c40f;">1</strong> / 98</span>
+        <span id="nextLevelCost" style="color:#2ecc71;">⬆️ 🪙 500</span>
+      </div>
+      <div class="level-progress-bar">
+        <div class="level-progress-fill" id="levelProgressFill"></div>
+      </div>
+    </div>
+
+    <div class="menu-buttons">
+      <button class="btn btn-upgrade" id="upgradeBtn">⬆️ ارتقا کاراکتر</button>
+      <button class="btn btn-primary" id="startBtn">⚔️ شروع مبارزه</button>
+      <button class="btn btn-shop" id="shopBtn">🛒 فروشگاه میوه‌ها</button>
+      <a href="store.html" class="btn btn-outline">← بازگشت به فروشگاه</a>
+    </div>
+  </div>
+
+  <!-- فروشگاه -->
+  <div class="shop-screen" id="shopScreen">
+    <div class="shop-header">
+      <div class="shop-title">🛒 فروشگاه میوه‌ها</div>
+      <div class="shop-coins">🪙 <span id="shopCoins">0</span></div>
+    </div>
+    <div class="shop-grid" id="shopGrid"></div>
+    <button class="btn btn-outline" id="closeShopBtn" style="margin-top:15px;">← بازگشت</button>
+  </div>
+
+  <!-- پایان -->
+  <div class="end-screen" id="endScreen">
+    <div class="end-title win" id="endTitle">🎉 بردی!</div>
+    <div class="end-sub" id="endSub">دشمن رو نابود کردی!</div>
+    <div class="end-reward" id="endReward">🎁 +۵۰۰ 🪙</div>
+    <div class="btn-group">
+      <button class="btn btn-primary" id="playAgainBtn">🔄 دوباره</button>
+      <button class="btn btn-secondary" id="backToMenuBtn">🏠 منو</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+</div>
+
+<script>
+// ============================================================
+//  FRUIT WAR 🍎⚔️ - با ارتقا، لول، دشمن رندوم و بمب خشم
+// ============================================================
+
+const MAX_LEVEL = 98;
+const HP_PER_LEVEL = 10;
+const POWER_PER_LEVEL = 5;
+
+const ALL_CARDS = [
+  { id: 'sword', name: 'شمشیر', icon: '⚔️', damage: 15, type: 'sword' },
+  { id: 'gun', name: 'تفنگ', icon: '🔫', damage: 20, type: 'gun' },
+  { id: 'bow', name: 'تیرکمان', icon: '🏹', damage: 12, type: 'bow' },
+  { id: 'bomb', name: 'بمب', icon: '💣', damage: 30, type: 'bomb' }
+];
+
+const FRUITS = [
+  { id: 'apple', name: 'سیب', emoji: '🍎', hp: 100, price: 0, power: 100 },
+  { id: 'banana', name: 'موز', emoji: '🍌', hp: 110, price: 10000, power: 110 },
+  { id: 'orange', name: 'پرتقال', emoji: '🍊', hp: 120, price: 25000, power: 120 },
+  { id: 'grape', name: 'انگور', emoji: '🍇', hp: 130, price: 50000, power: 130 },
+  { id: 'strawberry', name: 'توت‌فرنگی', emoji: '🍓', hp: 140, price: 100000, power: 140 },
+  { id: 'watermelon', name: 'هندوانه', emoji: '🍉', hp: 160, price: 200000, power: 160 },
+  { id: 'pineapple', name: 'آناناس', emoji: '🍍', hp: 180, price: 350000, power: 180 },
+  { id: 'kiwi', name: 'کیوی', emoji: '🥝', hp: 200, price: 500000, power: 200 },
+  { id: 'peach', name: 'هلو', emoji: '🍑', hp: 220, price: 750000, power: 220 },
+  { id: 'cherry', name: 'گیلاس', emoji: '🍒', hp: 250, price: 1000000, power: 250 },
+  { id: 'lemon', name: 'لیمو', emoji: '🍋', hp: 280, price: 1500000, power: 280 },
+  { id: 'coconut', name: 'نارگیل', emoji: '🥥', hp: 320, price: 2000000, power: 320 },
+  { id: 'mango', name: 'انبه', emoji: '🥭', hp: 360, price: 3000000, power: 360 },
+  { id: 'avocado', name: 'آووکادو', emoji: '🥑', hp: 400, price: 5000000, power: 400 },
+  { id: 'tomato', name: 'گوجه', emoji: '🍅', hp: 500, price: 10000000, power: 500 }
+];
+
+const game = {
+  active: false,
+  playerHp: 100,
+  playerMaxHp: 100,
+  enemyHp: 100,
+  enemyMaxHp: 100,
+  enemyEmoji: '🍌',
+  enemyName: 'موز',
+  round: 1,
+  cardsLeft: 2,
+  isPlayerTurn: true,
+  rage: 0,
+  coins: 0,
+  score: 0,
+  selectedFruit: 'apple',
+  ownedFruits: ['apple'],
+  fruitLevels: { apple: 1 },
+  username: null
+};
+
+const SAVE_KEY = 'starloom_fruitwar_save';
+
+function saveProgress() {
+  if (!game.username) return;
+  try {
+    const saves = JSON.parse(localStorage.getItem(SAVE_KEY)) || {};
+    saves[game.username] = {
+      selectedFruit: game.selectedFruit,
+      ownedFruits: game.ownedFruits,
+      fruitLevels: game.fruitLevels
+    };
+    localStorage.setItem(SAVE_KEY, JSON.stringify(saves));
+  } catch(e) {}
+}
+
+function loadProgress() {
+  if (!game.username) return;
+  try {
+    const saves = JSON.parse(localStorage.getItem(SAVE_KEY)) || {};
+    if (saves[game.username]) {
+      game.selectedFruit = saves[game.username].selectedFruit || 'apple';
+      game.ownedFruits = saves[game.username].ownedFruits || ['apple'];
+      game.fruitLevels = saves[game.username].fruitLevels || { apple: 1 };
+    }
+  } catch(e) {}
+}
+
+function getFruitLevel(fruitId) {
+  return game.fruitLevels[fruitId] || 1;
+}
+
+function getUpgradeCost(fruitId) {
+  const level = getFruitLevel(fruitId);
+  if (level >= MAX_LEVEL) return Infinity;
+  return Math.floor(500 * Math.pow(1.35, level - 1));
+}
+
+function getTotalHp(fruitId) {
+  const fruit = FRUITS.find(f => f.id === fruitId);
+  const level = getFruitLevel(fruitId);
+  return fruit.hp + (level - 1) * HP_PER_LEVEL;
+}
+
+function getTotalPower(fruitId) {
+  const fruit = FRUITS.find(f => f.id === fruitId);
+  const level = getFruitLevel(fruitId);
+  return fruit.power + (level - 1) * POWER_PER_LEVEL;
+}
+
+function loadUser() {
+  try {
+    const current = JSON.parse(localStorage.getItem('starloom_current_user')) || {};
+    game.username = current.username || null;
+    game.coins = current.coins || 0;
+    
+    document.getElementById('hudCoins').textContent = game.coins;
+    document.getElementById('shopCoins').textContent = game.coins;
+    
+    if (game.username) loadProgress();
+    updateHeroDisplay();
+  } catch(e) {}
+}
+
+function giveCoins(amount) {
+  try {
+    var users = JSON.parse(localStorage.getItem('starloom_users')) || {};
+    var current = JSON.parse(localStorage.getItem('starloom_current_user')) || {};
+    if (!current.username) {
+      showToast('⚠️ لاگین کن!', true);
+      return;
+    }
+    var username = current.username;
+    if (users[username]) {
+      users[username].coins = (users[username].coins || 0) + amount;
+      localStorage.setItem('starloom_users', JSON.stringify(users));
+      current.coins = users[username].coins;
+      localStorage.setItem('starloom_current_user', JSON.stringify(current));
+      game.coins = current.coins;
+      updateCoinsUI();
+    }
+  } catch(e) {}
+}
+
+function spendCoins(amount) {
+  try {
+    var users = JSON.parse(localStorage.getItem('starloom_users')) || {};
+    var current = JSON.parse(localStorage.getItem('starloom_current_user')) || {};
+    if (!current.username) return false;
+    var username = current.username;
+    if (users[username] && (users[username].coins || 0) >= amount) {
+      users[username].coins -= amount;
+      localStorage.setItem('starloom_users', JSON.stringify(users));
+      current.coins = users[username].coins;
+      localStorage.setItem('starloom_current_user', JSON.stringify(current));
+      game.coins = current.coins;
+      updateCoinsUI();
+      return true;
+    }
+  } catch(e) {}
+  return false;
+}
+
+function updateCoinsUI() {
+  document.getElementById('hudCoins').textContent = game.coins;
+  document.getElementById('shopCoins').textContent = game.coins;
+}
+
+function updateHeroDisplay() {
+  const fruit = FRUITS.find(f => f.id === game.selectedFruit) || FRUITS[0];
+  const level = getFruitLevel(game.selectedFruit);
+  const hp = getTotalHp(game.selectedFruit);
+  const power = getTotalPower(game.selectedFruit);
+  const cost = getUpgradeCost(game.selectedFruit);
+  
+  document.getElementById('heroEmoji').textContent = fruit.emoji;
+  document.getElementById('heroName').textContent = fruit.emoji + ' ' + fruit.name;
+  document.getElementById('heroHp').textContent = hp;
+  document.getElementById('heroPower').textContent = power + '%';
+  document.getElementById('heroLevelBadge').textContent = 'Lv.' + level;
+  document.getElementById('currentLevel').textContent = level;
+  
+  const progress = (level / MAX_LEVEL) * 100;
+  document.getElementById('levelProgressFill').style.width = progress + '%';
+  
+  const costEl = document.getElementById('nextLevelCost');
+  if (level >= MAX_LEVEL) {
+    costEl.textContent = '🏆 MAX';
+    costEl.style.color = '#f1c40f';
+  } else {
+    costEl.textContent = '⬆️ 🪙 ' + cost.toLocaleString('fa-IR');
+    costEl.style.color = game.coins >= cost ? '#2ecc71' : '#e74c3c';
+  }
+  
+  saveProgress();
+}
+
+function upgradeFruit() {
+  const fruitId = game.selectedFruit;
+  const level = getFruitLevel(fruitId);
+  
+  if (level >= MAX_LEVEL) {
+    showToast('🏆 به حداکثر لول رسیدی!', true);
+    return;
+  }
+  
+  const cost = getUpgradeCost(fruitId);
+  
+  if (game.coins < cost) {
+    showToast(`❌ نیاز به ${cost.toLocaleString('fa-IR')} سکه`, true);
+    return;
+  }
+  
+  if (!confirm(`⬆️ ارتقا به لول ${level + 1}؟\n💰 ${cost.toLocaleString('fa-IR')} سکه\n❤️ +${HP_PER_LEVEL} جان\n⚔️ +${POWER_PER_LEVEL}% قدرت`)) return;
+  
+  if (spendCoins(cost)) {
+    game.fruitLevels[fruitId] = level + 1;
+    saveProgress();
+    updateHeroDisplay();
+    showToast(`🎉 ارتقا به لول ${level + 1}!`);
+  } else {
+    showToast('❌ خطا!', true);
+  }
+}
+
+function startGame() {
+  const fruit = FRUITS.find(f => f.id === game.selectedFruit) || FRUITS[0];
+  const totalHp = getTotalHp(game.selectedFruit);
+  
+  game.active = true;
+  game.playerHp = totalHp;
+  game.playerMaxHp = totalHp;
+  game.round = 1;
+  game.cardsLeft = 2;
+  game.isPlayerTurn = true;
+  game.rage = 0;
+  game.score = 0;
+
+  // 🎲 دشمن رندوم
+  const level = getFruitLevel(game.selectedFruit);
+  const availableEnemies = FRUITS.filter(f => f.id !== game.selectedFruit);
+  const enemyFruit = availableEnemies[Math.floor(Math.random() * availableEnemies.length)];
+  
+  const enemy = {
+    emoji: enemyFruit.emoji,
+    name: enemyFruit.name,
+    hp: enemyFruit.hp
+  };
+  
+  const enemyHp = Math.floor(enemy.hp * (1 + level * 0.15));
+  
+  game.enemyEmoji = enemy.emoji;
+  game.enemyName = enemy.name;
+  game.enemyHp = enemyHp;
+  game.enemyMaxHp = enemyHp;
+
+  document.getElementById('mainMenu').classList.add('hidden');
+  document.getElementById('endScreen').classList.remove('show');
+  document.getElementById('hudTop').style.display = 'flex';
+  document.getElementById('battleField').style.display = 'flex';
+  document.getElementById('cardsArea').style.display = 'block';
+  document.getElementById('rageBombBtn').style.display = 'none';
+
+  document.getElementById('enemyEmoji').textContent = enemy.emoji;
+  document.getElementById('enemyName').textContent = enemy.emoji + ' ' + enemy.name;
+  document.getElementById('enemyMaxHp').textContent = enemyHp;
+  document.getElementById('playerEmoji').textContent = fruit.emoji;
+  document.getElementById('playerName').textContent = fruit.emoji + ' تو (Lv.' + level + ')';
+  document.getElementById('playerMaxHp').textContent = totalHp;
+
+  updateUI();
+  renderCards();
+  showTurnIndicator('نوبت تو! ' + fruit.emoji);
+}
+
+function renderCards() {
+  const grid = document.getElementById('cardsGrid');
+  grid.innerHTML = '';
+
+  const shuffled = [...ALL_CARDS].sort(() => Math.random() - 0.5);
+  const handCards = shuffled.slice(0, 3);
+  const level = getFruitLevel(game.selectedFruit);
+  const bonus = 1 + (level - 1) * 0.05;
+
+  handCards.forEach(card => {
+    const cardEl = document.createElement('div');
+    cardEl.className = `card ${card.type}`;
+    if (!game.isPlayerTurn || game.cardsLeft <= 0) cardEl.classList.add('disabled');
+    
+    const finalDamage = Math.floor(card.damage * bonus);
+    cardEl.innerHTML = `
+      <div class="card-icon">${card.icon}</div>
+      <div class="card-name">${card.name}</div>
+      <div class="card-dmg">${finalDamage} ⚡</div>
+    `;
+
+    cardEl.addEventListener('click', () => {
+      if (!game.isPlayerTurn || game.cardsLeft <= 0) return;
+      playCard({...card, damage: finalDamage}, cardEl);
+    });
+
+    grid.appendChild(cardEl);
+  });
+
+  document.getElementById('cardsLeft').textContent =
+    game.cardsLeft > 0 ? `${game.cardsLeft} کارت` : 'تمام';
+}
+
+function playCard(card, cardEl) {
+  if (!game.isPlayerTurn || game.cardsLeft <= 0) return;
+
+  game.cardsLeft--;
+  game.score += card.damage;
+
+  cardEl.classList.add('playing');
+
+  document.getElementById('playerChar').classList.add('attack');
+  setTimeout(() => document.getElementById('playerChar').classList.remove('attack'), 500);
+
+  setTimeout(() => {
+    game.enemyHp = Math.max(0, game.enemyHp - card.damage);
+    document.getElementById('enemyChar').classList.add('hit');
+    setTimeout(() => document.getElementById('enemyChar').classList.remove('hit'), 400);
+
+    showDamage(card.damage, 'enemy');
+    showHitEffect(card.icon, 'enemy');
+
+    game.rage = Math.min(100, game.rage + card.damage);
+    updateUI();
+
+    if (game.enemyHp <= 0) {
+      endGame(true);
+      return;
+    }
+
+    if (game.cardsLeft <= 0) {
+      setTimeout(enemyTurn, 800);
+    } else {
+      renderCards();
+    }
+  }, 400);
+}
+
+// ============ 💣 بمب خشم ============
+function useRageBomb() {
+  if (game.rage < 100) {
+    showToast('❌ خشم کافی نیست!', true);
+    return;
+  }
+  
+  if (!game.isPlayerTurn || !game.active) {
+    showToast('❌ نوبت تو نیست!', true);
+    return;
+  }
+  
+  const RAGE_DAMAGE = 100;
+  
+  game.rage = 0;
+  document.getElementById('rageBombBtn').style.display = 'none';
+  
+  // 🔥 فلاش قرمز
+  const flash = document.createElement('div');
+  flash.className = 'red-flash';
+  document.getElementById('gameWrapper').appendChild(flash);
+  setTimeout(() => flash.remove(), 600);
+  
+  // 💥 لرزش
+  document.getElementById('gameWrapper').classList.add('shake');
+  setTimeout(() => document.getElementById('gameWrapper').classList.remove('shake'), 500);
+  
+  // 🎬 انفجار
+  const wrapper = document.getElementById('gameWrapper');
+  const enemyChar = document.getElementById('enemyChar');
+  const rect = enemyChar.getBoundingClientRect();
+  const wrapperRect = wrapper.getBoundingClientRect();
+  
+  const explosion = document.createElement('div');
+  explosion.className = 'explosion';
+  explosion.textContent = '💥';
+  explosion.style.left = (rect.left - wrapperRect.left + rect.width / 2 - 60) + 'px';
+  explosion.style.top = (rect.top - wrapperRect.top + rect.height / 2 - 60) + 'px';
+  wrapper.appendChild(explosion);
+  setTimeout(() => explosion.remove(), 1000);
+  
+  // دشمن
+  enemyChar.classList.add('hit');
+  setTimeout(() => enemyChar.classList.remove('hit'), 400);
+  
+  showTurnIndicator('💣 بمب خشم!');
+  
+  setTimeout(() => {
+    game.enemyHp = Math.max(0, game.enemyHp - RAGE_DAMAGE);
+    game.score += RAGE_DAMAGE;
+    
+    showDamage(RAGE_DAMAGE, 'enemy');
+    updateUI();
+    
+    if (game.enemyHp <= 0) {
+      endGame(true);
+    }
+  }, 300);
+}
+
+function enemyTurn() {
+  game.isPlayerTurn = false;
+  showTurnIndicator('نوبت دشمن! 👹');
+
+  let enemyCardsLeft = 2;
+  const level = getFruitLevel(game.selectedFruit);
+  const enemyBonus = 1 + (level - 1) * 0.1;
+
+  function playEnemyCard() {
+    if (enemyCardsLeft <= 0) {
+      setTimeout(() => {
+        game.isPlayerTurn = true;
+        game.cardsLeft = 2;
+        game.round++;
+        updateUI();
+        renderCards();
+        showTurnIndicator('نوبت تو! 🍎');
+      }, 500);
+      return;
+    }
+
+    const card = ALL_CARDS[Math.floor(Math.random() * ALL_CARDS.length)];
+    const damage = Math.floor(card.damage * enemyBonus);
+
+    document.getElementById('enemyChar').classList.add('attack');
+    setTimeout(() => document.getElementById('enemyChar').classList.remove('attack'), 500);
+
+    setTimeout(() => {
+      game.playerHp = Math.max(0, game.playerHp - damage);
+      document.getElementById('playerChar').classList.add('hit');
+      setTimeout(() => document.getElementById('playerChar').classList.remove('hit'), 400);
+
+      showDamage(damage, 'player');
+      showHitEffect(card.icon, 'player');
+
+      updateUI();
+
+      if (game.playerHp <= 0) {
+        endGame(false);
+        return;
+      }
+
+      enemyCardsLeft--;
+      setTimeout(playEnemyCard, 900);
+    }, 400);
+  }
+
+  setTimeout(playEnemyCard, 500);
+}
+
+function showDamage(amount, target) {
+  const wrapper = document.getElementById('gameWrapper');
+  const targetEl = target === 'enemy' ? document.getElementById('enemyChar') : document.getElementById('playerChar');
+  const rect = targetEl.getBoundingClientRect();
+  const wrapperRect = wrapper.getBoundingClientRect();
+
+  const el = document.createElement('div');
+  el.className = 'damage-number';
+  el.textContent = '-' + amount;
+  el.style.left = (rect.left - wrapperRect.left + rect.width / 2 - 20) + 'px';
+  el.style.top = (rect.top - wrapperRect.top) + 'px';
+
+  wrapper.appendChild(el);
+  setTimeout(() => el.remove(), 1000);
+}
+
+function showHitEffect(icon, target) {
+  const wrapper = document.getElementById('gameWrapper');
+  const targetEl = target === 'enemy' ? document.getElementById('enemyChar') : document.getElementById('playerChar');
+  const rect = targetEl.getBoundingClientRect();
+  const wrapperRect = wrapper.getBoundingClientRect();
+
+  const el = document.createElement('div');
+  el.className = 'hit-effect';
+  el.textContent = icon;
+  el.style.left = (rect.left - wrapperRect.left + rect.width / 2 - 25) + 'px';
+  el.style.top = (rect.top - wrapperRect.top + rect.height / 2 - 25) + 'px';
+
+  wrapper.appendChild(el);
+  setTimeout(() => el.remove(), 600);
+}
+
+function showTurnIndicator(text) {
+  const el = document.getElementById('turnIndicator');
+  el.textContent = text;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 1200);
+}
+
+function updateUI() {
+  document.getElementById('playerHp').textContent = game.playerHp;
+  document.getElementById('enemyHp').textContent = game.enemyHp;
+
+  const playerRatio = (game.playerHp / game.playerMaxHp) * 100;
+  const enemyRatio = (game.enemyHp / game.enemyMaxHp) * 100;
+
+  const playerBar = document.getElementById('playerHpBar');
+  const enemyBar = document.getElementById('enemyHpBar');
+
+  playerBar.style.width = playerRatio + '%';
+  enemyBar.style.width = enemyRatio + '%';
+
+  playerBar.className = 'hp-bar-fill';
+  if (playerRatio < 30) playerBar.classList.add('mid');
+  if (playerRatio < 15) playerBar.style.background = 'linear-gradient(90deg, #e74c3c, #c0392b)';
+
+  document.getElementById('rageBar').style.width = game.rage + '%';
+  document.getElementById('rageLabel').textContent = '🔥 خشم: ' + Math.floor(game.rage) + '%';
+  
+  // نمایش دکمه بمب خشم
+  const rageBombBtn = document.getElementById('rageBombBtn');
+  if (rageBombBtn) {
+    if (game.rage >= 100 && game.isPlayerTurn && game.active) {
+      rageBombBtn.style.display = 'block';
+    } else {
+      rageBombBtn.style.display = 'none';
+    }
+  }
+  
+  document.getElementById('hudRound').textContent = 'دور ' + game.round;
+  document.getElementById('hudScore').textContent = game.score;
+  updateCoinsUI();
+}
+
+function endGame(won) {
+  game.active = false;
+
+  const endScreen = document.getElementById('endScreen');
+  const endTitle = document.getElementById('endTitle');
+  const endSub = document.getElementById('endSub');
+  const endReward = document.getElementById('endReward');
+
+  const level = getFruitLevel(game.selectedFruit);
+  const reward = 500 + level * 100;
+
+  if (won) {
+    endTitle.textContent = '🎉 بردی!';
+    endTitle.className = 'end-title win';
+    endSub.textContent = `${game.enemyName} رو نابود کردی!`;
+    endReward.textContent = '🎁 +' + reward.toLocaleString('fa-IR') + ' 🪙';
+    endReward.style.display = 'block';
+    giveCoins(reward);
+  } else {
+    endTitle.textContent = '💀 باختی!';
+    endTitle.className = 'end-title lose';
+    endSub.textContent = 'دشمن قوی‌تر بود!';
+    endReward.style.display = 'none';
+  }
+
+  endScreen.classList.add('show');
+  document.getElementById('rageBombBtn').style.display = 'none';
+}
+
+function backToMenu() {
+  document.getElementById('mainMenu').classList.remove('hidden');
+  document.getElementById('hudTop').style.display = 'none';
+  document.getElementById('battleField').style.display = 'none';
+  document.getElementById('cardsArea').style.display = 'none';
+  document.getElementById('endScreen').classList.remove('show');
+  document.getElementById('rageBombBtn').style.display = 'none';
+  updateHeroDisplay();
+}
+
+function openShop() {
+  document.getElementById('shopScreen').classList.add('show');
+  renderShop();
+}
+
+function closeShop() {
+  document.getElementById('shopScreen').classList.remove('show');
+}
+
+function renderShop() {
+  const grid = document.getElementById('shopGrid');
+  grid.innerHTML = '';
+  
+  updateCoinsUI();
+  
+  FRUITS.forEach(fruit => {
+    const isOwned = game.ownedFruits.indexOf(fruit.id) !== -1;
+    const isActive = game.selectedFruit === fruit.id;
+    const canAfford = game.coins >= fruit.price;
+    const level = getFruitLevel(fruit.id);
+    
+    const div = document.createElement('div');
+    div.className = 'shop-item';
+    if (isOwned) div.classList.add('owned');
+    if (isActive) div.classList.add('active');
+    if (!isOwned && !canAfford) div.classList.add('locked');
+    
+    let badge = '';
+    if (isActive) badge = '<span class="shop-badge active-badge">فعال</span>';
+    else if (isOwned) badge = '<span class="shop-badge owned-badge">مالک</span>';
+    else if (fruit.price === 0) badge = '<span class="shop-badge free-badge">رایگان</span>';
+    
+    let priceHtml = '';
+    if (isOwned) {
+      priceHtml = `<div class="shop-price" style="background:rgba(46,204,113,0.15);color:#2ecc71;border-color:rgba(46,204,113,0.4);">✅ Lv.${level}</div>`;
+    } else if (fruit.price === 0) {
+      priceHtml = `<div class="shop-price">🎁 رایگان</div>`;
+    } else {
+      priceHtml = `<div class="shop-price" style="${!canAfford ? 'opacity:0.5;' : ''}">🪙 ${fruit.price.toLocaleString('fa-IR')}</div>`;
+    }
+    
+    div.innerHTML = `
+      ${badge}
+      <div class="shop-emoji">${fruit.emoji}</div>
+      <div class="shop-name">${fruit.name}</div>
+      <div class="shop-stats-mini">
+        <span>❤️ ${fruit.hp}</span>
+        <span>⚔️ ${fruit.power}%</span>
+      </div>
+      ${priceHtml}
+    `;
+    
+    div.addEventListener('click', () => handleShopClick(fruit));
+    grid.appendChild(div);
+  });
+}
+
+function handleShopClick(fruit) {
+  const isOwned = game.ownedFruits.indexOf(fruit.id) !== -1;
+  
+  if (isOwned) {
+    game.selectedFruit = fruit.id;
+    if (!game.fruitLevels[fruit.id]) game.fruitLevels[fruit.id] = 1;
+    updateHeroDisplay();
+    renderShop();
+    showToast(`✅ ${fruit.emoji} ${fruit.name} فعال شد!`);
+    return;
+  }
+  
+  if (game.coins < fruit.price) {
+    showToast(`❌ نیاز به ${fruit.price.toLocaleString('fa-IR')} سکه`, true);
+    return;
+  }
+  
+  if (!confirm(`🛒 ${fruit.emoji} ${fruit.name}\n💰 ${fruit.price.toLocaleString('fa-IR')} سکه`)) return;
+  
+  if (spendCoins(fruit.price)) {
+    game.ownedFruits.push(fruit.id);
+    game.selectedFruit = fruit.id;
+    if (!game.fruitLevels[fruit.id]) game.fruitLevels[fruit.id] = 1;
+    saveProgress();
+    updateHeroDisplay();
+    renderShop();
+    showToast(`🎉 ${fruit.emoji} ${fruit.name} خریداری شد!`);
+  } else {
+    showToast('❌ خطا!', true);
+  }
+}
+
+let toastTimer = null;
+function showToast(text, isError = false) {
+  const toast = document.getElementById('toast');
+  toast.textContent = text;
+  toast.className = 'toast show' + (isError ? ' error' : '');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+document.getElementById('rageBombBtn').addEventListener('click', useRageBomb);
+document.getElementById('startBtn').addEventListener('click', startGame);
+document.getElementById('upgradeBtn').addEventListener('click', upgradeFruit);
+document.getElementById('shopBtn').addEventListener('click', openShop);
+document.getElementById('closeShopBtn').addEventListener('click', closeShop);
+document.getElementById('playAgainBtn').addEventListener('click', () => {
+  backToMenu();
+  setTimeout(startGame, 300);
+});
+document.getElementById('backToMenuBtn').addEventListener('click', backToMenu);
+
+loadUser();
+
+setInterval(() => {
+  try {
+    const current = JSON.parse(localStorage.getItem('starloom_current_user')) || {};
+    if (current.coins !== undefined && current.coins !== game.coins) {
+      game.coins = current.coins;
+      updateCoinsUI();
+      updateHeroDisplay();
+    }
+  } catch(e) {}
+}, 2000);
+
+console.log('🍎 Fruit War Ready! (با بمب خشم 💣)');
+</script>
+
+</body>
+</html>
