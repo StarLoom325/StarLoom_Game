@@ -599,6 +599,7 @@ body {
 <script>
 // ============================================================
 //  STARLOOM IDLE ⭐ - Clicker Game + Milestone Rewards
+//  نسخه سخت: قیمت ارتقاها خیلی گرون‌تر
 // ============================================================
 
 // ============ تنظیمات جایزه ============
@@ -617,13 +618,13 @@ const game = {
   lastMilestone: 0,
   
   upgrades: {
-    finger:   { level: 0, baseCost: 10,      multiplier: 1.5, perClick: 1 },
-    robot:    { level: 0, baseCost: 50,      multiplier: 1.6, perSecond: 1 },
-    factory:  { level: 0, baseCost: 200,     multiplier: 1.7, perSecond: 5 },
-    maker:    { level: 0, baseCost: 1000,    multiplier: 1.8, perSecond: 25 },
-    galaxy:   { level: 0, baseCost: 10000,   multiplier: 1.9, perSecond: 100 },
-    ship:     { level: 0, baseCost: 100000,  multiplier: 2.0, perSecond: 1000 },
-    universe: { level: 0, baseCost: 1000000, multiplier: 2.2, perSecond: 10000 }
+    finger:   { level: 0, baseCost: 100,        multiplier: 2.2, perClick: 1 },
+    robot:    { level: 0, baseCost: 2000,       multiplier: 2.5, perSecond: 1 },
+    factory:  { level: 0, baseCost: 50000,      multiplier: 2.8, perSecond: 5 },
+    maker:    { level: 0, baseCost: 2000000,    multiplier: 3.2, perSecond: 25 },
+    galaxy:   { level: 0, baseCost: 100000000,  multiplier: 3.6, perSecond: 100 },
+    ship:     { level: 0, baseCost: 10000000000, multiplier: 4.0, perSecond: 1000 },
+    universe: { level: 0, baseCost: 2000000000000, multiplier: 4.5, perSecond: 10000 }
   },
   
   powerups: {
@@ -656,9 +657,9 @@ const UPGRADE_INFO = {
 };
 
 const POWERUP_INFO = {
-  clickStorm: { icon: '⚡', name: 'کلیک طوفانی', desc: '۲ برابر کلیک برای ۳۰ ثانیه', cost: 100, duration: 30 },
-  goldStar:   { icon: '🌟', name: 'ستاره طلایی', desc: '۱۰ برابر کلیک برای ۱۰ ثانیه', cost: 500, duration: 10 },
-  megaBoost:  { icon: '💎', name: 'الماس مگا',  desc: '۳ برابر همه چیز برای ۲۰ ثانیه', cost: 1000, duration: 20 }
+  clickStorm: { icon: '⚡', name: 'کلیک طوفانی', desc: '۲ برابر کلیک برای ۳۰ ثانیه', cost: 5000, duration: 30 },
+  goldStar:   { icon: '🌟', name: 'ستاره طلایی', desc: '۱۰ برابر کلیک برای ۱۰ ثانیه', cost: 50000, duration: 10 },
+  megaBoost:  { icon: '💎', name: 'الماس مگا',  desc: '۳ برابر همه چیز برای ۲۰ ثانیه', cost: 200000, duration: 20 }
 };
 
 const SAVE_KEY = 'starloomidle_save';
@@ -856,9 +857,13 @@ function buyUpgrade(key) {
   saveGame();
 }
 
+// ============ فرمول جدید قیمت: خیلی گرون‌تر ============
 function getCost(key) {
   const u = game.upgrades[key];
-  return Math.floor(u.baseCost * Math.pow(u.multiplier, u.level));
+  // رشد نمایی تند + پنالتی مربع لول
+  const exponential = Math.pow(u.multiplier, u.level);
+  const levelPenalty = Math.pow(1.35, u.level * u.level / 4);
+  return Math.floor(u.baseCost * exponential * levelPenalty);
 }
 
 const CONVERT_RATE = 1000;
@@ -1312,7 +1317,7 @@ setTimeout(() => {
 lastLoopTime = performance.now();
 requestAnimationFrame(gameLoop);
 
-console.log('⭐ StarLoom Idle Ready! (هر ۵۰۰۰ ستاره = ۵۰۰۰ سکه)');
+console.log('⭐ StarLoom Idle Ready! (نسخه سخت - قیمت‌ها گرون‌تر)');
 </script>
 
 </body>
