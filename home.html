@@ -9,6 +9,9 @@
 <meta name="description" content="StarLoom_Game - مرکز بازی‌ها، فروشگاه و دنیای StarLoom">
 <link rel="stylesheet" href="style.css">
 
+<!-- Supabase SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 
 /* =========================================================
@@ -37,10 +40,6 @@
 
     --accent:var(--cyan);
 }
-
-/* =========================
-   پایه
-   ========================= */
 
 *{
     box-sizing:border-box;
@@ -87,8 +86,6 @@ body{
     overflow-x:hidden;
 }
 
-/* ستاره‌های پس‌زمینه */
-
 body::before{
     content:"";
     position:fixed;
@@ -111,15 +108,9 @@ body::before{
 }
 
 @keyframes starField{
-    from{
-        transform:translateY(0);
-    }
-    to{
-        transform:translateY(90px);
-    }
+    from{transform:translateY(0);}
+    to{transform:translateY(90px);}
 }
-
-/* نور بالای صفحه */
 
 body::after{
     content:"";
@@ -143,19 +134,11 @@ body::after{
     z-index:-4;
 }
 
-/* =========================
-   کانتینر
-   ========================= */
-
 .main-container{
     width:min(1250px,94%);
     margin:auto;
     padding:24px 0 40px;
 }
-
-/* =========================
-   Header
-   ========================= */
 
 .header{
     position:relative;
@@ -185,8 +168,6 @@ body::after{
     backdrop-filter:blur(20px);
 }
 
-/* نور بالای هدر */
-
 .header::before{
     content:"";
     position:absolute;
@@ -210,8 +191,6 @@ body::after{
 
     opacity:.7;
 }
-
-/* لوگو */
 
 .logo{
     font-size:25px;
@@ -238,9 +217,7 @@ body::after{
     white-space:nowrap;
 }
 
-.logo:first-letter{
-    color:#fff;
-}
+.logo:first-letter{color:#fff;}
 
 .logo span{
     color:#7885a8;
@@ -251,14 +228,8 @@ body::after{
 }
 
 @keyframes logoFlow{
-    to{
-        background-position:250% center;
-    }
+    to{background-position:250% center;}
 }
-
-/* =========================
-   Theme Selector
-   ========================= */
 
 .theme-selector{
     display:flex;
@@ -282,9 +253,7 @@ body::after{
     box-shadow:0 0 0 transparent;
 }
 
-.theme-btn:hover{
-    transform:scale(1.18);
-}
+.theme-btn:hover{transform:scale(1.18);}
 
 .theme-btn.active{
     border-color:#fff;
@@ -293,44 +262,19 @@ body::after{
         0 0 20px currentColor;
 }
 
-.theme-btn.dark{
-    background:#050611;
-}
+.theme-btn.dark{background:#050611;}
+.theme-btn.light{background:#eee;}
+.theme-btn.gold{background:#f1c40f;}
+.theme-btn.purple{background:#914cff;}
+.theme-btn.blue{background:#20bfff;}
+.theme-btn.green{background:#24d981;}
 
-.theme-btn.light{
-    background:#eee;
-}
-
-.theme-btn.gold{
-    background:#f1c40f;
-}
-
-.theme-btn.purple{
-    background:#914cff;
-}
-
-.theme-btn.blue{
-    background:#20bfff;
-}
-
-.theme-btn.green{
-    background:#24d981;
-}
-
-/* =========================
-   User
-   ========================= */
-
-#userSection{
-    justify-content:flex-end;
-}
+#userSection{justify-content:flex-end;}
 
 .user-info{
     padding:9px 14px;
-
     border:1px solid var(--border);
     border-radius:14px;
-
     color:#aab7d7;
     background:rgba(255,255,255,.025);
     font-size:13px;
@@ -340,19 +284,15 @@ body::after{
     display:flex;
     align-items:center;
     gap:11px;
-
     padding:8px 11px;
-
     border-radius:18px;
     border:1px solid rgba(120,150,255,.22);
-
     background:
         linear-gradient(
             135deg,
             rgba(255,255,255,.06),
             rgba(255,255,255,.015)
         );
-
     box-shadow:
         0 10px 35px rgba(0,0,0,.25);
 }
@@ -360,22 +300,17 @@ body::after{
 .user-profile .avatar{
     width:44px;
     height:44px;
-
     display:flex;
     align-items:center;
     justify-content:center;
-
     border-radius:14px;
-
     background:
         radial-gradient(
             circle at 30% 20%,
             rgba(255,255,255,.16),
             rgba(100,80,255,.13)
         );
-
     border:1px solid rgba(120,150,255,.2);
-
     font-size:25px;
 }
 
@@ -401,11 +336,9 @@ body::after{
     border:1px solid rgba(255,80,110,.25);
     background:rgba(255,80,110,.08);
     color:#ff8095;
-
     padding:8px 10px;
     border-radius:11px;
     cursor:pointer;
-
     transition:.3s;
 }
 
@@ -414,55 +347,35 @@ body::after{
     transform:translateY(-2px);
 }
 
-/* =========================
-   Bot
-   ========================= */
-
 .bot-btn-wrapper{
     text-decoration:none;
-
     display:flex;
     align-items:center;
     gap:8px;
-
     padding:7px 11px;
-
     border-radius:14px;
-
     background:
         linear-gradient(
             135deg,
             rgba(32,220,255,.08),
             rgba(166,108,255,.08)
         );
-
     border:1px solid rgba(80,190,255,.2);
-
     color:#9defff;
-
     transition:.3s;
 }
 
 .bot-btn-wrapper:hover{
     transform:translateY(-3px);
-
     border-color:rgba(32,220,255,.5);
-
     box-shadow:
         0 8px 30px rgba(32,220,255,.12);
 }
 
-.bot-btn-icon{
-    font-size:23px;
-}
+.bot-btn-icon{font-size:23px;}
+.bot-btn-text{font-size:11px;}
 
-.bot-btn-text{
-    font-size:11px;
-}
-
-/* =========================
-   Follow Button
-   ========================= */
+/* ============ Follow Button ============ */
 .follow-btn{
     display:flex;
     align-items:center;
@@ -559,49 +472,35 @@ body::after{
     max-width:90%;
     text-align:center;
 }
-.follow-toast.show{
-    transform:translateX(-50%) translateY(0);
-}
+.follow-toast.show{transform:translateX(-50%) translateY(0);}
 .follow-toast.unfollow{
     background:linear-gradient(135deg,#ff5874,#e74c3c);
     box-shadow:0 10px 30px rgba(255,88,116,.5);
 }
 
-/* =========================
-   Auth
-   ========================= */
-
+/* ============ Auth ============ */
 .auth-section{
     max-width:480px;
     margin:70px auto;
-
     padding:32px;
-
     border-radius:28px;
-
     background:
         linear-gradient(
             145deg,
             rgba(18,25,54,.9),
             rgba(7,10,25,.82)
         );
-
     border:1px solid var(--border);
-
     box-shadow:
         var(--shadow),
         inset 0 1px rgba(255,255,255,.04);
-
     backdrop-filter:blur(22px);
-
     text-align:center;
 }
 
 .auth-section h2{
     margin-bottom:24px;
-
     font-size:25px;
-
     background:
         linear-gradient(
             90deg,
@@ -609,80 +508,53 @@ body::after{
             var(--cyan),
             var(--purple)
         );
-
     -webkit-background-clip:text;
     background-clip:text;
     color:transparent;
 }
 
-.auth-tabs{
-    display:flex;
-    gap:8px;
-    margin-bottom:18px;
-}
+.auth-tabs{display:flex;gap:8px;margin-bottom:18px;}
 
 .auth-tabs button{
     flex:1;
-
     padding:12px;
-
     border-radius:13px;
-
     border:1px solid var(--border);
-
     background:rgba(255,255,255,.035);
     color:#8592b6;
-
     cursor:pointer;
-
     transition:.3s;
 }
 
 .auth-tabs button.active{
     color:#fff;
-
     background:
         linear-gradient(
             135deg,
             rgba(32,220,255,.14),
             rgba(166,108,255,.14)
         );
-
     border-color:rgba(80,200,255,.35);
-
     box-shadow:
         0 0 25px rgba(80,150,255,.08);
 }
 
-.auth-form{
-    display:flex;
-    flex-direction:column;
-    gap:12px;
-}
+.auth-form{display:flex;flex-direction:column;gap:12px;}
 
 .auth-form input{
     width:100%;
-
     padding:14px 16px;
-
     border-radius:13px;
-
     border:1px solid rgba(120,150,255,.16);
-
     outline:none;
-
     background:rgba(0,0,0,.28);
-
     color:#fff;
-
     font-size:14px;
-
     transition:.3s;
 }
 
 .auth-form input:focus{
     border-color:var(--cyan);
-
     box-shadow:
         0 0 0 3px rgba(32,220,255,.07),
         0 0 25px rgba(32,220,255,.08);
@@ -690,10 +562,8 @@ body::after{
 
 .auth-form button{
     padding:14px;
-
     border:0;
     border-radius:13px;
-
     background:
         linear-gradient(
             90deg,
@@ -701,16 +571,11 @@ body::after{
             #6878ff,
             #a66cff
         );
-
     color:#fff;
-
     font-weight:800;
-
     cursor:pointer;
-
     box-shadow:
         0 8px 30px rgba(70,100,255,.2);
-
     transition:.3s;
 }
 
@@ -725,22 +590,14 @@ body::after{
     font-size:12px;
 }
 
-/* =========================
-   Welcome
-   ========================= */
-
+/* ============ Welcome ============ */
 .welcome-msg{
     position:relative;
     overflow:hidden;
-
     margin-bottom:25px;
-
     padding:24px 26px;
-
     border-radius:22px;
-
     border:1px solid rgba(120,150,255,.18);
-
     background:
         linear-gradient(
             100deg,
@@ -748,86 +605,58 @@ body::after{
             rgba(166,108,255,.09),
             rgba(255,255,255,.02)
         );
-
     color:#9ba9ca;
-
     box-shadow:
         0 15px 50px rgba(0,0,0,.25);
 }
 
 .welcome-msg::before{
     content:"✦";
-
     position:absolute;
-
     left:20px;
     top:50%;
-
     transform:translateY(-50%);
-
     font-size:70px;
-
     color:rgba(120,100,255,.07);
-
     animation:welcomeStar 3s ease-in-out infinite alternate;
 }
 
 @keyframes welcomeStar{
-    from{
-        transform:translateY(-50%) rotate(0deg) scale(.9);
-    }
-    to{
-        transform:translateY(-50%) rotate(25deg) scale(1.1);
-    }
+    from{transform:translateY(-50%) rotate(0deg) scale(.9);}
+    to{transform:translateY(-50%) rotate(25deg) scale(1.1);}
 }
 
-.welcome-msg strong{
-    color:#fff;
-}
+.welcome-msg strong{color:#fff;}
 
-/* =========================
-   Section Panels
-   ========================= */
-
+/* ============ Panels ============ */
 .icon-shop,
 .dice-shop{
     position:relative;
     overflow:hidden;
-
     margin-top:25px;
     margin-bottom:28px;
-
     padding:24px;
-
     border-radius:24px;
-
     background:
         linear-gradient(
             145deg,
             rgba(15,22,47,.82),
             rgba(7,11,27,.76)
         );
-
     border:1px solid var(--border);
-
     box-shadow:
         0 15px 50px rgba(0,0,0,.3);
-
     backdrop-filter:blur(18px);
 }
 
 .icon-shop::before,
 .dice-shop::before{
     content:"";
-
     position:absolute;
-
     top:0;
     left:15%;
     right:15%;
-
     height:1px;
-
     background:
         linear-gradient(
             90deg,
@@ -836,9 +665,7 @@ body::after{
             var(--purple),
             transparent
         );
-
     box-shadow:0 0 20px var(--cyan);
-
     opacity:.5;
 }
 
@@ -848,65 +675,45 @@ body::after{
     align-items:center;
     gap:12px;
     flex-wrap:wrap;
-
     margin-bottom:20px;
-
     color:#eaf4ff;
 }
 
 .owned-count{
     font-size:11px;
-
     color:#93a2c7;
-
     padding:6px 13px;
-
     border-radius:20px;
-
     background:rgba(255,255,255,.04);
-
     border:1px solid rgba(120,150,255,.15);
 }
 
-/* =========================
-   Icon Shop
-   ========================= */
-
 .icon-grid{
     display:grid;
-
     grid-template-columns:
         repeat(
             auto-fill,
             minmax(95px,1fr)
         );
-
     gap:11px;
 }
 
 .icon-item{
     position:relative;
-
     display:flex;
     flex-direction:column;
     align-items:center;
     gap:5px;
-
     padding:14px 7px;
-
     border-radius:17px;
-
     background:
         linear-gradient(
             145deg,
             rgba(255,255,255,.045),
             rgba(255,255,255,.015)
         );
-
     border:1px solid rgba(120,150,255,.13);
-
     cursor:pointer;
-
     transition:
         transform .3s,
         border-color .3s,
@@ -917,124 +724,81 @@ body::after{
     transform:
         translateY(-5px)
         scale(1.02);
-
     border-color:rgba(32,220,255,.45);
-
     box-shadow:
         0 12px 35px rgba(32,220,255,.08);
 }
 
-.icon-item.owned{
-    border-color:rgba(46,230,138,.3);
-}
+.icon-item.owned{border-color:rgba(46,230,138,.3);}
 
 .icon-item.active{
     border-color:var(--cyan);
-
     box-shadow:
         0 0 25px rgba(32,220,255,.12),
         inset 0 0 20px rgba(32,220,255,.04);
 }
 
-.icon-item.locked{
-    opacity:.58;
-}
+.icon-item.locked{opacity:.58;}
 
 .icon-item .emoji{
     font-size:32px;
-
     filter:
         drop-shadow(
             0 5px 10px rgba(0,0,0,.3)
         );
 }
 
-.icon-item .name{
-    color:#a3b0ce;
-    font-size:10px;
-}
-
-.icon-item .price{
-    color:var(--gold);
-    font-size:9px;
-}
+.icon-item .name{color:#a3b0ce;font-size:10px;}
+.icon-item .price{color:var(--gold);font-size:9px;}
 
 .icon-item .tag{
     position:absolute;
-
     top:-6px;
     right:-5px;
-
     font-size:8px;
-
     padding:3px 7px;
-
     border-radius:10px;
-
     color:#fff;
 }
 
-.icon-item .tag.owned-tag{
-    background:#268bd2;
-}
-
-.icon-item .tag.free{
-    background:#20a968;
-}
-
+.icon-item .tag.owned-tag{background:#268bd2;}
+.icon-item .tag.free{background:#20a968;}
 .icon-item .tag.active-tag{
     background:var(--cyan);
     color:#041018;
     font-weight:800;
 }
 
-/* =========================
-   Dice Shop
-   ========================= */
-
-.dice-shop h4{
-    color:#dfeaff;
-    margin-bottom:16px;
-}
+.dice-shop h4{color:#dfeaff;margin-bottom:16px;}
 
 .dice-options{
     display:grid;
-
     grid-template-columns:
         repeat(
             auto-fit,
             minmax(130px,1fr)
         );
-
     gap:12px;
 }
 
 .dice-options button{
     padding:17px 10px;
-
     border-radius:17px;
-
     border:1px solid rgba(120,150,255,.15);
-
     background:
         linear-gradient(
             145deg,
             rgba(255,255,255,.045),
             rgba(255,255,255,.015)
         );
-
     color:#fff;
-
     cursor:pointer;
-
     transition:.3s;
 }
 
 .dice-options button:hover{
     transform:translateY(-4px);
-
     border-color:rgba(241,199,91,.4);
-
     box-shadow:
         0 10px 30px rgba(241,199,91,.08);
 }
@@ -1045,59 +809,40 @@ body::after{
     margin-bottom:5px;
 }
 
-.dice-options .price{
-    color:var(--gold);
-    font-size:11px;
-}
+.dice-options .price{color:var(--gold);font-size:11px;}
 
-/* =========================
-   Games
-   ========================= */
-
+/* ============ Games ============ */
 .games-grid{
     display:grid;
-
     grid-template-columns:
         repeat(
             auto-fit,
             minmax(220px,1fr)
         );
-
     gap:18px;
-
     margin-top:25px;
 }
 
 .game-card{
     position:relative;
     overflow:hidden;
-
     display:flex;
     flex-direction:column;
     align-items:center;
-
     min-height:310px;
-
     padding:28px 20px 20px;
-
     text-decoration:none;
-
     color:#fff;
-
     border-radius:25px;
-
     background:
         linear-gradient(
             145deg,
             rgba(18,26,56,.9),
             rgba(7,11,26,.85)
         );
-
     border:1px solid rgba(120,150,255,.16);
-
     box-shadow:
         0 15px 45px rgba(0,0,0,.3);
-
     transition:
         transform .35s,
         border-color .35s,
@@ -1106,36 +851,27 @@ body::after{
 
 .game-card::before{
     content:"";
-
     position:absolute;
-
     width:170px;
     height:170px;
-
     top:-90px;
     left:50%;
-
     transform:translateX(-50%);
-
     border-radius:50%;
-
     background:
         radial-gradient(
             circle,
             rgba(32,220,255,.14),
             transparent 70%
         );
-
     transition:.4s;
 }
 
 .game-card:hover{
     transform:
         translateY(-9px);
-
     border-color:
         rgba(32,220,255,.4);
-
     box-shadow:
         0 25px 65px rgba(0,0,0,.45),
         0 0 30px rgba(32,220,255,.06);
@@ -1150,32 +886,23 @@ body::after{
 .game-icon{
     position:relative;
     z-index:2;
-
     width:92px;
     height:92px;
-
     display:flex;
     align-items:center;
     justify-content:center;
-
     margin-bottom:18px;
-
     border-radius:26px;
-
     background:
         radial-gradient(
             circle at 35% 25%,
             rgba(255,255,255,.12),
             rgba(100,80,255,.08)
         );
-
     border:1px solid rgba(120,150,255,.18);
-
     font-size:53px;
-
     box-shadow:
         0 15px 30px rgba(0,0,0,.25);
-
     transition:.35s;
 }
 
@@ -1183,7 +910,6 @@ body::after{
     transform:
         scale(1.08)
         rotate(-3deg);
-
     box-shadow:
         0 0 30px rgba(32,220,255,.12);
 }
@@ -1196,65 +922,45 @@ body::after{
 
 .game-desc{
     text-align:center;
-
     color:#7e8bab;
-
     font-size:11px;
     line-height:1.8;
-
     min-height:42px;
 }
 
 .game-stats{
     width:100%;
-
     display:flex;
     justify-content:center;
     flex-wrap:wrap;
-
     gap:6px;
-
     margin:15px 0;
 }
 
 .game-stats span{
     padding:5px 8px;
-
     border-radius:9px;
-
     background:rgba(255,255,255,.035);
-
     border:1px solid rgba(120,150,255,.1);
-
     color:#7e8caf;
-
     font-size:9px;
 }
 
 .play-btn{
     margin-top:auto;
-
     width:100%;
-
     padding:11px;
-
     border:1px solid rgba(32,220,255,.25);
-
     border-radius:12px;
-
     background:
         linear-gradient(
             90deg,
             rgba(32,220,255,.1),
             rgba(166,108,255,.1)
         );
-
     color:#a8efff;
-
     font-weight:800;
-
     cursor:pointer;
-
     transition:.3s;
 }
 
@@ -1265,80 +971,45 @@ body::after{
             rgba(32,220,255,.18),
             rgba(166,108,255,.18)
         );
-
     border-color:rgba(32,220,255,.45);
 }
 
-/* Badge */
-
 .badge-new{
     position:absolute;
-
     top:13px;
     right:13px;
-
     z-index:4;
-
     padding:5px 9px;
-
     border-radius:10px;
-
     background:
         rgba(0,0,0,.35);
-
     border:1px solid rgba(255,255,255,.08);
-
     color:#b9c5e0;
-
     font-size:9px;
-
     backdrop-filter:blur(8px);
 }
 
-/* =========================
-   Footer
-   ========================= */
-
 .footer{
     margin-top:45px;
-
     padding:25px 0;
-
     text-align:center;
-
     border-top:1px solid rgba(120,150,255,.08);
-
     color:#4f5b7b;
-
     font-size:10px;
-
     letter-spacing:.5px;
 }
 
-.footer p::first-letter{
-    color:var(--cyan);
-}
+.footer p::first-letter{color:var(--cyan);}
 
-/* =========================
-   Hidden
-   ========================= */
+.hidden{display:none !important;}
 
-.hidden{
-    display:none !important;
-}
-
-/* =========================
-   Light Theme
-   ========================= */
-
+/* ============ Themes ============ */
 body.theme-light{
     --bg:#eef3fa;
     --bg2:#e7edf7;
     --panel:rgba(255,255,255,.8);
-
     --text:#152039;
     --muted:#63708c;
-
     background:
         radial-gradient(
             circle at 50% -10%,
@@ -1362,20 +1033,13 @@ body.theme-light .game-card{
 
 body.theme-light .game-title,
 body.theme-light .welcome-msg strong,
-body.theme-light .auth-section h2{
-    color:#18233d;
-}
-
-/* =========================
-   Gold
-   ========================= */
+body.theme-light .auth-section h2{color:#18233d;}
 
 body.theme-gold{
     --cyan:#f1c40f;
     --blue:#f39c12;
     --purple:#ff8a3d;
     --accent:#f1c40f;
-
     background:
         radial-gradient(
             circle at 50% -10%,
@@ -1385,20 +1049,12 @@ body.theme-gold{
         #080706;
 }
 
-/* =========================
-   Purple
-   ========================= */
-
 body.theme-purple{
     --cyan:#bd7cff;
     --blue:#765cff;
     --purple:#e66cff;
     --accent:#bd7cff;
 }
-
-/* =========================
-   Blue
-   ========================= */
 
 body.theme-blue{
     --cyan:#20dcff;
@@ -1407,10 +1063,6 @@ body.theme-blue{
     --accent:#20dcff;
 }
 
-/* =========================
-   Green
-   ========================= */
-
 body.theme-green{
     --cyan:#35f0a0;
     --blue:#20d99a;
@@ -1418,70 +1070,26 @@ body.theme-green{
     --accent:#35f0a0;
 }
 
-/* =========================
-   Responsive
-   ========================= */
-
 @media(max-width:900px){
-
     .header{
         flex-direction:column;
         align-items:stretch;
     }
-
-    .logo{
-        text-align:center;
-    }
-
-    .theme-selector{
-        justify-content:center;
-    }
-
-    #userSection{
-        justify-content:center;
-    }
+    .logo{text-align:center;}
+    .theme-selector{justify-content:center;}
+    #userSection{justify-content:center;}
 }
 
 @media(max-width:600px){
-
-    .main-container{
-        width:94%;
-        padding-top:12px;
-    }
-
-    .header{
-        padding:15px;
-        border-radius:20px;
-    }
-
-    .logo{
-        font-size:21px;
-    }
-
-    .logo span{
-        font-size:10px;
-    }
-
-    .bot-btn-text{
-        display:none;
-    }
-
-    .user-profile{
-        width:100%;
-        justify-content:center;
-    }
-
-    .auth-section{
-        margin:35px auto;
-        padding:22px 17px;
-    }
-
+    .main-container{width:94%;padding-top:12px;}
+    .header{padding:15px;border-radius:20px;}
+    .logo{font-size:21px;}
+    .logo span{font-size:10px;}
+    .bot-btn-text{display:none;}
+    .user-profile{width:100%;justify-content:center;}
+    .auth-section{margin:35px auto;padding:22px 17px;}
     .icon-shop,
-    .dice-shop{
-        padding:17px;
-        border-radius:20px;
-    }
-
+    .dice-shop{padding:17px;border-radius:20px;}
     .icon-grid{
         grid-template-columns:
             repeat(
@@ -1489,26 +1097,12 @@ body.theme-green{
                 minmax(78px,1fr)
             );
     }
-
-    .games-grid{
-        grid-template-columns:1fr;
-    }
-
-    .game-card{
-        min-height:290px;
-    }
-
-    .welcome-msg{
-        padding:20px;
-    }
+    .games-grid{grid-template-columns:1fr;}
+    .game-card{min-height:290px;}
+    .welcome-msg{padding:20px;}
 }
 
-/* =========================
-   Reduced Motion
-   ========================= */
-
 @media(prefers-reduced-motion:reduce){
-
     *,
     *::before,
     *::after{
@@ -1525,10 +1119,6 @@ body.theme-green{
 
 <div class="main-container">
 
-<!-- =====================================================
-     HEADER
-     ===================================================== -->
-
 <div class="header">
 
     <div class="logo">
@@ -1536,45 +1126,13 @@ body.theme-green{
     </div>
 
     <div class="theme-selector">
-
         <span class="theme-label">🎨 تم:</span>
-
-        <button
-            class="theme-btn dark active"
-            data-theme="dark"
-            title="تاریک">
-        </button>
-
-        <button
-            class="theme-btn light"
-            data-theme="light"
-            title="روشن">
-        </button>
-
-        <button
-            class="theme-btn gold"
-            data-theme="gold"
-            title="طلایی">
-        </button>
-
-        <button
-            class="theme-btn purple"
-            data-theme="purple"
-            title="بنفش">
-        </button>
-
-        <button
-            class="theme-btn blue"
-            data-theme="blue"
-            title="آبی">
-        </button>
-
-        <button
-            class="theme-btn green"
-            data-theme="green"
-            title="سبز">
-        </button>
-
+        <button class="theme-btn dark active" data-theme="dark" title="تاریک"></button>
+        <button class="theme-btn light" data-theme="light" title="روشن"></button>
+        <button class="theme-btn gold" data-theme="gold" title="طلایی"></button>
+        <button class="theme-btn purple" data-theme="purple" title="بنفش"></button>
+        <button class="theme-btn blue" data-theme="blue" title="آبی"></button>
+        <button class="theme-btn green" data-theme="green" title="سبز"></button>
     </div>
 
     <a href="store.html" style="background:linear-gradient(135deg,#f9d976,#f39c12);color:#1a1f30;padding:10px 20px;border-radius:50px;font-weight:800;text-decoration:none;display:flex;align-items:center;gap:6px;box-shadow:0 4px 15px rgba(241,196,15,0.4);transition:all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
@@ -1584,75 +1142,27 @@ body.theme-green{
     <button id="followBtn" class="follow-btn">
         <span class="follow-icon">🔔</span>
         <span class="follow-text" id="followText">دنبال کنید</span>
-        <span class="follow-count" id="followCount">0</span>
+        <span class="follow-count" id="followCount">...</span>
     </button>
 
-    <div
-        id="userSection"
-        style="display:flex;align-items:center;gap:15px;flex-wrap:wrap;">
+    <div id="userSection" style="display:flex;align-items:center;gap:15px;flex-wrap:wrap;">
 
-        <a
-            href="StarLoomBot.html"
-            class="bot-btn-wrapper"
-            title="ربات راهنما - نیاز به کمک دارید؟">
-
+        <a href="StarLoomBot.html" class="bot-btn-wrapper" title="ربات راهنما - نیاز به کمک دارید؟">
             <div class="bot-btn-icon">🤖</div>
-
-            <span class="bot-btn-text">
-                نیاز به کمک دارید؟
-            </span>
-
+            <span class="bot-btn-text">نیاز به کمک دارید؟</span>
         </a>
 
-        <div class="user-info" id="guestInfo">
-            👤 مهمان
-        </div>
+        <div class="user-info" id="guestInfo">👤 مهمان</div>
 
-        <div
-            class="user-profile hidden"
-            id="userProfile">
-
-            <span
-                class="avatar"
-                id="userAvatar">
-                😊
-            </span>
-
+        <div class="user-profile hidden" id="userProfile">
+            <span class="avatar" id="userAvatar">😊</span>
             <div class="info">
-
-                <span
-                    class="name"
-                    id="userName">
-                    کاربر
-                </span>
-
-                <span class="stats">
-                    💰
-                    <span id="userCoins">0</span>
-                    |
-                    🏆 لول
-                    <span id="userLevel">0</span>/62
-                </span>
-
-                <span class="dice-count">
-                    🎲 تاس:
-                    <span id="userDice">40</span>
-                </span>
-
-                <span
-                    class="level-progress"
-                    id="levelProgress">
-                    📊 پیشرفت لول: 0%
-                </span>
-
+                <span class="name" id="userName">کاربر</span>
+                <span class="stats">💰 <span id="userCoins">0</span> | 🏆 لول <span id="userLevel">0</span>/62</span>
+                <span class="dice-count">🎲 تاس: <span id="userDice">40</span></span>
+                <span class="level-progress" id="levelProgress">📊 پیشرفت لول: 0%</span>
             </div>
-
-            <button
-                class="logout-btn"
-                id="logoutBtn">
-                🚪 خروج
-            </button>
-
+            <button class="logout-btn" id="logoutBtn">🚪 خروج</button>
         </div>
 
     </div>
@@ -1660,577 +1170,178 @@ body.theme-green{
 </div>
 
 
-<!-- =====================================================
-     AUTH
-     ===================================================== -->
+<div class="auth-section" id="authSection">
 
-<div
-    class="auth-section"
-    id="authSection">
-
-    <h2>
-        ✦ ورود به جهان StarLoom
-    </h2>
+    <h2>✦ ورود به جهان StarLoom</h2>
 
     <div class="auth-tabs">
-
-        <button
-            class="active"
-            data-tab="login">
-            ورود
-        </button>
-
-        <button
-            data-tab="register">
-            ثبت نام
-        </button>
-
+        <button class="active" data-tab="login">ورود</button>
+        <button data-tab="register">ثبت نام</button>
     </div>
 
-
-    <div
-        class="auth-form"
-        id="loginForm">
-
-        <input
-            type="text"
-            id="loginUsername"
-            placeholder="نام کاربری">
-
-        <input
-            type="password"
-            id="loginPassword"
-            placeholder="رمز عبور">
-
-        <button id="loginBtn">
-            🚀 ورود به StarLoom
-        </button>
-
-        <div
-            class="auth-error"
-            id="loginError">
-        </div>
-
+    <div class="auth-form" id="loginForm">
+        <input type="text" id="loginUsername" placeholder="نام کاربری">
+        <input type="password" id="loginPassword" placeholder="رمز عبور">
+        <button id="loginBtn">🚀 ورود به StarLoom</button>
+        <div class="auth-error" id="loginError"></div>
     </div>
 
-
-    <div
-        class="auth-form hidden"
-        id="registerForm">
-
-        <input
-            type="text"
-            id="registerUsername"
-            placeholder="نام کاربری (حداقل 3 کاراکتر)">
-
-        <input
-            type="password"
-            id="registerPassword"
-            placeholder="رمز عبور (حداقل 4 کاراکتر)">
-
-        <button id="registerBtn">
-            🎉 ساخت حساب StarLoom
-        </button>
-
-        <div
-            class="auth-error"
-            id="registerError">
-        </div>
-
+    <div class="auth-form hidden" id="registerForm">
+        <input type="text" id="registerUsername" placeholder="نام کاربری (حداقل 3 کاراکتر)">
+        <input type="password" id="registerPassword" placeholder="رمز عبور (حداقل 4 کاراکتر)">
+        <button id="registerBtn">🎉 ساخت حساب StarLoom</button>
+        <div class="auth-error" id="registerError"></div>
     </div>
 
 </div>
 
 
-<!-- =====================================================
-     GAME SECTION
-     ===================================================== -->
+<div id="gameSection" class="hidden">
 
-<div
-    id="gameSection"
-    class="hidden">
-
-
-    <!-- Welcome -->
-
-    <div
-        class="welcome-msg"
-        id="welcomeMsg">
-
+    <div class="welcome-msg" id="welcomeMsg">
         👋 خوش برگشتی،
-        <strong id="welcomeName">
-            کاربر
-        </strong>!
-
+        <strong id="welcomeName">کاربر</strong>!
     </div>
-
-
-    <!-- =================================================
-         ICON SHOP
-         ================================================= -->
 
     <div class="icon-shop">
-
         <h3>
-
-            <span>
-                🌌 Galaxy Icon Shop
-            </span>
-
-            <span
-                class="owned-count"
-                id="ownedCount">
-                📦 مالک: 4
-            </span>
-
+            <span>🌌 Galaxy Icon Shop</span>
+            <span class="owned-count" id="ownedCount">📦 مالک: 4</span>
         </h3>
-
-        <div
-            class="icon-grid"
-            id="iconGrid">
-        </div>
-
+        <div class="icon-grid" id="iconGrid"></div>
     </div>
-
-
-    <!-- =================================================
-         DICE SHOP
-         ================================================= -->
 
     <div class="dice-shop">
-
-        <h4>
-            🎲 فروشگاه تاس StarLoom
-        </h4>
-
+        <h4>🎲 فروشگاه تاس StarLoom</h4>
         <div class="dice-options">
-
-            <button
-                onclick="buyDice(20,300)">
-
-                <div class="count">
-                    🎲 20 تا
-                </div>
-
-                <div class="price">
-                    💰 300 سکه
-                </div>
-
-            </button>
-
-
-            <button
-                onclick="buyDice(43,600)">
-
-                <div class="count">
-                    🎲 43 تا
-                </div>
-
-                <div class="price">
-                    💰 600 سکه
-                </div>
-
-            </button>
-
-
-            <button
-                onclick="buyDice(80,1000)">
-
-                <div class="count">
-                    🎲 80 تا
-                </div>
-
-                <div class="price">
-                    💰 1000 سکه
-                </div>
-
-            </button>
-
-
-            <button
-                onclick="buyDice(150,1800)">
-
-                <div class="count">
-                    🎲 150 تا
-                </div>
-
-                <div class="price">
-                    💰 1800 سکه
-                </div>
-
-            </button>
-
+            <button onclick="buyDice(20,300)"><div class="count">🎲 20 تا</div><div class="price">💰 300 سکه</div></button>
+            <button onclick="buyDice(43,600)"><div class="count">🎲 43 تا</div><div class="price">💰 600 سکه</div></button>
+            <button onclick="buyDice(80,1000)"><div class="count">🎲 80 تا</div><div class="price">💰 1000 سکه</div></button>
+            <button onclick="buyDice(150,1800)"><div class="count">🎲 150 تا</div><div class="price">💰 1800 سکه</div></button>
         </div>
-
     </div>
-
-
-    <!-- =================================================
-         GAMES
-         ================================================= -->
 
     <div class="games-grid">
 
-
-        <!-- Snake -->
-
-        <a
-            href="snake.html"
-            class="game-card">
-
-            <span class="badge-new">
-                🔥 محبوب
-            </span>
-
-            <span class="game-icon">
-                🐍
-            </span>
-
-            <div class="game-title">
-                مار و پله
-            </div>
-
-            <div class="game-desc">
-                🎯 تک‌نفره | ۲۲۰ خانه |
-                برنده
-                <strong style="color:var(--accent);">
-                    +1 لول
-                </strong>
-            </div>
-
-            <div class="game-stats">
-
-                <span>
-                    👤 ۱ نفره
-                </span>
-
-                <span>
-                    🎲 استراتژیک
-                </span>
-
-                <span>
-                    🏆 ۸۰۰ سکه
-                </span>
-
-            </div>
-
-            <button class="play-btn">
-                ▶ بازی کن
-            </button>
-
-        </a>
-
-
-        <!-- Race -->
-
-        <a
-            href="race.html"
-            class="game-card">
-
-            <span class="badge-new">
-                ⚡ جدید
-            </span>
-
-            <span class="game-icon">
-                🏎️
-            </span>
-
-            <div class="game-title">
-                مسابقه سرعت
-            </div>
-
-            <div class="game-desc">
-                ⚡ با کلیک سریع به خط پایان برسید!
-                <strong style="color:#2ecc71;">
-                    +0.5 لول
-                </strong>
-            </div>
-
-            <div class="game-stats">
-
-                <span>
-                    👤 ۱ نفره
-                </span>
-
-                <span>
-                    ⚡ سرعتی
-                </span>
-
-                <span>
-                    🏆 ۳۰۰ سکه
-                </span>
-
-            </div>
-
-            <button class="play-btn">
-                ▶ بازی کن
-            </button>
-
-        </a>
-
-
-        <!-- Boom -->
-
-        <a
-            href="boom.html"
-            class="game-card">
-
-            <span class="badge-new">
-                💥 بروزرسانی
-            </span>
-
-            <span class="game-icon">
-                💣
-            </span>
-
-            <div class="game-title">
-                بوم بوم
-            </div>
-
-            <div class="game-desc">
-                💥 ۵۰۰ مکعب!
-                برنده
-                <strong style="color:var(--accent);">
-                    ۳۰۰۰
-                </strong>
-                سکه
-            </div>
-
-            <div class="game-stats">
-
-                <span>
-                    👤 ۱ نفره
-                </span>
-
-                <span>
-                    🎮 ماجراجویی
-                </span>
-
-                <span>
-                    🏆 ۳۰۰۰ سکه
-                </span>
-
-            </div>
-
-            <button class="play-btn">
-                ▶ بازی کن
-            </button>
-
-        </a>
-
-
-        <!-- Minecraft -->
-
-        <a
-            href="minecraft.html"
-            class="game-card">
-
-            <span class="badge-new">
-                ⛏️ جدید
-            </span>
-
-            <span class="game-icon">
-                ⛏️
-            </span>
-
-            <div class="game-title">
-                ماینکرفت
-            </div>
-
-            <div class="game-desc">
-                ⛏️ ۱۰۰۰ مکعب را بکنید!
-                برنده
-                <strong style="color:var(--accent);">
-                    ۱۳,۰۰۰
-                </strong>
-                سکه
-            </div>
-
-            <div class="game-stats">
-
-                <span>
-                    👤 ۱ نفره
-                </span>
-
-                <span>
-                    ⛏️ ماجراجویی
-                </span>
-
-                <span>
-                    🏆 ۱۳,۰۰۰ سکه
-                </span>
-
-            </div>
-
-            <button class="play-btn">
-                ▶ بازی کن
-            </button>
-
-        </a>
-
-
-        <!-- Loom Wars -->
-
-<a href="loomwars.html" class="game-card">
-    <span class="badge-new">⚔️ جدید</span>
-    <span class="game-icon">🏰</span>
-    <div class="game-title">Loom Wars</div>
-    <div class="game-desc">⚔️ نبرد قلعه‌ها! برنده <strong style="color:var(--accent);">۶۰۰</strong> سکه</div>
-    <div class="game-stats"><span>👤 ۱ نفره</span><span>🎮 استراتژیک</span><span>🏆 ۶۰۰ سکه</span></div>
+<a href="snake-online.html" class="game-card">
+    <span class="badge-new">🌐 آنلاین</span>
+    <span class="game-icon">🐍</span>
+    <div class="game-title">مار و پله آنلاین</div>
+    <div class="game-desc">🎮 ۲ نفره آنلاین! با دوستت از دو گوشی بازی کن</div>
+    <div class="game-stats"><span>👥 ۲ نفره</span><span>🌐 آنلاین</span><span>🏆 ۸۰۰ سکه</span></div>
     <button class="play-btn">▶ بازی کن</button>
 </a>
 
-<!-- ⭐ StarLoom Idle -->
-<a href="starloomidle.html" class="game-card">
-    <span class="badge-new">⭐ ویژه</span>
-    <span class="game-icon">⭐</span>
-    <div class="game-title">StarLoom Idle</div>
-    <div class="game-desc">⭐ ستاره جمع کن! هر ۵,۰۰۰ = <strong style="color:var(--accent);">5,۰۰۰</strong> سکه</div>
-    <div class="game-stats"><span>♾️ بی‌نهایت</span><span>💰 جایزه رکورد</span><span>💤 آفلاین</span></div>
-    <button class="play-btn">▶ بازی کن</button>
-</a>
+        <a href="race.html" class="game-card">
+            <span class="badge-new">⚡ جدید</span>
+            <span class="game-icon">🏎️</span>
+            <div class="game-title">مسابقه سرعت</div>
+            <div class="game-desc">⚡ با کلیک سریع به خط پایان برسید! <strong style="color:#2ecc71;">+0.5 لول</strong></div>
+            <div class="game-stats"><span>👤 ۱ نفره</span><span>⚡ سرعتی</span><span>🏆 ۳۰۰ سکه</span></div>
+            <button class="play-btn">▶ بازی کن</button>
+        </a>
 
-</a>
+        <a href="boom.html" class="game-card">
+            <span class="badge-new">💥 بروزرسانی</span>
+            <span class="game-icon">💣</span>
+            <div class="game-title">بوم بوم</div>
+            <div class="game-desc">💥 ۵۰۰ مکعب! برنده <strong style="color:var(--accent);">۳۰۰۰</strong> سکه</div>
+            <div class="game-stats"><span>👤 ۱ نفره</span><span>🎮 ماجراجویی</span><span>🏆 ۳۰۰۰ سکه</span></div>
+            <button class="play-btn">▶ بازی کن</button>
+        </a>
+
+        <a href="minecraft.html" class="game-card">
+            <span class="badge-new">⛏️ جدید</span>
+            <span class="game-icon">⛏️</span>
+            <div class="game-title">ماینکرفت</div>
+            <div class="game-desc">⛏️ ۱۰۰۰ مکعب را بکنید! برنده <strong style="color:var(--accent);">۱۳,۰۰۰</strong> سکه</div>
+            <div class="game-stats"><span>👤 ۱ نفره</span><span>⛏️ ماجراجویی</span><span>🏆 ۱۳,۰۰۰ سکه</span></div>
+            <button class="play-btn">▶ بازی کن</button>
+        </a>
+
+        <a href="loomwars.html" class="game-card">
+            <span class="badge-new">⚔️ جدید</span>
+            <span class="game-icon">🏰</span>
+            <div class="game-title">Loom Wars</div>
+            <div class="game-desc">⚔️ نبرد قلعه‌ها! برنده <strong style="color:var(--accent);">۶۰۰</strong> سکه</div>
+            <div class="game-stats"><span>👤 ۱ نفره</span><span>🎮 استراتژیک</span><span>🏆 ۶۰۰ سکه</span></div>
+            <button class="play-btn">▶ بازی کن</button>
+        </a>
+
+        <a href="starloomidle.html" class="game-card">
+            <span class="badge-new">⭐ ویژه</span>
+            <span class="game-icon">⭐</span>
+            <div class="game-title">StarLoom Idle</div>
+            <div class="game-desc">⭐ ستاره جمع کن! هر ۵,۰۰۰ = <strong style="color:var(--accent);">5,۰۰۰</strong> سکه</div>
+            <div class="game-stats"><span>♾️ بی‌نهایت</span><span>💰 جایزه رکورد</span><span>💤 آفلاین</span></div>
+            <button class="play-btn">▶ بازی کن</button>
+        </a>
+
+    </div>
+
 </div>
 
-</div>
-
-
-<!-- =====================================================
-     FOOTER
-     ===================================================== -->
 
 <div class="footer">
-
-    <p>
-        ✦ StarLoom_Game
-        — جهان بازی‌های StarLoom
-        | تمامی حقوق محفوظ است
-        | v2.1
-    </p>
-
+    <p>✦ StarLoom_Game — جهان بازی‌های StarLoom | تمامی حقوق محفوظ است | v2.1</p>
 </div>
 
 </div>
 
-
-<!-- =====================================================
-     JAVASCRIPT
-     عملکرد اصلی بدون تغییر
-     ===================================================== -->
 
 <script>
 
 (function(){
 
-    var THEMES = [
-        'dark',
-        'light',
-        'gold',
-        'purple',
-        'blue',
-        'green'
-    ];
-
+    var THEMES = ['dark','light','gold','purple','blue','green'];
     var currentTheme = 'dark';
-
 
     /* =========================
        Theme
        ========================= */
 
     function loadTheme(){
-
         try{
-
-            var saved =
-                localStorage.getItem(
-                    'starloom_theme'
-                );
-
-            if(
-                saved &&
-                THEMES.indexOf(saved) !== -1
-            ){
+            var saved = localStorage.getItem('starloom_theme');
+            if(saved && THEMES.indexOf(saved) !== -1){
                 currentTheme = saved;
             }
-
         }catch(e){}
-
         applyTheme(currentTheme);
     }
 
-
     function applyTheme(theme){
-
         document.body.className = '';
-
         if(theme !== 'dark'){
-
-            document.body.classList.add(
-                'theme-' + theme
-            );
-
+            document.body.classList.add('theme-' + theme);
         }
-
         currentTheme = theme;
-
-        document
-            .querySelectorAll('.theme-btn')
-            .forEach(function(btn){
-
-                btn.classList.remove('active');
-
-                if(
-                    btn.dataset.theme === theme
-                ){
-                    btn.classList.add('active');
-                }
-
-            });
-
+        document.querySelectorAll('.theme-btn').forEach(function(btn){
+            btn.classList.remove('active');
+            if(btn.dataset.theme === theme){
+                btn.classList.add('active');
+            }
+        });
         try{
-
-            localStorage.setItem(
-                'starloom_theme',
-                theme
-            );
-
+            localStorage.setItem('starloom_theme', theme);
         }catch(e){}
-
     }
 
-
-    document
-        .querySelectorAll('.theme-btn')
-        .forEach(function(btn){
-
-            btn.addEventListener(
-                'click',
-                function(){
-
-                    applyTheme(
-                        this.dataset.theme
-                    );
-
-                }
-            );
-
+    document.querySelectorAll('.theme-btn').forEach(function(btn){
+        btn.addEventListener('click', function(){
+            applyTheme(this.dataset.theme);
         });
-
+    });
 
     /* =========================
        Icons
        ========================= */
 
 var ICONS = {
-    // رایگان
     'default':{name:'پیش‌فرض',emoji:'😊',price:0},
     'smile':{name:'خندان',emoji:'😄',price:0},
     'heart':{name:'قلب',emoji:'❤️',price:0},
     'star':{name:'ستاره',emoji:'⭐',price:0},
-    
-    // از ۲۰۰۰ شروع می‌شن
     'lion':{name:'شیر',emoji:'🦁',price:2600},
     'tiger':{name:'ببر',emoji:'🐯',price:2700},
     'eagle':{name:'عقاب',emoji:'🦅',price:2800},
@@ -2260,8 +1371,6 @@ var ICONS = {
     'legendary':{name:'افسانه‌ای',emoji:'🌟',price:15100},
     'ultimate':{name:'نهایی',emoji:'⚡',price:18000},
     'void':{name:'ابدیت',emoji:'🌑',price:22000},
-    
-    // 🆕 ۱۰ آیکون جدید و گرون
     'alien':{name:'فضایی',emoji:'👽',price:25000},
     'cyborg':{name:'سایبورگ',emoji:'🦾',price:28000},
     'genie':{name:'جن',emoji:'🧞',price:32000},
@@ -2274,1337 +1383,454 @@ var ICONS = {
     'sun':{name:'خورشید',emoji:'☀️',price:100000}
 };
 
-
     var currentUser = null;
     var userData = null;
 
-
-    /* =========================
-       Users
-       ========================= */
-
     function getUsers(){
-
         try{
-
-            return JSON.parse(
-                localStorage.getItem(
-                    'starloom_users'
-                )
-            ) || {};
-
+            return JSON.parse(localStorage.getItem('starloom_users')) || {};
         }catch(e){
-
             return {};
-
         }
-
     }
-
 
     function saveUsers(u){
-
         try{
-
-            localStorage.setItem(
-                'starloom_users',
-                JSON.stringify(u)
-            );
-
+            localStorage.setItem('starloom_users', JSON.stringify(u));
         }catch(e){}
-
     }
-
 
     function getIconEmoji(id){
-
-        return ICONS[id]
-            ? ICONS[id].emoji
-            : '😊';
-
+        return ICONS[id] ? ICONS[id].emoji : '😊';
     }
-
-
-    /* =========================
-       User UI
-       ========================= */
 
     function updateUserUI(){
-
         if(!userData) return;
+        document.getElementById('userName').textContent = userData.username;
+        document.getElementById('userAvatar').textContent = getIconEmoji(userData.icon || 'default');
+        document.getElementById('userCoins').textContent = userData.coins || 0;
+        document.getElementById('userLevel').textContent = userData.level || 0;
+        document.getElementById('userDice').textContent = userData.dice || 40;
+        document.getElementById('welcomeName').textContent = userData.username;
 
-        document.getElementById(
-            'userName'
-        ).textContent =
-            userData.username;
-
-        document.getElementById(
-            'userAvatar'
-        ).textContent =
-            getIconEmoji(
-                userData.icon || 'default'
-            );
-
-        document.getElementById(
-            'userCoins'
-        ).textContent =
-            userData.coins || 0;
-
-        document.getElementById(
-            'userLevel'
-        ).textContent =
-            userData.level || 0;
-
-        document.getElementById(
-            'userDice'
-        ).textContent =
-            userData.dice || 40;
-
-        document.getElementById(
-            'welcomeName'
-        ).textContent =
-            userData.username;
-
-
-        var levelProgress =
-            userData.levelProgress || 0;
-
-        var progressPercent =
-            Math.min(
-                levelProgress * 100,
-                100
-            );
-
-        var el =
-            document.getElementById(
-                'levelProgress'
-            );
-
+        var levelProgress = userData.levelProgress || 0;
+        var progressPercent = Math.min(levelProgress * 100, 100);
+        var el = document.getElementById('levelProgress');
         if(el){
-
-            el.textContent =
-                '📊 پیشرفت لول: ' +
-                Math.floor(
-                    progressPercent
-                ) +
-                '%';
-
+            el.textContent = '📊 پیشرفت لول: ' + Math.floor(progressPercent) + '%';
         }
-
     }
-
-
-    /* =========================
-       Coin Sync
-       ========================= */
 
     function refreshCoins(){
-
         if(!currentUser) return;
-
         var users = getUsers();
-
         if(users[currentUser]){
-
-            userData =
-                users[currentUser];
-
+            userData = users[currentUser];
             updateUserUI();
-
         }
-
     }
-
-
-    /* =========================
-       User Icons
-       ========================= */
 
     function getUserIcons(){
-
         if(!userData){
-
-            return [
-                'default',
-                'smile',
-                'heart',
-                'star'
-            ];
-
+            return ['default','smile','heart','star'];
         }
-
         if(!userData.icons){
-
-            userData.icons = [
-                'default',
-                'smile',
-                'heart',
-                'star'
-            ];
-
+            userData.icons = ['default','smile','heart','star'];
         }
-
         return userData.icons;
-
     }
-
 
     function renderIconShop(){
-
-        var grid =
-            document.getElementById(
-                'iconGrid'
-            );
-
+        var grid = document.getElementById('iconGrid');
         if(!grid) return;
-
         grid.innerHTML = '';
 
-
         if(!userData){
-
-            grid.innerHTML =
-                '<div style="color:#7a8bb0;font-size:.85rem;padding:20px;text-align:center;">برای دیدن فروشگاه ابتدا وارد شوید</div>';
-
+            grid.innerHTML = '<div style="color:#7a8bb0;font-size:.85rem;padding:20px;text-align:center;">برای دیدن فروشگاه ابتدا وارد شوید</div>';
             return;
-
         }
 
+        var owned = getUserIcons();
+        document.getElementById('ownedCount').textContent = '📦 مالک: ' + owned.length;
 
-        var owned =
-            getUserIcons();
+        Object.keys(ICONS).forEach(function(id){
+            var icon = ICONS[id];
+            var isOwned = owned.indexOf(id) !== -1;
+            var isActive = (userData.icon || 'default') === id;
 
-        document.getElementById(
-            'ownedCount'
-        ).textContent =
-            '📦 مالک: ' +
-            owned.length;
+            var div = document.createElement('div');
+            div.className = 'icon-item';
 
-
-        Object.keys(ICONS)
-        .forEach(function(id){
-
-            var icon =
-                ICONS[id];
-
-            var isOwned =
-                owned.indexOf(id) !== -1;
-
-            var isActive =
-                (
-                    userData.icon ||
-                    'default'
-                ) === id;
-
-
-            var div =
-                document.createElement(
-                    'div'
-                );
-
-            div.className =
-                'icon-item';
-
-
-            if(isOwned)
-                div.classList.add(
-                    'owned'
-                );
-
-            if(isActive)
-                div.classList.add(
-                    'active'
-                );
-
-            if(!isOwned)
-                div.classList.add(
-                    'locked'
-                );
-
+            if(isOwned) div.classList.add('owned');
+            if(isActive) div.classList.add('active');
+            if(!isOwned) div.classList.add('locked');
 
             var tag = '';
-
-
             if(isActive){
-
-                tag =
-                    '<span class="tag active-tag">فعال</span>';
-
+                tag = '<span class="tag active-tag">فعال</span>';
             }else if(isOwned){
-
-                tag =
-                    '<span class="tag owned-tag">مالک</span>';
-
+                tag = '<span class="tag owned-tag">مالک</span>';
             }else if(icon.price === 0){
-
-                tag =
-                    '<span class="tag free">رایگان</span>';
-
+                tag = '<span class="tag free">رایگان</span>';
             }
 
-
-            var priceText =
-                icon.price > 0
-                ?
-                '💰 ' +
-                icon.price.toLocaleString(
-                    'fa-IR'
-                )
-                :
-                'رایگان';
-
+            var priceText = icon.price > 0 ? '💰 ' + icon.price.toLocaleString('fa-IR') : 'رایگان';
 
             div.innerHTML =
-
                 tag +
+                '<span class="emoji">' + icon.emoji + '</span>' +
+                '<span class="name">' + icon.name + '</span>' +
+                '<span class="price">' + priceText + '</span>';
 
-                '<span class="emoji">' +
-                icon.emoji +
-                '</span>' +
+            div.addEventListener('click', function(){
+                handleIconClick(id);
+            });
 
-                '<span class="name">' +
-                icon.name +
-                '</span>' +
-
-                '<span class="price">' +
-                priceText +
-                '</span>';
-
-
-            div.addEventListener(
-                'click',
-                function(){
-
-                    handleIconClick(
-                        id
-                    );
-
-                }
-            );
-
-
-            grid.appendChild(
-                div
-            );
-
+            grid.appendChild(div);
         });
-
     }
 
-
-    /* =========================
-       Icon Click
-       ========================= */
-
     function handleIconClick(iconId){
-
         if(!userData){
-
-            alert(
-                'ابتدا وارد شوید'
-            );
-
+            alert('ابتدا وارد شوید');
             return;
-
         }
 
+        var icon = ICONS[iconId];
+        var owned = getUserIcons();
 
-        var icon =
-            ICONS[iconId];
-
-        var owned =
-            getUserIcons();
-
-
-        if(
-            owned.indexOf(iconId) !== -1
-        ){
-
-            userData.icon =
-                iconId;
-
-            var users =
-                getUsers();
-
-            users[currentUser] =
-                userData;
-
+        if(owned.indexOf(iconId) !== -1){
+            userData.icon = iconId;
+            var users = getUsers();
+            users[currentUser] = userData;
             saveUsers(users);
 
-
-            localStorage.setItem(
-                'starloom_current_user',
-                JSON.stringify({
-
-                    username:
-                        currentUser,
-
-                    coins:
-                        userData.coins,
-
-                    level:
-                        userData.level,
-
-                    levelProgress:
-                        userData.levelProgress ||
-                        0,
-
-                    icon:
-                        userData.icon,
-
-                    dice:
-                        userData.dice
-
-                })
-            );
-
+            localStorage.setItem('starloom_current_user', JSON.stringify({
+                username: currentUser,
+                coins: userData.coins,
+                level: userData.level,
+                levelProgress: userData.levelProgress || 0,
+                icon: userData.icon,
+                dice: userData.dice
+            }));
 
             updateUserUI();
             renderIconShop();
-
-
-            alert(
-                '✅ آیکون ' +
-                icon.emoji +
-                ' ' +
-                icon.name +
-                ' فعال شد!'
-            );
-
+            alert('✅ آیکون ' + icon.emoji + ' ' + icon.name + ' فعال شد!');
             return;
         }
 
-
-        if(
-            (userData.coins || 0)
-            <
-            icon.price
-        ){
-
-            alert(
-                '❌ سکه کافی نداری! نیاز به ' +
-                icon.price.toLocaleString(
-                    'fa-IR'
-                ) +
-                ' سکه داری.'
-            );
-
+        if((userData.coins || 0) < icon.price){
+            alert('❌ سکه کافی نداری! نیاز به ' + icon.price.toLocaleString('fa-IR') + ' سکه داری.');
             return;
-
         }
 
-
-        if(
-            !confirm(
-                '🛒 آیکون ' +
-                icon.emoji +
-                ' ' +
-                icon.name +
-                ' رو به قیمت ' +
-                icon.price.toLocaleString(
-                    'fa-IR'
-                ) +
-                ' سکه می‌خری؟'
-            )
-        ){
-
+        if(!confirm('🛒 آیکون ' + icon.emoji + ' ' + icon.name + ' رو به قیمت ' + icon.price.toLocaleString('fa-IR') + ' سکه می‌خری؟')){
             return;
-
         }
 
-
-        userData.coins -=
-            icon.price;
-
+        userData.coins -= icon.price;
 
         if(!userData.icons){
-
-            userData.icons = [
-                'default',
-                'smile',
-                'heart',
-                'star'
-            ];
-
+            userData.icons = ['default','smile','heart','star'];
         }
 
+        userData.icons.push(iconId);
+        userData.icon = iconId;
 
-        userData.icons.push(
-            iconId
-        );
-
-        userData.icon =
-            iconId;
-
-
-        var users =
-            getUsers();
-
-        users[currentUser] =
-            userData;
-
+        var users = getUsers();
+        users[currentUser] = userData;
         saveUsers(users);
 
-
-        localStorage.setItem(
-            'starloom_current_user',
-            JSON.stringify({
-
-                username:
-                    currentUser,
-
-                coins:
-                    userData.coins,
-
-                level:
-                    userData.level,
-
-                levelProgress:
-                    userData.levelProgress ||
-                    0,
-
-                icon:
-                    userData.icon,
-
-                dice:
-                    userData.dice
-
-            })
-        );
-
+        localStorage.setItem('starloom_current_user', JSON.stringify({
+            username: currentUser,
+            coins: userData.coins,
+            level: userData.level,
+            levelProgress: userData.levelProgress || 0,
+            icon: userData.icon,
+            dice: userData.dice
+        }));
 
         updateUserUI();
         renderIconShop();
-
-
-        alert(
-            '🎉 آیکون ' +
-            icon.emoji +
-            ' ' +
-            icon.name +
-            ' خریداری و فعال شد!'
-        );
-
+        alert('🎉 آیکون ' + icon.emoji + ' ' + icon.name + ' خریداری و فعال شد!');
     }
 
+    window.buyDice = function(count,price){
+        if(!userData){
+            alert('لطفاً وارد شوید');
+            return;
+        }
 
-    /* =========================
-       Buy Dice
-       ========================= */
+        if((userData.coins || 0) < price){
+            alert('❌ سکه کافی ندارید! نیاز به ' + price.toLocaleString('fa-IR') + ' سکه دارید.');
+            return;
+        }
 
-    window.buyDice =
-        function(count,price){
+        if(!confirm('🎲 آیا ' + count + ' تا تاس به قیمت ' + price.toLocaleString('fa-IR') + ' سکه می‌خواهید؟'))
+            return;
 
-            if(!userData){
+        userData.coins -= price;
+        userData.dice = (userData.dice || 0) + count;
 
-                alert(
-                    'لطفاً وارد شوید'
-                );
+        var users = getUsers();
+        users[currentUser] = userData;
+        saveUsers(users);
 
-                return;
+        localStorage.setItem('starloom_current_user', JSON.stringify({
+            username: currentUser,
+            coins: userData.coins,
+            level: userData.level,
+            levelProgress: userData.levelProgress || 0,
+            icon: userData.icon,
+            dice: userData.dice
+        }));
 
-            }
-
-
-            if(
-                (userData.coins || 0)
-                <
-                price
-            ){
-
-                alert(
-                    '❌ سکه کافی ندارید! نیاز به ' +
-                    price.toLocaleString(
-                        'fa-IR'
-                    ) +
-                    ' سکه دارید.'
-                );
-
-                return;
-
-            }
-
-
-            if(
-                !confirm(
-                    '🎲 آیا ' +
-                    count +
-                    ' تا تاس به قیمت ' +
-                    price.toLocaleString(
-                        'fa-IR'
-                    ) +
-                    ' سکه می‌خواهید؟'
-                )
-            )
-                return;
-
-
-            userData.coins -=
-                price;
-
-            userData.dice =
-                (userData.dice || 0)
-                +
-                count;
-
-
-            var users =
-                getUsers();
-
-            users[currentUser] =
-                userData;
-
-            saveUsers(users);
-
-
-            localStorage.setItem(
-                'starloom_current_user',
-                JSON.stringify({
-
-                    username:
-                        currentUser,
-
-                    coins:
-                        userData.coins,
-
-                    level:
-                        userData.level,
-
-                    levelProgress:
-                        userData.levelProgress ||
-                        0,
-
-                    icon:
-                        userData.icon,
-
-                    dice:
-                        userData.dice
-
-                })
-            );
-
-
-            updateUserUI();
-
-
-            alert(
-                '🎉 ' +
-                count +
-                ' تا تاس خریداری شد!'
-            );
-
-        };
-
-
-    /* =========================
-       Login
-       ========================= */
+        updateUserUI();
+        alert('🎉 ' + count + ' تا تاس خریداری شد!');
+    };
 
     function loginUser(username){
-
-        var users =
-            getUsers();
-
-        var user =
-            users[username];
-
+        var users = getUsers();
+        var user = users[username];
         if(!user) return;
 
+        currentUser = username;
+        userData = user;
 
-        currentUser =
-            username;
-
-        userData =
-            user;
-
-
-        if(
-            !userData.dice ||
-            userData.dice === 0
-        ){
-
-            userData.dice =
-                40;
-
-            users[currentUser].dice =
-                40;
-
+        if(!userData.dice || userData.dice === 0){
+            userData.dice = 40;
+            users[currentUser].dice = 40;
             saveUsers(users);
-
         }
-
 
         if(!userData.levelProgress){
-
-            userData.levelProgress =
-                0;
-
+            userData.levelProgress = 0;
         }
-
 
         if(!userData.icons){
-
-            userData.icons = [
-                'default',
-                'smile',
-                'heart',
-                'star'
-            ];
-
-            users[currentUser].icons =
-                userData.icons;
-
+            userData.icons = ['default','smile','heart','star'];
+            users[currentUser].icons = userData.icons;
             saveUsers(users);
-
         }
 
+        localStorage.setItem('starloom_current_user', JSON.stringify({
+            username: username,
+            coins: user.coins,
+            level: user.level,
+            levelProgress: userData.levelProgress || 0,
+            icon: user.icon,
+            dice: userData.dice
+        }));
 
-        localStorage.setItem(
-            'starloom_current_user',
-            JSON.stringify({
-
-                username:
-                    username,
-
-                coins:
-                    user.coins,
-
-                level:
-                    user.level,
-
-                levelProgress:
-                    userData.levelProgress ||
-                    0,
-
-                icon:
-                    user.icon,
-
-                dice:
-                    userData.dice
-
-            })
-        );
-
-
-        document
-            .getElementById(
-                'authSection'
-            )
-            .classList.add(
-                'hidden'
-            );
-
-
-        document
-            .getElementById(
-                'gameSection'
-            )
-            .classList.remove(
-                'hidden'
-            );
-
-
-        document
-            .getElementById(
-                'guestInfo'
-            )
-            .classList.add(
-                'hidden'
-            );
-
-
-        document
-            .getElementById(
-                'userProfile'
-            )
-            .classList.remove(
-                'hidden'
-            );
-
+        document.getElementById('authSection').classList.add('hidden');
+        document.getElementById('gameSection').classList.remove('hidden');
+        document.getElementById('guestInfo').classList.add('hidden');
+        document.getElementById('userProfile').classList.remove('hidden');
 
         updateUserUI();
         updateWelcomeMessage();
         renderIconShop();
-
     }
 
-
-    /* =========================
-       Welcome
-       ========================= */
-
     function updateWelcomeMessage(){
-
         if(!userData) return;
 
-
-        var hour =
-            new Date().getHours();
-
-        var g =
-            '👋 خوش آمدی';
-
+        var hour = new Date().getHours();
+        var g = '👋 خوش آمدی';
 
         if(hour < 12){
-
-            g =
-                '🌅 صبح بخیر';
-
+            g = '🌅 صبح بخیر';
         }else if(hour < 18){
-
-            g =
-                '☀️ ظهر بخیر';
-
+            g = '☀️ ظهر بخیر';
         }else{
-
-            g =
-                '🌙 شب بخیر';
-
+            g = '🌙 شب بخیر';
         }
-
 
         var newMsg = '';
 
-
         if(userData.isNew){
+            newMsg = ' 🎁 ۶۰۰ سکه + ۴۰ تاس هدیه!';
+            userData.isNew = false;
 
-            newMsg =
-                ' 🎁 ۶۰۰ سکه + ۴۰ تاس هدیه!';
-
-            userData.isNew =
-                false;
-
-
-            var users =
-                getUsers();
-
-
+            var users = getUsers();
             if(users[currentUser]){
-
-                users[currentUser].isNew =
-                    false;
-
+                users[currentUser].isNew = false;
                 saveUsers(users);
-
             }
-
         }
 
-
-        document.getElementById(
-            'welcomeMsg'
-        ).innerHTML =
-
-            g +
-            ' <strong>' +
-            userData.username +
-            '</strong>!' +
-            newMsg;
-
+        document.getElementById('welcomeMsg').innerHTML =
+            g + ' <strong>' + userData.username + '</strong>!' + newMsg;
     }
 
-
-    /* =========================
-       Auth Tabs
-       ========================= */
-
-    document
-        .querySelectorAll(
-            '.auth-tabs button'
-        )
-        .forEach(function(btn){
-
-            btn.addEventListener(
-                'click',
-                function(){
-
-                    document
-                        .querySelectorAll(
-                            '.auth-tabs button'
-                        )
-                        .forEach(
-                            function(b){
-
-                                b.classList.remove(
-                                    'active'
-                                );
-
-                            }
-                        );
-
-
-                    this.classList.add(
-                        'active'
-                    );
-
-
-                    var tab =
-                        this.dataset.tab;
-
-
-                    document
-                        .getElementById(
-                            'loginForm'
-                        )
-                        .classList.toggle(
-                            'hidden',
-                            tab !== 'login'
-                        );
-
-
-                    document
-                        .getElementById(
-                            'registerForm'
-                        )
-                        .classList.toggle(
-                            'hidden',
-                            tab !== 'register'
-                        );
-
-
-                    document
-                        .getElementById(
-                            'loginError'
-                        )
-                        .textContent =
-                        '';
-
-
-                    document
-                        .getElementById(
-                            'registerError'
-                        )
-                        .textContent =
-                        '';
-
-                }
-            );
-
+    document.querySelectorAll('.auth-tabs button').forEach(function(btn){
+        btn.addEventListener('click', function(){
+            document.querySelectorAll('.auth-tabs button').forEach(function(b){
+                b.classList.remove('active');
+            });
+            this.classList.add('active');
+            var tab = this.dataset.tab;
+            document.getElementById('loginForm').classList.toggle('hidden', tab !== 'login');
+            document.getElementById('registerForm').classList.toggle('hidden', tab !== 'register');
+            document.getElementById('loginError').textContent = '';
+            document.getElementById('registerError').textContent = '';
         });
+    });
+
+    document.getElementById('registerBtn').addEventListener('click', function(){
+        var username = document.getElementById('registerUsername').value.trim();
+        var password = document.getElementById('registerPassword').value.trim();
+        var errorEl = document.getElementById('registerError');
+
+        if(!username || username.length < 3){
+            errorEl.textContent = 'نام کاربری حداقل ۳ کاراکتر';
+            return;
+        }
+
+        if(!password || password.length < 4){
+            errorEl.textContent = 'رمز عبور حداقل ۴ کاراکتر';
+            return;
+        }
+
+        var users = getUsers();
+
+        if(users[username]){
+            errorEl.textContent = 'این نام کاربری قبلاً ثبت شده است';
+            return;
+        }
+
+        users[username] = {
+            username: username,
+            password: password,
+            coins: 600,
+            level: 0,
+            levelProgress: 0,
+            icon: 'default',
+            icons: ['default','smile','heart','star'],
+            dice: 40,
+            createdAt: new Date().toISOString(),
+            snakeWins: 0,
+            boomWins: 0,
+            raceWins: 0,
+            totalGames: 0,
+            isNew: true,
+            online: false
+        };
+
+        saveUsers(users);
+        errorEl.textContent = '';
+        document.getElementById('registerUsername').value = '';
+        document.getElementById('registerPassword').value = '';
+        loginUser(username);
+    });
+
+    document.getElementById('loginBtn').addEventListener('click', function(){
+        var username = document.getElementById('loginUsername').value.trim();
+        var password = document.getElementById('loginPassword').value.trim();
+        var errorEl = document.getElementById('loginError');
+
+        if(!username || !password){
+            errorEl.textContent = 'همه فیلدها را پر کنید';
+            return;
+        }
+
+        var users = getUsers();
+        var user = users[username];
+
+        if(!user){
+            errorEl.textContent = 'کاربری با این نام پیدا نشد';
+            return;
+        }
+
+        if(user.password !== password){
+            errorEl.textContent = 'رمز عبور اشتباه است';
+            return;
+        }
+
+        errorEl.textContent = '';
+        document.getElementById('loginUsername').value = '';
+        document.getElementById('loginPassword').value = '';
+        loginUser(username);
+    });
+
+    document.getElementById('loginPassword').addEventListener('keypress', function(e){
+        if(e.key === 'Enter')
+            document.getElementById('loginBtn').click();
+    });
+
+    document.getElementById('registerPassword').addEventListener('keypress', function(e){
+        if(e.key === 'Enter')
+            document.getElementById('registerBtn').click();
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', function(){
+        try{
+            localStorage.removeItem('starloom_current_user');
+        }catch(e){}
+
+        currentUser = null;
+        userData = null;
+        document.getElementById('authSection').classList.remove('hidden');
+        document.getElementById('gameSection').classList.add('hidden');
+        document.getElementById('guestInfo').classList.remove('hidden');
+        document.getElementById('userProfile').classList.add('hidden');
+        location.reload();
+    });
 
 
     /* =========================
-       Register
+       Follow System - Supabase
        ========================= */
 
-    document
-        .getElementById(
-            'registerBtn'
-        )
-        .addEventListener(
-            'click',
-            function(){
+    var SUPABASE_URL = 'https://txstexjrypiowndavrtr.supabase.co';
+    var SUPABASE_KEY = 'sb_publishable_6WqGjT0eriWi9JcJWRsVvg_J358WuUz';
+
+    var supabaseClient = null;
+    var supabaseReady = false;
+
+    try {
+        if (typeof supabase !== 'undefined') {
+            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            supabaseReady = true;
+            console.log('✅ Supabase initialized');
+        } else {
+            console.log('⚠️ Supabase SDK not loaded');
+        }
+    } catch(e) {
+        console.log('❌ Supabase init error:', e);
+    }
 
-                var username =
-                    document
-                        .getElementById(
-                            'registerUsername'
-                        )
-                        .value
-                        .trim();
-
-
-                var password =
-                    document
-                        .getElementById(
-                            'registerPassword'
-                        )
-                        .value
-                        .trim();
-
-
-                var errorEl =
-                    document
-                        .getElementById(
-                            'registerError'
-                        );
-
-
-                if(
-                    !username ||
-                    username.length < 3
-                ){
-
-                    errorEl.textContent =
-                        'نام کاربری حداقل ۳ کاراکتر';
-
-                    return;
-
-                }
-
-
-                if(
-                    !password ||
-                    password.length < 4
-                ){
-
-                    errorEl.textContent =
-                        'رمز عبور حداقل ۴ کاراکتر';
-
-                    return;
-
-                }
-
-
-                var users =
-                    getUsers();
-
-
-                if(users[username]){
-
-                    errorEl.textContent =
-                        'این نام کاربری قبلاً ثبت شده است';
-
-                    return;
-
-                }
-
-
-                users[username] = {
-
-                    username:
-                        username,
-
-                    password:
-                        password,
-
-                    coins:
-                        600,
-
-                    level:
-                        0,
-
-                    levelProgress:
-                        0,
-
-                    icon:
-                        'default',
-
-                    icons:[
-                        'default',
-                        'smile',
-                        'heart',
-                        'star'
-                    ],
-
-                    dice:
-                        40,
-
-                    createdAt:
-                        new Date()
-                            .toISOString(),
-
-                    snakeWins:
-                        0,
-
-                    boomWins:
-                        0,
-
-                    raceWins:
-                        0,
-
-                    totalGames:
-                        0,
-
-                    isNew:
-                        true,
-
-                    online:
-                        false
-
-                };
-
-
-                saveUsers(users);
-
-                errorEl.textContent =
-                    '';
-
-                document
-                    .getElementById(
-                        'registerUsername'
-                    )
-                    .value =
-                    '';
-
-                document
-                    .getElementById(
-                        'registerPassword'
-                    )
-                    .value =
-                    '';
-
-                loginUser(username);
-
-            }
-        );
-
-
-    /* =========================
-       Login Button
-       ========================= */
-
-    document
-        .getElementById(
-            'loginBtn'
-        )
-        .addEventListener(
-            'click',
-            function(){
-
-                var username =
-                    document
-                        .getElementById(
-                            'loginUsername'
-                        )
-                        .value
-                        .trim();
-
-
-                var password =
-                    document
-                        .getElementById(
-                            'loginPassword'
-                        )
-                        .value
-                        .trim();
-
-
-                var errorEl =
-                    document
-                        .getElementById(
-                            'loginError'
-                        );
-
-
-                if(
-                    !username ||
-                    !password
-                ){
-
-                    errorEl.textContent =
-                        'همه فیلدها را پر کنید';
-
-                    return;
-
-                }
-
-
-                var users =
-                    getUsers();
-
-
-                var user =
-                    users[username];
-
-
-                if(!user){
-
-                    errorEl.textContent =
-                        'کاربری با این نام پیدا نشد';
-
-                    return;
-
-                }
-
-
-                if(
-                    user.password !==
-                    password
-                ){
-
-                    errorEl.textContent =
-                        'رمز عبور اشتباه است';
-
-                    return;
-
-                }
-
-
-                errorEl.textContent =
-                    '';
-
-
-                document
-                    .getElementById(
-                        'loginUsername'
-                    )
-                    .value =
-                    '';
-
-                document
-                    .getElementById(
-                        'loginPassword'
-                    )
-                    .value =
-                    '';
-
-
-                loginUser(username);
-
-            }
-        );
-
-
-    /* =========================
-       Enter
-       ========================= */
-
-    document
-        .getElementById(
-            'loginPassword'
-        )
-        .addEventListener(
-            'keypress',
-            function(e){
-
-                if(e.key === 'Enter')
-                    document
-                        .getElementById(
-                            'loginBtn'
-                        )
-                        .click();
-
-            }
-        );
-
-
-    document
-        .getElementById(
-            'registerPassword'
-        )
-        .addEventListener(
-            'keypress',
-            function(e){
-
-                if(e.key === 'Enter')
-                    document
-                        .getElementById(
-                            'registerBtn'
-                        )
-                        .click();
-
-            }
-        );
-
-
-    /* =========================
-       Logout
-       ========================= */
-
-    document
-        .getElementById(
-            'logoutBtn'
-        )
-        .addEventListener(
-            'click',
-            function(){
-
-                try{
-
-                    localStorage.removeItem(
-                        'starloom_current_user'
-                    );
-
-                }catch(e){}
-
-
-                currentUser =
-                    null;
-
-                userData =
-                    null;
-
-
-                document
-                    .getElementById(
-                        'authSection'
-                    )
-                    .classList.remove(
-                        'hidden'
-                    );
-
-
-                document
-                    .getElementById(
-                        'gameSection'
-                    )
-                    .classList.add(
-                        'hidden'
-                    );
-
-
-                document
-                    .getElementById(
-                        'guestInfo'
-                    )
-                    .classList.remove(
-                        'hidden'
-                    );
-
-
-                document
-                    .getElementById(
-                        'userProfile'
-                    )
-                    .classList.add(
-                        'hidden'
-                    );
-
-
-                location.reload();
-
-            }
-        );
-
-
-    /* =========================
-       Follow System
-       ========================= */
-
-    var FOLLOW_KEY = 'starloom_followers';
     var MY_FOLLOW_KEY = 'starloom_my_follow';
+    var DEVICE_ID_KEY = 'starloom_device_id';
+
+    function getDeviceId() {
+        try {
+            var id = localStorage.getItem(DEVICE_ID_KEY);
+            if (!id) {
+                id = 'user_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+                localStorage.setItem(DEVICE_ID_KEY, id);
+            }
+            return id;
+        } catch(e) {
+            return 'user_anon_' + Date.now();
+        }
+    }
+
+    var myDeviceId = getDeviceId();
 
     function isFollowing() {
         try {
-            var myFollow = localStorage.getItem(MY_FOLLOW_KEY);
-            return myFollow === 'true';
+            return localStorage.getItem(MY_FOLLOW_KEY) === 'true';
         } catch(e) { return false; }
-    }
-
-    function setFollowing(value) {
-        try {
-            localStorage.setItem(MY_FOLLOW_KEY, value ? 'true' : 'false');
-
-            var followers = parseInt(localStorage.getItem(FOLLOW_KEY) || '0');
-            if (value) {
-                followers++;
-            } else {
-                followers = Math.max(0, followers - 1);
-            }
-            localStorage.setItem(FOLLOW_KEY, followers.toString());
-        } catch(e) {}
-    }
-
-    function getFollowersCount() {
-        try {
-            return parseInt(localStorage.getItem(FOLLOW_KEY) || '0');
-        } catch(e) { return 0; }
     }
 
     function updateFollowButton() {
         var btn = document.getElementById('followBtn');
         var text = document.getElementById('followText');
         var icon = document.querySelector('.follow-icon');
-        var count = document.getElementById('followCount');
 
         if (!btn || !text) return;
-
-        // تعداد فالوورها
-        var followers = getFollowersCount();
-        if (count) {
-            count.textContent = followers;
-        }
 
         if (isFollowing()) {
             btn.classList.add('following');
@@ -3638,27 +1864,99 @@ var ICONS = {
         }, 2500);
     }
 
-    function toggleFollow() {
+    async function refreshFollowersCount() {
+        if (!supabaseReady) {
+            var countEl = document.getElementById('followCount');
+            if (countEl) countEl.textContent = '?';
+            return;
+        }
+
+        try {
+            var result = await supabaseClient
+                .from('followers')
+                .select('*', { count: 'exact', head: true });
+
+            if (!result.error) {
+                var countEl = document.getElementById('followCount');
+                if (countEl) countEl.textContent = result.count || 0;
+            }
+
+            var myResult = await supabaseClient
+                .from('followers')
+                .select('device_id')
+                .eq('device_id', myDeviceId)
+                .maybeSingle();
+
+            if (myResult.data) {
+                localStorage.setItem(MY_FOLLOW_KEY, 'true');
+            } else {
+                localStorage.setItem(MY_FOLLOW_KEY, 'false');
+            }
+            updateFollowButton();
+
+        } catch(e) {
+            console.error('Supabase error:', e);
+        }
+    }
+
+    var followInterval = null;
+
+    function startFollowListener() {
+        if (!supabaseReady) return;
+        refreshFollowersCount();
+        if (followInterval) clearInterval(followInterval);
+        followInterval = setInterval(refreshFollowersCount, 5000);
+    }
+
+    async function toggleFollow() {
+        if (!supabaseReady) {
+            showFollowToast('⚠️ اتصال به سرور برقرار نیست', true);
+            return;
+        }
+
         var following = isFollowing();
 
         if (following) {
             if (!confirm('❓ می‌خوای StarLoom رو آنفالو کنی؟')) {
                 return;
             }
-            setFollowing(false);
-            updateFollowButton();
-            showFollowToast('💔 StarLoom رو آنفالو کردی', true);
+
+            try {
+                await supabaseClient
+                    .from('followers')
+                    .delete()
+                    .eq('device_id', myDeviceId);
+
+                localStorage.setItem(MY_FOLLOW_KEY, 'false');
+                showFollowToast('💔 StarLoom رو آنفالو کردی', true);
+
+                setTimeout(refreshFollowersCount, 500);
+            } catch(e) {
+                console.error(e);
+            }
         } else {
-            setFollowing(true);
-            updateFollowButton();
-            showFollowToast('🎉 StarLoom رو دنبال می‌کنی!', false);
+            try {
+                await supabaseClient
+                    .from('followers')
+                    .insert({ device_id: myDeviceId });
+
+                localStorage.setItem(MY_FOLLOW_KEY, 'true');
+                showFollowToast('🎉 StarLoom رو دنبال می‌کنی!', false);
+
+                setTimeout(refreshFollowersCount, 500);
+            } catch(e) {
+                console.error(e);
+            }
         }
+
+        updateFollowButton();
     }
 
     var followBtn = document.getElementById('followBtn');
     if (followBtn) {
         followBtn.addEventListener('click', toggleFollow);
         updateFollowButton();
+        startFollowListener();
     }
 
 
@@ -3667,143 +1965,52 @@ var ICONS = {
        ========================= */
 
     (function(){
-
         var saved = null;
 
-
         try{
-
-            saved =
-                localStorage.getItem(
-                    'starloom_current_user'
-                );
-
+            saved = localStorage.getItem('starloom_current_user');
         }catch(e){}
 
-
         if(saved){
-
             try{
-
-                var data =
-                    JSON.parse(
-                        saved
-                    );
-
-                var users =
-                    getUsers();
-
+                var data = JSON.parse(saved);
+                var users = getUsers();
 
                 if(users[data.username]){
+                    userData = users[data.username];
+                    currentUser = data.username;
 
-                    userData =
-                        users[data.username];
-
-                    currentUser =
-                        data.username;
-
-
-                    if(
-                        !userData.dice ||
-                        userData.dice === 0
-                    ){
-
-                        userData.dice =
-                            40;
-
-                        users[currentUser].dice =
-                            40;
-
+                    if(!userData.dice || userData.dice === 0){
+                        userData.dice = 40;
+                        users[currentUser].dice = 40;
                         saveUsers(users);
-
                     }
 
-
-                    if(
-                        !userData.levelProgress
-                    ){
-
-                        userData.levelProgress =
-                            0;
-
+                    if(!userData.levelProgress){
+                        userData.levelProgress = 0;
                     }
 
-
-                    if(
-                        !userData.icons
-                    ){
-
-                        userData.icons = [
-                            'default',
-                            'smile',
-                            'heart',
-                            'star'
-                        ];
-
-                        users[currentUser].icons =
-                            userData.icons;
-
+                    if(!userData.icons){
+                        userData.icons = ['default','smile','heart','star'];
+                        users[currentUser].icons = userData.icons;
                         saveUsers(users);
-
                     }
 
-
-                    document
-                        .getElementById(
-                            'authSection'
-                        )
-                        .classList.add(
-                            'hidden'
-                        );
-
-
-                    document
-                        .getElementById(
-                            'gameSection'
-                        )
-                        .classList.remove(
-                            'hidden'
-                        );
-
-
-                    document
-                        .getElementById(
-                            'guestInfo'
-                        )
-                        .classList.add(
-                            'hidden'
-                        );
-
-
-                    document
-                        .getElementById(
-                            'userProfile'
-                        )
-                        .classList.remove(
-                            'hidden'
-                        );
-
+                    document.getElementById('authSection').classList.add('hidden');
+                    document.getElementById('gameSection').classList.remove('hidden');
+                    document.getElementById('guestInfo').classList.add('hidden');
+                    document.getElementById('userProfile').classList.remove('hidden');
 
                     updateUserUI();
                     updateWelcomeMessage();
                     renderIconShop();
-
                 }
-
             }catch(e){
-
                 try{
-
-                    localStorage.removeItem(
-                        'starloom_current_user'
-                    );
-
+                    localStorage.removeItem('starloom_current_user');
                 }catch(ex){}
-
             }
-
         }
-
     })();
 
 
@@ -3811,48 +2018,17 @@ var ICONS = {
        Multi Tab Sync
        ========================= */
 
-    window.addEventListener(
-        'storage',
-        function(e){
-
-            if(
-                e.key ===
-                    'starloom_users'
-                ||
-                e.key ===
-                    'starloom_current_user'
-            ){
-
-                refreshCoins();
-
-            }
-
-            if(e.key === FOLLOW_KEY || e.key === MY_FOLLOW_KEY){
-                updateFollowButton();
-            }
-
+    window.addEventListener('storage', function(e){
+        if(e.key === 'starloom_users' || e.key === 'starloom_current_user'){
+            refreshCoins();
         }
-    );
+    });
 
-
-    /* =========================
-       Every 2 seconds
-       ========================= */
-
-    setInterval(
-        function(){
-
-            if(currentUser){
-
-                refreshCoins();
-
-            }
-
-            updateFollowButton();
-
-        },
-        2000
-    );
+    setInterval(function(){
+        if(currentUser){
+            refreshCoins();
+        }
+    }, 2000);
 
 
     /* =========================
@@ -3861,9 +2037,7 @@ var ICONS = {
 
     loadTheme();
 
-    console.log(
-        '🌌 StarLoom_Game v2.1 - StarLoom Edition آماده!'
-    );
+    console.log('🌌 StarLoom_Game v2.1 - Supabase Edition آماده!');
 
 })();
 
