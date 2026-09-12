@@ -630,7 +630,8 @@ body::after{
 
 /* ============ Panels ============ */
 .icon-shop,
-.dice-shop{
+.dice-shop,
+.guild-panel{
     position:relative;
     overflow:hidden;
     margin-top:25px;
@@ -650,7 +651,8 @@ body::after{
 }
 
 .icon-shop::before,
-.dice-shop::before{
+.dice-shop::before,
+.guild-panel::before{
     content:"";
     position:absolute;
     top:0;
@@ -810,6 +812,501 @@ body::after{
 }
 
 .dice-options .price{color:var(--gold);font-size:11px;}
+
+/* ============ Guild ============ */
+.guild-panel h4{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    flex-wrap:wrap;
+    color:#dfeaff;
+    margin-bottom:16px;
+}
+
+.guild-panel h4 .guild-sub{
+    font-size:11px;
+    color:#93a2c7;
+    padding:6px 13px;
+    border-radius:20px;
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(120,150,255,.15);
+}
+
+.guild-auth-note{
+    color:#7a8bb0;
+    font-size:.85rem;
+    padding:14px;
+    text-align:center;
+    border:1px dashed rgba(120,150,255,.2);
+    border-radius:14px;
+    background:rgba(255,255,255,.02);
+}
+
+.guild-tabs{
+    display:flex;
+    gap:8px;
+    margin-bottom:16px;
+    flex-wrap:wrap;
+}
+
+.guild-tabs button{
+    flex:1;
+    min-width:130px;
+    padding:12px;
+    border-radius:13px;
+    border:1px solid var(--border);
+    background:rgba(255,255,255,.035);
+    color:#8592b6;
+    cursor:pointer;
+    transition:.3s;
+    font-family:inherit;
+    font-weight:700;
+}
+
+.guild-tabs button.active{
+    color:#fff;
+    background:
+        linear-gradient(
+            135deg,
+            rgba(32,220,255,.14),
+            rgba(166,108,255,.14)
+        );
+    border-color:rgba(80,200,255,.35);
+    box-shadow:
+        0 0 25px rgba(80,150,255,.08);
+}
+
+.guild-form{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    max-width:520px;
+}
+
+.guild-form input{
+    width:100%;
+    padding:14px 16px;
+    border-radius:13px;
+    border:1px solid rgba(120,150,255,.16);
+    outline:none;
+    background:rgba(0,0,0,.28);
+    color:#fff;
+    font-size:14px;
+    transition:.3s;
+    font-family:inherit;
+}
+
+.guild-form input:focus{
+    border-color:var(--cyan);
+    box-shadow:
+        0 0 0 3px rgba(32,220,255,.07),
+        0 0 25px rgba(32,220,255,.08);
+}
+
+.guild-form button{
+    padding:14px;
+    border:0;
+    border-radius:13px;
+    background:
+        linear-gradient(
+            90deg,
+            #20cfff,
+            #6878ff,
+            #a66cff
+        );
+    color:#fff;
+    font-weight:800;
+    cursor:pointer;
+    box-shadow:
+        0 8px 30px rgba(70,100,255,.2);
+    transition:.3s;
+    font-family:inherit;
+}
+
+.guild-form button:hover{
+    transform:translateY(-2px);
+    filter:brightness(1.12);
+}
+
+.guild-form button:disabled{
+    opacity:.55;
+    cursor:not-allowed;
+    transform:none;
+    filter:none;
+}
+
+.guild-error{
+    min-height:18px;
+    color:#ff7289;
+    font-size:12px;
+    word-break:break-word;
+}
+
+.guild-info{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.guild-info-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    flex-wrap:wrap;
+    padding:14px 16px;
+    border-radius:16px;
+    background:
+        linear-gradient(
+            135deg,
+            rgba(32,220,255,.08),
+            rgba(166,108,255,.08)
+        );
+    border:1px solid rgba(80,190,255,.2);
+}
+
+.guild-info-header .g-name{
+    font-weight:900;
+    color:#fff;
+    font-size:16px;
+}
+
+.guild-info-header .g-code{
+    font-size:12px;
+    color:#9defff;
+    letter-spacing:1px;
+    padding:6px 12px;
+    border-radius:10px;
+    background:rgba(0,0,0,.3);
+    border:1px solid rgba(32,220,255,.25);
+    cursor:pointer;
+}
+
+.guild-members{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+}
+
+.guild-members .m-chip{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    padding:7px 12px;
+    border-radius:12px;
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(120,150,255,.15);
+    font-size:12px;
+    color:#b9c5e0;
+}
+
+.guild-members .m-chip.leader{
+    border-color:rgba(241,199,91,.45);
+    color:#f1c75b;
+}
+
+.guild-chat{
+    margin-top:14px;
+    border-radius:18px;
+    border:1px solid rgba(120,150,255,.15);
+    background:rgba(0,0,0,.22);
+    overflow:hidden;
+}
+
+.guild-chat-title{
+    padding:12px 16px;
+    font-size:13px;
+    font-weight:800;
+    color:#dfeaff;
+    border-bottom:1px solid rgba(120,150,255,.12);
+    background:rgba(255,255,255,.025);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+}
+
+.guild-chat-title .live-dot{
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:var(--green);
+    box-shadow:0 0 10px var(--green);
+    animation:pulseDot 1.6s ease-in-out infinite;
+}
+
+@keyframes pulseDot{
+    0%,100%{opacity:1;transform:scale(1);}
+    50%{opacity:.4;transform:scale(.8);}
+}
+
+.guild-chat-messages{
+    height:300px;
+    overflow-y:auto;
+    padding:14px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    scroll-behavior:smooth;
+}
+
+.guild-chat-messages::-webkit-scrollbar{width:8px;}
+.guild-chat-messages::-webkit-scrollbar-track{background:rgba(255,255,255,.03);}
+.guild-chat-messages::-webkit-scrollbar-thumb{
+    background:rgba(120,150,255,.25);
+    border-radius:10px;
+}
+
+.chat-msg{
+    display:flex;
+    gap:9px;
+    align-items:flex-start;
+    max-width:85%;
+    align-self:flex-start;
+}
+
+.chat-msg.mine{
+    align-self:flex-end;
+    flex-direction:row-reverse;
+}
+
+.chat-msg .c-avatar{
+    width:34px;
+    height:34px;
+    min-width:34px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:11px;
+    background:
+        radial-gradient(
+            circle at 30% 20%,
+            rgba(255,255,255,.16),
+            rgba(100,80,255,.13)
+        );
+    border:1px solid rgba(120,150,255,.2);
+    font-size:18px;
+}
+
+.chat-msg .c-body{
+    padding:9px 13px;
+    border-radius:14px;
+    background:rgba(255,255,255,.045);
+    border:1px solid rgba(120,150,255,.12);
+}
+
+.chat-msg.mine .c-body{
+    background:
+        linear-gradient(
+            135deg,
+            rgba(32,220,255,.13),
+            rgba(166,108,255,.13)
+        );
+    border-color:rgba(80,200,255,.25);
+}
+
+.chat-msg .c-name{
+    font-size:10px;
+    font-weight:800;
+    color:#9defff;
+    margin-bottom:4px;
+}
+
+.chat-msg.mine .c-name{color:#f1c75b;}
+
+.chat-msg .c-text{
+    font-size:13px;
+    color:#e6eeff;
+    line-height:1.7;
+    word-break:break-word;
+    white-space:pre-wrap;
+}
+
+.chat-msg .c-time{
+    font-size:9px;
+    color:#6a7796;
+    margin-top:4px;
+}
+
+.guild-chat-empty{
+    margin:auto;
+    color:#6a7796;
+    font-size:12px;
+    text-align:center;
+    padding:20px;
+}
+
+.guild-chat-input{
+    display:flex;
+    gap:9px;
+    padding:12px;
+    border-top:1px solid rgba(120,150,255,.12);
+    background:rgba(255,255,255,.02);
+}
+
+.guild-chat-input input{
+    flex:1;
+    padding:12px 15px;
+    border-radius:12px;
+    border:1px solid rgba(120,150,255,.16);
+    outline:none;
+    background:rgba(0,0,0,.28);
+    color:#fff;
+    font-size:13px;
+    font-family:inherit;
+}
+
+.guild-chat-input input:focus{
+    border-color:var(--cyan);
+    box-shadow:
+        0 0 0 3px rgba(32,220,255,.07);
+}
+
+.guild-chat-input button{
+    padding:12px 20px;
+    border:0;
+    border-radius:12px;
+    background:
+        linear-gradient(
+            90deg,
+            #20cfff,
+            #6878ff,
+            #a66cff
+        );
+    color:#fff;
+    font-weight:800;
+    cursor:pointer;
+    transition:.3s;
+    font-family:inherit;
+}
+
+.guild-chat-input button:hover{
+    filter:brightness(1.12);
+    transform:translateY(-1px);
+}
+
+.guild-leave-btn{
+    align-self:flex-start;
+    padding:10px 16px;
+    border-radius:12px;
+    border:1px solid rgba(255,80,110,.3);
+    background:rgba(255,80,110,.08);
+    color:#ff8095;
+    cursor:pointer;
+    transition:.3s;
+    font-family:inherit;
+    font-weight:700;
+    font-size:12px;
+}
+
+.guild-leave-btn:hover{
+    background:rgba(255,80,110,.18);
+    transform:translateY(-2px);
+}
+
+/* ============ Guild List ============ */
+.guild-list{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    max-height:360px;
+    overflow-y:auto;
+    padding:4px;
+}
+
+.guild-list::-webkit-scrollbar{width:7px;}
+.guild-list::-webkit-scrollbar-thumb{
+    background:rgba(120,150,255,.25);
+    border-radius:10px;
+}
+
+.guild-list-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    padding:13px 16px;
+    border-radius:14px;
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,.045),
+            rgba(255,255,255,.015)
+        );
+    border:1px solid rgba(120,150,255,.15);
+    transition:.3s;
+    cursor:pointer;
+}
+
+.guild-list-item:hover{
+    transform:translateX(-4px);
+    border-color:rgba(32,220,255,.45);
+    box-shadow:0 8px 25px rgba(32,220,255,.08);
+}
+
+.guild-list-item .gl-info{
+    display:flex;
+    flex-direction:column;
+    gap:3px;
+    min-width:0;
+    flex:1;
+}
+
+.guild-list-item .gl-name{
+    font-weight:800;
+    color:#fff;
+    font-size:14px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.guild-list-item .gl-meta{
+    font-size:10px;
+    color:#8592b6;
+}
+
+.guild-list-item .gl-code{
+    font-family:monospace;
+    font-size:11px;
+    color:#f1c75b;
+    padding:3px 8px;
+    border-radius:8px;
+    background:rgba(0,0,0,.3);
+    border:1px solid rgba(241,199,91,.2);
+    letter-spacing:1px;
+}
+
+.guild-list-item .gl-join{
+    padding:8px 14px;
+    border-radius:10px;
+    border:1px solid rgba(32,220,255,.3);
+    background:rgba(32,220,255,.08);
+    color:#9defff;
+    font-weight:700;
+    font-size:11px;
+    white-space:nowrap;
+    transition:.3s;
+}
+
+.guild-list-item:hover .gl-join{
+    background:rgba(32,220,255,.2);
+    border-color:rgba(32,220,255,.6);
+}
+
+.guild-empty{
+    text-align:center;
+    color:#6a7796;
+    font-size:13px;
+    padding:30px 10px;
+}
+
+body.theme-light .guild-list-item{background:rgba(0,0,0,.03);}
+body.theme-light .guild-list-item .gl-name{color:#1a2540;}
+body.theme-light .guild-chat{background:rgba(255,255,255,.6);}
+body.theme-light .chat-msg .c-text{color:#1d2a47;}
+body.theme-light .chat-msg .c-body{background:rgba(0,0,0,.04);}
 
 /* ============ Games ============ */
 .games-grid{
@@ -1027,6 +1524,7 @@ body.theme-light .header,
 body.theme-light .auth-section,
 body.theme-light .icon-shop,
 body.theme-light .dice-shop,
+body.theme-light .guild-panel,
 body.theme-light .game-card{
     background:rgba(255,255,255,.72);
 }
@@ -1034,6 +1532,8 @@ body.theme-light .game-card{
 body.theme-light .game-title,
 body.theme-light .welcome-msg strong,
 body.theme-light .auth-section h2{color:#18233d;}
+
+body.theme-light .guild-chat-messages::-webkit-scrollbar-thumb{background:rgba(80,110,200,.3);}
 
 body.theme-gold{
     --cyan:#f1c40f;
@@ -1089,7 +1589,8 @@ body.theme-green{
     .user-profile{width:100%;justify-content:center;}
     .auth-section{margin:35px auto;padding:22px 17px;}
     .icon-shop,
-    .dice-shop{padding:17px;border-radius:20px;}
+    .dice-shop,
+    .guild-panel{padding:17px;border-radius:20px;}
     .icon-grid{
         grid-template-columns:
             repeat(
@@ -1100,6 +1601,8 @@ body.theme-green{
     .games-grid{grid-template-columns:1fr;}
     .game-card{min-height:290px;}
     .welcome-msg{padding:20px;}
+    .guild-chat-messages{height:240px;}
+    .chat-msg{max-width:92%;}
 }
 
 @media(prefers-reduced-motion:reduce){
@@ -1218,6 +1721,81 @@ body.theme-green{
             <button onclick="buyDice(43,600)"><div class="count">🎲 43 تا</div><div class="price">💰 600 سکه</div></button>
             <button onclick="buyDice(80,1000)"><div class="count">🎲 80 تا</div><div class="price">💰 1000 سکه</div></button>
             <button onclick="buyDice(150,1800)"><div class="count">🎲 150 تا</div><div class="price">💰 1800 سکه</div></button>
+        </div>
+    </div>
+
+    <div class="guild-panel" id="guildPanel">
+        <h4>
+            <span>🏰 اتحاد StarLoom</span>
+            <span class="guild-sub" id="guildStatusBadge">— بدون اتحاد</span>
+        </h4>
+
+        <div id="guildAuthNote" class="guild-auth-note">
+            🔒 برای ساخت یا ورود به اتحاد ابتدا وارد حساب خود شوید
+        </div>
+
+        <div id="guildContent" class="hidden">
+
+            <div id="guildNotJoined">
+
+                <div class="guild-tabs">
+                    <button class="active" data-gtab="create">🏗️ ساخت اتحاد (۲۰۰۰ سکه)</button>
+                    <button data-gtab="join">🚪 ورود با کد/اسم</button>
+                    <button data-gtab="list">🌐 همه اتحادها</button>
+                </div>
+
+                <div class="guild-form" id="guildCreateForm">
+                    <input type="text" id="guildCreateName" placeholder="اسم اتحاد (حداقل 3 کاراکتر)" maxlength="30">
+                    <button id="guildCreateBtn">🏗️ ساخت اتحاد (💰 2000 سکه)</button>
+                    <div class="guild-error" id="guildCreateError"></div>
+                </div>
+
+                <div class="guild-form hidden" id="guildJoinForm">
+                    <input type="text" id="guildJoinInput" placeholder="اسم اتحاد یا کد اتحاد (مثلاً AB12CD)">
+                    <button id="guildJoinBtn">🚪 ورود به اتحاد</button>
+                    <div class="guild-error" id="guildJoinError"></div>
+                </div>
+
+                <div class="guild-form hidden" id="guildListForm">
+                    <button id="guildRefreshListBtn" style="background:linear-gradient(90deg,#6878ff,#a66cff);">🔄 بروزرسانی لیست</button>
+                    <div class="guild-list" id="guildList">
+                        <div class="guild-empty">⏳ در حال بارگذاری...</div>
+                    </div>
+                    <div class="guild-error" id="guildListError"></div>
+                </div>
+
+            </div>
+
+            <div id="guildJoined" class="hidden">
+                <div class="guild-info">
+                    <div class="guild-info-header">
+                        <div>
+                            <div class="g-name" id="guildNameDisplay">—</div>
+                            <div style="font-size:11px;color:#93a2c7;margin-top:4px;">
+                                👥 اعضا: <span id="guildMemberCount">0</span>
+                            </div>
+                        </div>
+                        <div class="g-code" id="guildCodeDisplay" title="برای کپی کلیک کنید">کد: —</div>
+                    </div>
+
+                    <div class="guild-members" id="guildMembersList"></div>
+
+                    <button class="guild-leave-btn" id="guildLeaveBtn">🚪 خروج از اتحاد</button>
+
+                    <div class="guild-chat">
+                        <div class="guild-chat-title">
+                            <span>💬 چت اتحاد</span>
+                            <span class="live-dot" title="زنده"></span>
+                        </div>
+                        <div class="guild-chat-messages" id="guildChatMessages"></div>
+                        <div class="guild-chat-input">
+                            <input type="text" id="guildChatInput" placeholder="پیامت رو بنویس..." maxlength="200">
+                            <button id="guildChatSend">📤 ارسال</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -1631,6 +2209,10 @@ var ICONS = {
         updateUserUI();
         updateWelcomeMessage();
         renderIconShop();
+
+        if(typeof window.initGuildAfterLogin === 'function'){
+            window.initGuildAfterLogin();
+        }
     }
 
     function updateWelcomeMessage(){
@@ -1768,6 +2350,10 @@ var ICONS = {
         try{
             localStorage.removeItem('starloom_current_user');
         }catch(e){}
+
+        if(typeof window.cleanupGuild === 'function'){
+            window.cleanupGuild();
+        }
 
         currentUser = null;
         userData = null;
@@ -1958,6 +2544,742 @@ var ICONS = {
         updateFollowButton();
         startFollowListener();
     }
+
+
+    /* =========================
+       GUILD SYSTEM - Supabase
+       ========================= */
+
+    var currentGuild = null;
+    var guildChannel = null;
+    var guildMessagesCache = [];
+    var guildListCache = [];
+
+    var GUILD_CREATE_COST = 2000;
+
+    function guildStorageKey(){
+        return 'starloom_guild_' + (currentUser || 'anon');
+    }
+
+    function saveGuildLocal(){
+        try{
+            if(currentGuild){
+                localStorage.setItem(guildStorageKey(), JSON.stringify({
+                    id: currentGuild.id,
+                    name: currentGuild.name,
+                    code: currentGuild.code
+                }));
+            }else{
+                localStorage.removeItem(guildStorageKey());
+            }
+        }catch(e){}
+    }
+
+    function loadGuildLocal(){
+        try{
+            var raw = localStorage.getItem(guildStorageKey());
+            if(raw) return JSON.parse(raw);
+        }catch(e){}
+        return null;
+    }
+
+    function genGuildCode(){
+        var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+        var code = '';
+        for(var i=0; i<6; i++){
+            code += chars.charAt(Math.floor(Math.random()*chars.length));
+        }
+        return code;
+    }
+
+    function guildBadgeUpdate(){
+        var badge = document.getElementById('guildStatusBadge');
+        if(!badge) return;
+        if(currentGuild){
+            badge.textContent = '🏰 ' + currentGuild.name;
+        }else{
+            badge.textContent = '— بدون اتحاد';
+        }
+    }
+
+    function showGuildNotJoined(){
+        document.getElementById('guildNotJoined').classList.remove('hidden');
+        document.getElementById('guildJoined').classList.add('hidden');
+    }
+
+    function showGuildJoined(){
+        document.getElementById('guildNotJoined').classList.add('hidden');
+        document.getElementById('guildJoined').classList.remove('hidden');
+    }
+
+    function renderGuildInfo(){
+        if(!currentGuild) return;
+
+        document.getElementById('guildNameDisplay').textContent =
+            '🏰 ' + currentGuild.name;
+
+        document.getElementById('guildCodeDisplay').textContent =
+            'کد: ' + currentGuild.code;
+
+        var members = currentGuild.members || [];
+        document.getElementById('guildMemberCount').textContent = members.length;
+
+        var list = document.getElementById('guildMembersList');
+        list.innerHTML = '';
+
+        members.forEach(function(m){
+            var chip = document.createElement('span');
+            chip.className = 'm-chip';
+            if(m.id === currentGuild.leader_id){
+                chip.classList.add('leader');
+            }
+            var emoji = '😊';
+            try{ emoji = getIconEmoji(m.icon || 'default'); }catch(e){}
+            chip.innerHTML = '<span>' + emoji + '</span><span>' + m.name + '</span>' +
+                (m.id === currentGuild.leader_id ? '<span>👑</span>' : '');
+            list.appendChild(chip);
+        });
+    }
+
+    function renderGuildChat(){
+        var box = document.getElementById('guildChatMessages');
+        if(!box) return;
+
+        box.innerHTML = '';
+
+        if(guildMessagesCache.length === 0){
+            var empty = document.createElement('div');
+            empty.className = 'guild-chat-empty';
+            empty.textContent = '💬 هنوز پیامی نیست. اولین نفر باش!';
+            box.appendChild(empty);
+            return;
+        }
+
+        guildMessagesCache.forEach(function(msg){
+            var isMine = msg.sender_id === currentUser;
+
+            var wrap = document.createElement('div');
+            wrap.className = 'chat-msg' + (isMine ? ' mine' : '');
+
+            var avatar = document.createElement('div');
+            avatar.className = 'c-avatar';
+            avatar.textContent = getIconEmoji(msg.sender_icon || 'default');
+
+            var body = document.createElement('div');
+            body.className = 'c-body';
+
+            var nameEl = document.createElement('div');
+            nameEl.className = 'c-name';
+            nameEl.textContent = msg.sender_name;
+
+            var textEl = document.createElement('div');
+            textEl.className = 'c-text';
+            textEl.textContent = msg.text;
+
+            var timeEl = document.createElement('div');
+            timeEl.className = 'c-time';
+            try{
+                var d = new Date(msg.created_at);
+                timeEl.textContent = d.toLocaleTimeString('fa-IR', {hour:'2-digit', minute:'2-digit'});
+            }catch(e){
+                timeEl.textContent = '';
+            }
+
+            body.appendChild(nameEl);
+            body.appendChild(textEl);
+            body.appendChild(timeEl);
+
+            wrap.appendChild(avatar);
+            wrap.appendChild(body);
+            box.appendChild(wrap);
+        });
+
+        box.scrollTop = box.scrollHeight;
+    }
+
+    async function loadGuildMessages(){
+        if(!currentGuild || !supabaseReady) return;
+
+        try{
+            var res = await supabaseClient
+                .from('guild_messages')
+                .select('*')
+                .eq('guild_code', currentGuild.code)
+                .order('created_at', {ascending:true})
+                .limit(200);
+
+            if(res.error){
+                console.error('load msgs error:', res.error);
+                return;
+            }
+            guildMessagesCache = res.data || [];
+            renderGuildChat();
+        }catch(e){ console.error(e); }
+    }
+
+    function subscribeGuildMessages(){
+        if(!currentGuild || !supabaseReady) return;
+
+        if(guildChannel){
+            try{ supabaseClient.removeChannel(guildChannel); }catch(e){}
+            guildChannel = null;
+        }
+
+        guildChannel = supabaseClient
+            .channel('guild_chat_' + currentGuild.code)
+            .on(
+                'postgres_changes',
+                {
+                    event: 'INSERT',
+                    schema: 'public',
+                    table: 'guild_messages',
+                    filter: 'guild_code=eq.' + currentGuild.code
+                },
+                function(payload){
+                    if(!payload.new) return;
+                    var exists = guildMessagesCache.some(function(m){ return m.id === payload.new.id; });
+                    if(exists) return;
+                    guildMessagesCache.push(payload.new);
+                    renderGuildChat();
+                }
+            )
+            .subscribe();
+    }
+
+    async function fetchGuildById(id){
+        if(!supabaseReady) return null;
+        try{
+            var res = await supabaseClient
+                .from('guilds')
+                .select('*')
+                .eq('id', id)
+                .maybeSingle();
+            if(res.error){ console.error(res.error); return null; }
+            return res.data || null;
+        }catch(e){ console.error(e); return null; }
+    }
+
+    async function fetchGuildByCode(code){
+        if(!supabaseReady) return null;
+        try{
+            var res = await supabaseClient
+                .from('guilds')
+                .select('*')
+                .eq('code', code)
+                .maybeSingle();
+            if(res.error){ console.error(res.error); return null; }
+            return res.data || null;
+        }catch(e){ console.error(e); return null; }
+    }
+
+    async function fetchGuildByName(name){
+        if(!supabaseReady) return null;
+        try{
+            var res = await supabaseClient
+                .from('guilds')
+                .select('*')
+                .eq('name', name)
+                .maybeSingle();
+            if(res.error){ console.error(res.error); return null; }
+            return res.data || null;
+        }catch(e){ console.error(e); return null; }
+    }
+
+    async function fetchAllGuilds(){
+        if(!supabaseReady) return [];
+        try{
+            var res = await supabaseClient
+                .from('guilds')
+                .select('*')
+                .order('created_at', {ascending:false})
+                .limit(100);
+            if(res.error){ console.error(res.error); return []; }
+            return res.data || [];
+        }catch(e){ console.error(e); return []; }
+    }
+
+    async function enterGuild(guild){
+        currentGuild = guild;
+        saveGuildLocal();
+        guildBadgeUpdate();
+        showGuildJoined();
+        renderGuildInfo();
+        await loadGuildMessages();
+        subscribeGuildMessages();
+    }
+
+    async function restoreGuildSession(){
+        var saved = loadGuildLocal();
+        if(!saved || !saved.id) return;
+
+        var guild = await fetchGuildById(saved.id);
+        if(!guild){
+            try{ localStorage.removeItem(guildStorageKey()); }catch(e){}
+            currentGuild = null;
+            guildBadgeUpdate();
+            showGuildNotJoined();
+            return;
+        }
+
+        var members = guild.members || [];
+        var stillMember = members.some(function(m){ return m.id === currentUser; });
+        if(!stillMember){
+            try{ localStorage.removeItem(guildStorageKey()); }catch(e){}
+            currentGuild = null;
+            guildBadgeUpdate();
+            showGuildNotJoined();
+            return;
+        }
+
+        await enterGuild(guild);
+    }
+
+    function guildTabsInit(){
+        var tabs = document.querySelectorAll('.guild-tabs button');
+        tabs.forEach(function(btn){
+            btn.addEventListener('click', function(){
+                tabs.forEach(function(b){ b.classList.remove('active'); });
+                this.classList.add('active');
+                var tab = this.dataset.gtab;
+                document.getElementById('guildCreateForm').classList.toggle('hidden', tab !== 'create');
+                document.getElementById('guildJoinForm').classList.toggle('hidden', tab !== 'join');
+                document.getElementById('guildListForm').classList.toggle('hidden', tab !== 'list');
+                document.getElementById('guildCreateError').textContent = '';
+                document.getElementById('guildJoinError').textContent = '';
+                document.getElementById('guildListError').textContent = '';
+
+                if(tab === 'list'){
+                    loadGuildList();
+                }
+            });
+        });
+    }
+
+    function escapeHtml(str){
+        if(!str) return '';
+        return String(str)
+            .replace(/&/g,'&amp;')
+            .replace(/</g,'&lt;')
+            .replace(/>/g,'&gt;')
+            .replace(/"/g,'&quot;');
+    }
+
+    async function loadGuildList(){
+        var box = document.getElementById('guildList');
+        var errEl = document.getElementById('guildListError');
+        if(!box) return;
+
+        errEl.textContent = '';
+        box.innerHTML = '<div class="guild-empty">⏳ در حال بارگذاری...</div>';
+
+        var list = await fetchAllGuilds();
+        guildListCache = list;
+
+        if(!list || list.length === 0){
+            box.innerHTML = '<div class="guild-empty">🏜️ هنوز هیچ اتحادی ساخته نشده. اولین نفر باش!</div>';
+            return;
+        }
+
+        box.innerHTML = '';
+
+        list.forEach(function(g){
+            var members = g.members || [];
+            var isMyGuild = currentUser && members.some(function(m){ return m.id === currentUser; });
+            var isLeader = g.leader_id === currentUser;
+
+            var item = document.createElement('div');
+            item.className = 'guild-list-item';
+
+            item.innerHTML =
+                '<div class="gl-info">' +
+                    '<div class="gl-name">🏰 ' + escapeHtml(g.name) + (isLeader ? ' 👑' : '') + '</div>' +
+                    '<div class="gl-meta">👥 ' + members.length + ' عضو • لیدر: ' + escapeHtml(g.leader_name) + '</div>' +
+                '</div>' +
+                '<div class="gl-code">' + escapeHtml(g.code) + '</div>' +
+                '<div class="gl-join">' + (isMyGuild ? '✅ عضوی' : '🚪 ورود') + '</div>';
+
+            item.addEventListener('click', function(){
+                if(currentGuild){
+                    alert('شما قبلاً در یک اتحاد هستید. اول از اتحاد فعلی خارج شوید.');
+                    return;
+                }
+                if(isMyGuild){
+                    enterGuild(g);
+                    return;
+                }
+                joinGuildFromList(g);
+            });
+
+            box.appendChild(item);
+        });
+    }
+
+    async function joinGuildFromList(guild){
+        if(!userData || !currentUser){
+            alert('ابتدا وارد شوید');
+            return;
+        }
+        if(currentGuild){
+            alert('شما قبلاً در یک اتحاد هستید');
+            return;
+        }
+        if(!supabaseReady){
+            alert('اتصال به سرور برقرار نیست');
+            return;
+        }
+
+        if(!confirm('🚪 به اتحاد «' + guild.name + '» بپیوندی؟')){
+            return;
+        }
+
+        var members = guild.members || [];
+        var already = members.some(function(m){ return m.id === currentUser; });
+
+        if(!already){
+            members.push({
+                id: currentUser,
+                name: userData.username,
+                icon: userData.icon || 'default'
+            });
+
+            var upd = await supabaseClient
+                .from('guilds')
+                .update({ members: members })
+                .eq('id', guild.id)
+                .select()
+                .single();
+
+            if(upd.error){
+                console.error(upd.error);
+                alert('خطا در عضویت: ' + upd.error.message);
+                return;
+            }
+
+            guild = upd.data;
+        }
+
+        await enterGuild(guild);
+        alert('🎉 به اتحاد «' + guild.name + '» خوش آمدی!');
+    }
+
+    async function createGuildFlow(){
+        var errEl = document.getElementById('guildCreateError');
+        errEl.textContent = '';
+
+        if(!userData || !currentUser){
+            errEl.textContent = 'ابتدا وارد شوید';
+            return;
+        }
+
+        if(currentGuild){
+            errEl.textContent = 'شما قبلاً در یک اتحاد هستید';
+            return;
+        }
+
+        var name = document.getElementById('guildCreateName').value.trim();
+        if(name.length < 3){
+            errEl.textContent = 'اسم اتحاد حداقل 3 کاراکتر';
+            return;
+        }
+        if(name.length > 30){
+            errEl.textContent = 'اسم اتحاد حداکثر 30 کاراکتر';
+            return;
+        }
+
+        if((userData.coins || 0) < GUILD_CREATE_COST){
+            errEl.textContent = '❌ سکه کافی نداری! نیاز به ' + GUILD_CREATE_COST.toLocaleString('fa-IR') + ' سکه داری.';
+            return;
+        }
+
+        if(!supabaseReady){
+            errEl.textContent = 'اتصال به سرور برقرار نیست';
+            return;
+        }
+
+        var dupName = await fetchGuildByName(name);
+        if(dupName){
+            errEl.textContent = 'این اسم اتحاد قبلاً استفاده شده';
+            return;
+        }
+
+        var code = null;
+        for(var i=0; i<8; i++){
+            var c = genGuildCode();
+            var dup = await fetchGuildByCode(c);
+            if(!dup){ code = c; break; }
+        }
+        if(!code){
+            errEl.textContent = 'خطا در تولید کد، دوباره تلاش کن';
+            return;
+        }
+
+        if(!confirm('🏗️ اتحاد «' + name + '» رو به قیمت ' + GUILD_CREATE_COST.toLocaleString('fa-IR') + ' سکه می‌سازی؟')){
+            return;
+        }
+
+        var btn = document.getElementById('guildCreateBtn');
+        btn.disabled = true;
+        btn.textContent = '⏳ در حال ساخت...';
+
+        var memberObj = {
+            id: currentUser,
+            name: userData.username,
+            icon: userData.icon || 'default'
+        };
+
+        try{
+            var ins = await supabaseClient
+                .from('guilds')
+                .insert({
+                    name: name,
+                    code: code,
+                    leader_id: currentUser,
+                    leader_name: userData.username,
+                    members: [memberObj]
+                })
+                .select()
+                .single();
+
+            if(ins.error){
+                console.error('Insert error:', ins.error);
+                errEl.textContent = 'خطا: ' + (ins.error.message || JSON.stringify(ins.error));
+                btn.disabled = false;
+                btn.textContent = '🏗️ ساخت اتحاد (💰 ' + GUILD_CREATE_COST.toLocaleString('fa-IR') + ' سکه)';
+                return;
+            }
+
+            userData.coins -= GUILD_CREATE_COST;
+            var users = getUsers();
+            users[currentUser] = userData;
+            saveUsers(users);
+
+            try{
+                localStorage.setItem('starloom_current_user', JSON.stringify({
+                    username: currentUser,
+                    coins: userData.coins,
+                    level: userData.level,
+                    levelProgress: userData.levelProgress || 0,
+                    icon: userData.icon,
+                    dice: userData.dice
+                }));
+            }catch(e){}
+
+            updateUserUI();
+
+            document.getElementById('guildCreateName').value = '';
+            btn.disabled = false;
+            btn.textContent = '🏗️ ساخت اتحاد (💰 ' + GUILD_CREATE_COST.toLocaleString('fa-IR') + ' سکه)';
+
+            await enterGuild(ins.data);
+
+            alert('🎉 اتحاد «' + name + '» ساخته شد و واردش شدی!\n🔑 کد اتحاد: ' + code + '\n\nاین کد رو به دوستات بده تا عضو بشن.');
+        }catch(e){
+            console.error('Catch error:', e);
+            errEl.textContent = 'خطای غیرمنتظره: ' + (e.message || e.toString());
+            btn.disabled = false;
+            btn.textContent = '🏗️ ساخت اتحاد (💰 ' + GUILD_CREATE_COST.toLocaleString('fa-IR') + ' سکه)';
+        }
+    }
+
+    async function joinGuildFlow(){
+        var errEl = document.getElementById('guildJoinError');
+        errEl.textContent = '';
+
+        if(!userData || !currentUser){
+            errEl.textContent = 'ابتدا وارد شوید';
+            return;
+        }
+        if(currentGuild){
+            errEl.textContent = 'شما قبلاً در یک اتحاد هستید';
+            return;
+        }
+        if(!supabaseReady){
+            errEl.textContent = 'اتصال به سرور برقرار نیست';
+            return;
+        }
+
+        var input = document.getElementById('guildJoinInput').value.trim();
+        if(!input){
+            errEl.textContent = 'اسم یا کد اتحاد رو وارد کن';
+            return;
+        }
+
+        var guild = null;
+        var upper = input.toUpperCase();
+
+        if(/^[A-Z0-9]{6}$/.test(upper)){
+            guild = await fetchGuildByCode(upper);
+        }
+        if(!guild){
+            guild = await fetchGuildByName(input);
+        }
+        if(!guild){
+            errEl.textContent = 'اتحادی با این اسم یا کد پیدا نشد';
+            return;
+        }
+
+        document.getElementById('guildJoinInput').value = '';
+        await joinGuildFromList(guild);
+    }
+
+    async function leaveGuildFlow(){
+        if(!currentGuild) return;
+
+        if(!confirm('❓ مطمئنی می‌خوای از اتحاد «' + currentGuild.name + '» خارج بشی؟')){
+            return;
+        }
+
+        try{
+            var guild = await fetchGuildById(currentGuild.id);
+            if(guild){
+                var members = (guild.members || []).filter(function(m){
+                    return m.id !== currentUser;
+                });
+
+                if(members.length === 0){
+                    await supabaseClient
+                        .from('guilds')
+                        .delete()
+                        .eq('id', guild.id);
+                }else{
+                    var updateData = { members: members };
+                    if(guild.leader_id === currentUser){
+                        updateData.leader_id = members[0].id;
+                        updateData.leader_name = members[0].name;
+                    }
+                    await supabaseClient
+                        .from('guilds')
+                        .update(updateData)
+                        .eq('id', guild.id);
+                }
+            }
+        }catch(e){
+            console.error(e);
+        }
+
+        if(guildChannel){
+            try{ supabaseClient.removeChannel(guildChannel); }catch(e){}
+            guildChannel = null;
+        }
+
+        currentGuild = null;
+        guildMessagesCache = [];
+        try{ localStorage.removeItem(guildStorageKey()); }catch(e){}
+
+        guildBadgeUpdate();
+        showGuildNotJoined();
+    }
+
+    async function sendGuildMessage(){
+        if(!currentGuild || !currentUser || !userData) return;
+
+        var input = document.getElementById('guildChatInput');
+        var text = input.value.trim();
+        if(!text) return;
+
+        if(!supabaseReady){
+            alert('اتصال به سرور برقرار نیست');
+            return;
+        }
+
+        input.value = '';
+
+        try{
+            var ins = await supabaseClient
+                .from('guild_messages')
+                .insert({
+                    guild_code: currentGuild.code,
+                    sender_id: currentUser,
+                    sender_name: userData.username,
+                    sender_icon: userData.icon || 'default',
+                    text: text
+                })
+                .select()
+                .single();
+
+            if(ins.error){
+                console.error('Send error:', ins.error);
+                alert('خطا در ارسال پیام: ' + (ins.error.message || ''));
+                input.value = text;
+                return;
+            }
+
+            var exists = guildMessagesCache.some(function(m){ return m.id === ins.data.id; });
+            if(!exists){
+                guildMessagesCache.push(ins.data);
+                renderGuildChat();
+            }
+        }catch(e){
+            console.error(e);
+            alert('خطا در ارسال پیام');
+            input.value = text;
+        }
+    }
+
+    function initGuildUI(){
+        var badge = document.getElementById('guildStatusBadge');
+        var authNote = document.getElementById('guildAuthNote');
+        var content = document.getElementById('guildContent');
+
+        if(!badge || !authNote || !content) return;
+
+        if(!currentUser || !userData){
+            authNote.classList.remove('hidden');
+            content.classList.add('hidden');
+            badge.textContent = '— بدون اتحاد';
+            return;
+        }
+
+        authNote.classList.add('hidden');
+        content.classList.remove('hidden');
+
+        guildTabsInit();
+        guildBadgeUpdate();
+
+        if(!window.__guildBound){
+            window.__guildBound = true;
+
+            document.getElementById('guildCreateBtn').addEventListener('click', createGuildFlow);
+            document.getElementById('guildJoinBtn').addEventListener('click', joinGuildFlow);
+            document.getElementById('guildLeaveBtn').addEventListener('click', leaveGuildFlow);
+            document.getElementById('guildChatSend').addEventListener('click', sendGuildMessage);
+            document.getElementById('guildRefreshListBtn').addEventListener('click', loadGuildList);
+
+            document.getElementById('guildChatInput').addEventListener('keypress', function(e){
+                if(e.key === 'Enter') sendGuildMessage();
+            });
+
+            document.getElementById('guildCodeDisplay').addEventListener('click', function(){
+                if(!currentGuild) return;
+                try{
+                    navigator.clipboard.writeText(currentGuild.code);
+                    var old = this.textContent;
+                    this.textContent = '✅ کپی شد!';
+                    var self = this;
+                    setTimeout(function(){ self.textContent = old; }, 1500);
+                }catch(e){}
+            });
+        }
+
+        restoreGuildSession();
+    }
+
+    window.initGuildAfterLogin = function(){
+        initGuildUI();
+    };
+
+    window.cleanupGuild = function(){
+        if(guildChannel){
+            try{ supabaseClient.removeChannel(guildChannel); }catch(e){}
+            guildChannel = null;
+        }
+    };
+
+    setTimeout(function(){
+        if(currentUser && userData){
+            initGuildUI();
+        }
+    }, 100);
 
 
     /* =========================
