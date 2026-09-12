@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>⭐ StarLoom - فروشگاه</title>
-<meta name="description" content="فروشگاه StarLoom - بازی‌ها و برنامه‌ها">
+<meta name="description" content="فروشگاه StarLoom">
 <link rel="stylesheet" href="style.css">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -41,7 +41,6 @@ body::before {
   margin: 0 auto;
 }
 
-/* ============ هدر ============ */
 .header {
   position: relative;
   display: flex;
@@ -109,213 +108,41 @@ body::before {
   transform: translateY(-2px);
 }
 
-/* ============ آمار ============ */
-.stats-bar {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 15px;
-  margin-bottom: 30px;
-}
-
-.stat-card {
-  background: linear-gradient(145deg, rgba(15,22,47,.85), rgba(7,11,27,.8));
-  border: 1px solid rgba(120,150,255,.18);
-  border-radius: 20px;
-  padding: 18px 20px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  transition: all 0.3s;
-}
-.stat-card:hover {
-  transform: translateY(-3px);
-  border-color: rgba(32,220,255,.4);
-}
-
-.stat-icon {
-  font-size: 2rem;
-  filter: drop-shadow(0 0 12px rgba(32,220,255,.5));
-}
-
-.stat-info { flex: 1; }
-
-.stat-label {
-  font-size: 0.7rem;
-  color: #8491b5;
-  letter-spacing: 1px;
-  margin-bottom: 4px;
-}
-
-.stat-value {
-  font-size: 1.4rem;
-  font-weight: 900;
-  color: #20dcff;
-  text-shadow: 0 0 20px rgba(32,220,255,.5);
-}
-
-/* ============ گرید ============ */
-.games-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-  gap: 20px;
-}
-
-/* ============ کارت ============ */
-.game-card {
-  position: relative;
-  overflow: hidden;
-  background: linear-gradient(145deg, rgba(18,26,56,.9), rgba(7,11,26,.85));
-  border: 1px solid rgba(120,150,255,.16);
-  border-radius: 24px;
-  padding: 24px 22px 22px;
-  transition: all 0.35s;
-  box-shadow: 0 15px 45px rgba(0,0,0,.3);
-}
-.game-card::before {
-  content: "";
-  position: absolute;
-  width: 170px;
-  height: 170px;
-  top: -90px;
-  left: 50%;
-  transform: translateX(-50%);
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(32,220,255,.14), transparent 70%);
-  transition: .4s;
-}
-.game-card:hover {
-  transform: translateY(-8px);
-  border-color: rgba(32,220,255,.4);
-  box-shadow: 0 25px 65px rgba(0,0,0,.45), 0 0 30px rgba(32,220,255,.08);
-}
-.game-card:hover::before {
-  transform: translateX(-50%) scale(1.5);
-}
-
-.game-icon-big {
-  position: relative;
-  z-index: 2;
-  width: 85px;
-  height: 85px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 18px;
-  border-radius: 22px;
-  background: radial-gradient(circle at 35% 25%, rgba(255,255,255,.12), rgba(100,80,255,.08));
-  border: 1px solid rgba(120,150,255,.2);
-  font-size: 2.6rem;
-  box-shadow: 0 15px 30px rgba(0,0,0,.25);
-  transition: all 0.35s;
-}
-.game-card:hover .game-icon-big {
-  transform: scale(1.08) rotate(-3deg);
-  box-shadow: 0 0 30px rgba(32,220,255,.15);
-}
-
-.game-name {
-  font-size: 1.25rem;
-  font-weight: 900;
-  color: #fff;
-  margin-bottom: 6px;
-}
-
-.game-author {
-  font-size: 0.8rem;
-  color: #8491b5;
-  margin-bottom: 12px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.game-desc {
-  font-size: 0.85rem;
-  color: #8a9bbf;
-  line-height: 1.8;
-  margin-bottom: 16px;
-  min-height: 50px;
-}
-
-.game-info {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 16px;
-  flex-wrap: wrap;
-}
-.info-chip {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 0.7rem;
-  color: #8491b5;
-  background: rgba(255,255,255,.035);
-  padding: 5px 10px;
-  border-radius: 12px;
-  border: 1px solid rgba(120,150,255,.1);
-}
-.info-chip.size {
-  color: #20dcff;
-  border-color: rgba(32,220,255,.3);
-}
-.info-chip.type {
-  color: #2ee68a;
-  border-color: rgba(46,230,138,.3);
-}
-.info-chip.downloads {
-  color: #f1c75b;
-  border-color: rgba(241,199,91,.3);
-}
-
-.game-actions {
-  display: flex;
-  gap: 10px;
-}
-.btn {
-  flex: 1;
-  padding: 12px 16px;
-  border: none;
-  border-radius: 13px;
-  font-weight: 800;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: all 0.25s;
-  font-family: inherit;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  text-decoration: none;
-}
-.btn-download {
-  background: linear-gradient(135deg, #20dcff, #348cff);
-  color: #fff;
-  box-shadow: 0 8px 25px rgba(32,220,255,.3);
-}
-.btn-download:hover {
-  transform: scale(1.03);
-  box-shadow: 0 12px 35px rgba(32,220,255,.5);
-}
-.btn-play {
-  background: linear-gradient(135deg, #a66cff, #6478ff);
-  color: #fff;
-  box-shadow: 0 8px 25px rgba(166,108,255,.3);
-}
-.btn-play:hover {
-  transform: scale(1.03);
-  box-shadow: 0 12px 35px rgba(166,108,255,.5);
-}
-
 .empty-state {
   text-align: center;
-  padding: 80px 20px;
+  padding: 100px 20px;
   color: #8491b5;
-  grid-column: 1 / -1;
 }
-.empty-state .icon {
-  font-size: 4rem;
-  margin-bottom: 15px;
-  opacity: 0.5;
+
+.empty-icon {
+  font-size: 6rem;
+  margin-bottom: 25px;
+  opacity: 0.4;
+  animation: emptyFloat 3s ease-in-out infinite alternate;
+}
+@keyframes emptyFloat {
+  from { transform: translateY(0); }
+  to { transform: translateY(-15px); }
+}
+
+.empty-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #f0f4ff;
+  margin-bottom: 12px;
+  background: linear-gradient(90deg, #20dcff, #a66cff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.empty-text {
+  font-size: 0.95rem;
+  color: #8491b5;
+  line-height: 1.8;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .footer {
@@ -325,41 +152,16 @@ body::before {
   color: #4f5b7b;
   font-size: 0.8rem;
   border-top: 1px solid rgba(120,150,255,.08);
+  letter-spacing: .5px;
 }
 .footer p::first-letter { color: #20dcff; }
-
-.toast {
-  position: fixed;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%) translateY(100px);
-  background: linear-gradient(135deg, #20dcff, #348cff);
-  color: #fff;
-  padding: 15px 30px;
-  border-radius: 50px;
-  font-weight: 800;
-  box-shadow: 0 10px 30px rgba(32,220,255,.5);
-  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  z-index: 1000;
-  max-width: 90%;
-  text-align: center;
-  font-size: 0.9rem;
-}
-.toast.show { transform: translateX(-50%) translateY(0); }
-.toast.gold {
-  background: linear-gradient(135deg, #f1c75b, #e67e22);
-  box-shadow: 0 10px 30px rgba(241,199,91,.5);
-}
 
 @media (max-width: 700px) {
   .logo { font-size: 1.2rem; }
   .logo span { font-size: 10px; }
-  .games-grid { grid-template-columns: 1fr; }
-  .game-icon-big { width: 70px; height: 70px; font-size: 2.1rem; }
-  .stat-card { padding: 12px 15px; }
-  .stat-icon { font-size: 1.5rem; }
-  .stat-value { font-size: 1.1rem; }
-  .game-name { font-size: 1.05rem; }
+  .empty-icon { font-size: 4rem; }
+  .empty-title { font-size: 1.3rem; }
+  .empty-text { font-size: 0.85rem; }
   .header { padding: 15px; }
 }
 </style>
@@ -368,208 +170,25 @@ body::before {
 
 <div class="main-container">
 
-<!-- هدر -->
 <div class="header">
   <div class="logo">⭐ StarLoom <span>| فروشگاه</span></div>
   <a href="home.html" class="back-home">← بازگشت</a>
 </div>
 
-<!-- آمار -->
-<div class="stats-bar">
-  <div class="stat-card">
-    <span class="stat-icon">📦</span>
-    <div class="stat-info">
-      <div class="stat-label">کل فایل‌ها</div>
-      <div class="stat-value" id="totalCount">0</div>
-    </div>
-  </div>
-  <div class="stat-card">
-    <span class="stat-icon">⬇️</span>
-    <div class="stat-info">
-      <div class="stat-label">دانلودها</div>
-      <div class="stat-value" id="downloadsCount">0</div>
-    </div>
+<div class="empty-state">
+  <div class="empty-icon">📦</div>
+  <div class="empty-title">فروشگاه خالیه!</div>
+  <div class="empty-text">
+    هنوز هیچ برنامه یا بازی‌ای اضافه نشده.<br>
+    به‌زودی محتوا اضافه می‌شه!
   </div>
 </div>
 
-<!-- گرید -->
-<div class="games-grid" id="storeGrid"></div>
-
-<!-- فوتر -->
 <div class="footer">
   <p>✦ StarLoom_Game — فروشگاه | تمامی حقوق محفوظ است | v1.0</p>
 </div>
 
 </div>
-
-<!-- Toast -->
-<div class="toast" id="toast"></div>
-
-<script>
-// ============================================================
-//  ⭐ STARLOOM STORE
-// ============================================================
-
-const ITEMS = [
-  
-  // ============ 🍎 Fruit War ============
-  {
-    id: 'fruitwar',
-    name: 'Fruit War',
-    author: 'StarLoom_Game',
-    icon: '🍎',
-    description: 'جنگ میوه‌ها! با کارت‌های شمشیر، تفنگ، تیرکمان و بمب به دشمن حمله کن. برنده ۵۰۰ سکه!',
-    file: 'fruitwar.html',
-    size: '1.5 MB',
-    type: 'html',
-    date: '1403/06/25'
-  }
-  
-  // ============================================================
-  //  📝 فایل جدید اینجا اضافه کن:
-  //
-  //  {
-  //    id: 'my-new-item',
-  //    name: 'اسم فایل',
-  //    author: 'اسم سازنده',
-  //    icon: '🎮',
-  //    description: 'توضیحات',
-  //    file: 'filename.html',
-  //    size: '10 MB',
-  //    type: 'html',        // html / zip / apk / exe / rar
-  //    date: '1403/06/25'
-  //  }
-  // ============================================================
-];
-
-// ============================================================
-//  آمار
-// ============================================================
-const STATS_KEY = 'starloom_store_stats';
-
-function getStats() {
-  try {
-    return JSON.parse(localStorage.getItem(STATS_KEY)) || {};
-  } catch(e) { return {}; }
-}
-
-function saveStats(stats) {
-  try {
-    localStorage.setItem(STATS_KEY, JSON.stringify(stats));
-  } catch(e) {}
-}
-
-function incrementDownload(itemId) {
-  const stats = getStats();
-  if (!stats[itemId]) stats[itemId] = 0;
-  stats[itemId]++;
-  saveStats(stats);
-  updateStatsUI();
-}
-
-function getTotalDownloads() {
-  const stats = getStats();
-  return Object.values(stats).reduce((a, b) => a + b, 0);
-}
-
-// ============================================================
-//  Toast
-// ============================================================
-let toastTimer = null;
-function showToast(text, isGold = false) {
-  const toast = document.getElementById('toast');
-  toast.textContent = text;
-  toast.className = 'toast show' + (isGold ? ' gold' : '');
-  if (toastTimer) clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => toast.classList.remove('show'), 3000);
-}
-
-// ============================================================
-//  رسم کارت
-// ============================================================
-function renderCard(item) {
-  const stats = getStats();
-  const downloads = stats[item.id] || 0;
-  const canPlay = item.type === 'html';
-  
-  const typeIcon = {
-    'html': '🌐',
-    'zip': '📦',
-    'apk': '📱',
-    'exe': '💻',
-    'rar': '🗜️'
-  }[item.type] || '📄';
-  
-  return `
-    <div class="game-card">
-      <div class="game-icon-big">${item.icon}</div>
-      <div class="game-name">${item.name}</div>
-      <div class="game-author">👤 ${item.author}</div>
-      <div class="game-desc">${item.description}</div>
-      
-      <div class="game-info">
-        <span class="info-chip size">📦 ${item.size}</span>
-        <span class="info-chip type">${typeIcon} ${item.type.toUpperCase()}</span>
-        ${downloads > 0 ? `<span class="info-chip downloads">⬇️ ${downloads}</span>` : ''}
-      </div>
-      
-      <div class="game-actions">
-        ${canPlay ? `<a href="${item.file}" class="btn btn-play">▶ بازی</a>` : ''}
-        <a href="${item.file}" download class="btn btn-download" onclick="trackDownload('${item.id}', '${item.name}')">⬇️ دانلود</a>
-      </div>
-    </div>
-  `;
-}
-
-// ============================================================
-//  رندر
-// ============================================================
-function renderStore() {
-  const grid = document.getElementById('storeGrid');
-  
-  if (ITEMS.length === 0) {
-    grid.innerHTML = `
-      <div class="empty-state">
-        <div class="icon">📦</div>
-        <div>هنوز فایلی اضافه نشده</div>
-      </div>
-    `;
-    return;
-  }
-  
-  grid.innerHTML = ITEMS.map(renderCard).join('');
-}
-
-// ============================================================
-//  آمار
-// ============================================================
-function updateStatsUI() {
-  const total = ITEMS.length;
-  const downloads = getTotalDownloads();
-  
-  document.getElementById('totalCount').textContent = total;
-  document.getElementById('downloadsCount').textContent = downloads;
-}
-
-// ============================================================
-//  Track دانلود
-// ============================================================
-function trackDownload(itemId, itemName) {
-  incrementDownload(itemId);
-  showToast(`⬇️ دانلود ${itemName} شروع شد!`, true);
-  
-  setTimeout(renderStore, 800);
-}
-
-// ============================================================
-//  شروع
-// ============================================================
-renderStore();
-updateStatsUI();
-
-console.log('⭐ StarLoom Store Ready!');
-console.log('📦 تعداد فایل‌ها:', ITEMS.length);
-</script>
 
 </body>
 </html>
